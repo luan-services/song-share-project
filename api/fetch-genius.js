@@ -9,7 +9,7 @@ export default async function handler(request, response) {
 	}
 
 	// pegamos o token secreto que está seguro no ambiente da vercel
-	const accessToken = process.env.GENIUS_CLIENT_ACCESS_TOKEN;
+	const accessToken = process.env.GENIUS_API_ACCESS_TOKEN;
 
 	/* termos de busca com " " ou "&" são lidos pela api de forma errada, ex: 'Florence + The Machine' o query só vai ler 
 	q=Florence, para contornar isso usamos encodeURIComponent(), que transforma a string em Florence%20%2B%20The%20Machine */

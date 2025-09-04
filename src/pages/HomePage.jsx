@@ -1,6 +1,10 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'; // navigate é um state do react que possibilita ir para outras páginas, como o link, mas
 // ao invés de ser um Link, navigate é uma função (também possibilita enviar dados via states
+import { useState } from 'react';
+
+
+import { SongForm } from '../../components/SongForm.jsx'; // componente SongForm
 
 const dummySongs = [ // músicas dummy para testar o navigate, remover depois...
   {
@@ -20,7 +24,13 @@ const dummySongs = [ // músicas dummy para testar o navigate, remover depois...
 
 
 export const HomePage = () => {
-    
+
+    const [isLoading, setIsLoading] = useState(false); // usado pelo fetch de dados para definir que está carregando
+
+    const [searchResults, setSearchResults] = useState([]); // usado para guardar o texto da busca
+
+    const [error, setError] = useState(null); // usado para setar erros para o usuário ler
+
     // a chamada do hook nos dá uma função, que por convenção chamamos de 'navigate', como se fosse o router em next.js
     const navigate = useNavigate();
 
@@ -39,30 +49,35 @@ export const HomePage = () => {
     };
 
     return (
-        <div className="space-y-4">
-            {dummySongs.map((song) => (
-            <div key={song.id} className="p-4 bg-white rounded-lg shadow-md flex justify-between items-center">
-                <div>
-                <h2 className="text-xl font-semibold">{song.title}</h2>
-                <p className="text-gray-600">{song.artist}</p>
-                <p className="text-sm text-gray-500 italic mt-1">"{song.lyricsSnippet}"</p>
+        <>
+            <SongForm></SongForm>
+        
+            <div className="space-y-4">
+                {dummySongs.map((song) => (
+                <div key={song.id} className="p-4 bg-white rounded-lg shadow-md flex justify-between items-center">
+                    <div>
+                    <h2 className="text-xl font-semibold">{song.title}</h2>
+                    <p className="text-gray-600">{song.artist}</p>
+                    <p className="text-sm text-gray-500 italic mt-1">"{song.lyricsSnippet}"</p>
+                    </div>
+                    <div className="flex space-x-2">
+                    <button
+                        onClick={() => handleGenerateImage(song, false)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                        Gerar Imagem
+                    </button>
+                    <button
+                        onClick={() => handleGenerateImage(song, true)}
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                    >
+                        Gerar com Letra
+                    </button>
+                    </div>
                 </div>
-                <div className="flex space-x-2">
-                <button
-                    onClick={() => handleGenerateImage(song, false)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                    Gerar Imagem
-                </button>
-                <button
-                    onClick={() => handleGenerateImage(song, true)}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                >
-                    Gerar com Letra
-                </button>
-                </div>
+                ))}
             </div>
-            ))}
-        </div>
+
+        </>
     )
 }

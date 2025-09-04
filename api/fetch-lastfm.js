@@ -7,7 +7,7 @@ export default async function handler(request, response) {
 	}
 
 	// pegamos o token secreto que está seguro no ambiente da vercel
-	const apiKey = process.env.LASTFM_API_KEY;
+	const apiKey = process.env.LASTFM_API_ACCESS_TOKEN;
 
 	
 	/* termos de busca com " " ou "&" são lidos pela api de forma errada, ex: 'Florence + The Machine' o query só vai ler 
