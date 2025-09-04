@@ -34,6 +34,48 @@ export const HomePage = () => {
     // a chamada do hook nos dá uma função, que por convenção chamamos de 'navigate', como se fosse o router em next.js
     const navigate = useNavigate();
 
+    // o fetch do handleSearch não precisa estar dentro de um useEffect pois ele é uma resposta direto à um click de botão (envio de formulário)
+    const handleSearch = async (searchTerm) => {
+        setIsLoading(true);
+        setError(null);
+        setSearchResults([]);
+
+        const url = `/api/fetch-genius?term=${encodeURIComponent(searchTerm)}`; // faz o fetch com os termos
+
+        try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Falha ao buscar as músicas.');
+        }
+        const data = await response.json();
+        
+        const songs = data.response.hits.map(hit => ({
+            id: hit.result.id,
+            title: hit.result.title,
+            artist: hit.result.primary_artist.name,
+            albumArtUrl: hit.result.song_art_image_thumbnail_url,
+        }));
+
+        if (songs.length === 0) {
+            setError('Nenhum resultado encontrado para esta busca.');
+        }
+        setSearchResults(songs);
+        console.log(songs)
+
+        } catch (err) {
+            setError(err.message);
+        console.error(err);
+        } finally {
+        setIsLoading(false);
+        }
+    };
+
+    const handleSelectSong = (song) => {
+        navigate('/picture', {
+        state: { songData: song },
+        });
+    };
 
     // função que vai ser chamada após o usuário clicar em Generate ou Generate With Image, song é um objeto com os dados do som, e withLyrics é um bool
     const handleGenerateImage = (songData, withLyrics) => {
@@ -50,34 +92,14 @@ export const HomePage = () => {
 
     return (
         <>
-            <SongForm></SongForm>
-        
-            <div className="space-y-4">
-                {dummySongs.map((song) => (
-                <div key={song.id} className="p-4 bg-white rounded-lg shadow-md flex justify-between items-center">
-                    <div>
-                    <h2 className="text-xl font-semibold">{song.title}</h2>
-                    <p className="text-gray-600">{song.artist}</p>
-                    <p className="text-sm text-gray-500 italic mt-1">"{song.lyricsSnippet}"</p>
-                    </div>
-                    <div className="flex space-x-2">
-                    <button
-                        onClick={() => handleGenerateImage(song, false)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Gerar Imagem
-                    </button>
-                    <button
-                        onClick={() => handleGenerateImage(song, true)}
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                    >
-                        Gerar com Letra
-                    </button>
-                    </div>
-                </div>
-                ))}
+            <div>Search Song</div>
+            <div>
+                <SongForm onSearch={handleSearch} isLoading={isLoading}></SongForm>
             </div>
-
+            
+            <div>
+                
+            </div>
         </>
     )
 }

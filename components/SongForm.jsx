@@ -28,7 +28,7 @@ export const SongForm = ({isLoading, onSearch}) => {
 
         let searchTerm = `${songArtist} ${songTitle} ${songLyrics}`.trim().replace(/\s+/g, ' ') // cria uma query para buscar os dados;
 
-        onSearch(searchTerm); // chama a função on Search e passa a query.
+        onSearch(searchTerm); // chama a função onSearch e passa a query.
 
     };
 
