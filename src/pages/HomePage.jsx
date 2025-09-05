@@ -35,8 +35,8 @@ export const HomePage = () => {
             console.log(data.response.hits)
             const songs = data.response.hits.map(hit => ({
                 id: hit.result.id,
-                url: hit.result.url,
-                title: hit.result.title,
+                geniusSongUrl: hit.result.url,
+                track: hit.result.track,
                 artist: hit.result.primary_artist.name,
                 albumArtThumbnailUrl: hit.result.song_art_image_thumbnail_url,
                 albumArtUrl: hit.result.song_art_image_url, 

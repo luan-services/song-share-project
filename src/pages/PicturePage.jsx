@@ -26,6 +26,42 @@ export const PicturePage = () => {
 		}
 	}, [songData, navigate]); // Dependências: o efeito roda se songData ou navigate mudarem.
 
+	// ---
+
+	const [songImgLastFmUrl, setSongImgLastFmUrl] = useState(null);
+
+	useEffect(() => {
+
+		const fetchAlbumArt = async () => {
+			const params = new URLSearchParams({
+				artist: songData.artist,
+				track: songData.title,
+			});
+			const url = `/api/fetch-lastfm?${params.toString()}`;
+
+			try {
+				const response = await fetch(url);
+				if (!response.ok) return; // Falha silenciosamente, mantém a imagem do Genius
+				const data = await response.json();
+
+				const lastFmArt = data.track.album?.image.find(img => img.size === 'extralarge')['#text'];
+
+				// Se encontramos uma imagem de alta qualidade no Last.fm, atualizamos o estado!
+				if (lastFmArt) {
+				setSongImgLastFmUrl(lastFmArt);
+				}
+			} catch (error) {
+				console.error("Não foi possível aprimorar a arte do álbum com o Last.fm:", error);
+				// Se der erro, não fazemos nada, apenas mantemos a imagem do Genius
+			}
+		};
+
+		fetchAlbumArt();
+	}, [songData, navigate])
+	
+
+	// ---
+
 	const [songLyrics, setSongLyrics] = useState(null); // useState para guardar as lyrics que vão ser webscrapped
 	const [isLoading, setIsLoading] = useState(null); // useState isLoading enquanto o fetch está sendo feito
 	const [songLyricsError, setSongLyricsError] = useState(null); // useState para guardar erro caso o webscrapping tenha falhado
@@ -76,6 +112,8 @@ export const PicturePage = () => {
 
 	}, [songData, navigate]); // O efeito depende dos dados da música para rodar
 
+	// ----
+
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
 	if (!songData) {
 		return <div>Carregando...</div>;
@@ -95,13 +133,15 @@ export const PicturePage = () => {
 			
 			</div>
 
-			<div>{songLyrics}</div>
+			<div>{songLyrics}</div> {/* tá certo as lyrics, estão com \n o problema é que div não lê \n */}
 
 			<div className="text-center mt-8">
 				<button onClick={() => navigate('/')} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
 					Voltar
 				</button>
 			</div>
+
+			<img className="h-full" src={songImgLastFmUrl}/>
 		</div>
 	);
 }
