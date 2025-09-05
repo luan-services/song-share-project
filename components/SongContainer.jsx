@@ -6,7 +6,7 @@ export const SongContainer = ({onShare, songList}) => {
       {songList.map((song) => {
         return (
           <div>
-            <div>{song.title}</div>
+            <div>{song.track}</div>
             <button type="button" onClick={() => onShare(song)}>share</button>
           </div>
         );

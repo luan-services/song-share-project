@@ -35,7 +35,7 @@ export const PicturePage = () => {
 		const fetchAlbumArt = async () => {
 			const params = new URLSearchParams({
 				artist: songData.artist,
-				track: songData.title,
+				track: songData.track,
 			});
 			const url = `/api/fetch-lastfm?${params.toString()}`;
 
@@ -83,8 +83,8 @@ export const PicturePage = () => {
 			const params = new URLSearchParams({ // gera uma string com os params à serem enviados para a função server-side get-lyrics
 				id: songData.id,
 				artist: songData.artist,
-				title: songData.title,
-				url: songData.url,
+				track: songData.track,
+				geniusSongUrl: songData.geniusSongUrl,
 			});
 
 			const url = `/api/get-lyrics?${params.toString()}`; // gera a url para o fetch
@@ -125,7 +125,7 @@ export const PicturePage = () => {
 			<h1 className="text-4xl font-bold mb-4">Prévia da Imagem</h1>
 			
 			<div className="p-8 bg-white rounded-lg shadow-xl max-w-md mx-auto">
-				<h2 className="text-3xl font-bold text-center">{songData.title}</h2>
+				<h2 className="text-3xl font-bold text-center">{songData.track}</h2>
 				<p className="text-xl text-center text-gray-600 mb-4">{songData.artist}</p>
 				<div className="w-full h-64 bg-gray-300 rounded flex items-center justify-center mb-4">
 					<img className="h-full" src={songData.albumArtUrl}/>
