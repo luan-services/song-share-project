@@ -13,10 +13,11 @@ export const PicturePage = () => {
 	const location = useLocation(); // hook para acessar informações da rota atual, incluindo o 'state'.
 	const navigate = useNavigate(); // hook para podermos redirecionar o usuário, se necessário.
 
+	const withLyrics = true;
+
 	// EXTRAINDO OS DADOS DE FORMA SEGURA
 	// location.state busca para ver se o navigate que levou até a pagina atual enviou algum state, se sim, ele salva o estado nas duas const
 	const songData = location.state.songData ? location.state.songData : undefined;
-	const withLyrics = location.state.songData ? location.state.withLyrics : undefined;
 
 
 	// esse useEffect roda assim que a página inicia, ele checac se songData existe antes de carregar os dados, para evitar quebrar a página
@@ -44,12 +45,12 @@ export const PicturePage = () => {
 			<h2 className="text-3xl font-bold text-center">{songData.title}</h2>
 			<p className="text-xl text-center text-gray-600 mb-4">{songData.artist}</p>
 			<div className="w-full h-64 bg-gray-300 rounded flex items-center justify-center mb-4">
-			<p>(Aqui entrará a capa do álbum: {songData.album})</p>
+				<img className="h-full" src={songData.albumArtUrl}/>
 			</div>
 		
 			{withLyrics ? (
 			<div className="bg-gray-100 p-4 rounded">
-				<p className="text-center font-serif">"{songData.lyricsSnippet}"</p>
+				<p className="text-center font-serif">"{songData.artist}"</p>
 			</div>
 			) : (
 			<p className="text-center text-gray-400">(Modo sem letra)</p>
