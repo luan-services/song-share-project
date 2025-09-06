@@ -37,12 +37,12 @@ export const SongForm = ({isLoading, onSearch}) => {
         <form className="w-full max-w-212" onSubmit={(event) => handleSubmit(event)}>
             <div className="flex flex-col gap-2 w-full p-4">
                 <div className="flex flex-col sm:flex-row w-full gap-2">
-                    <input className="border-2 w-full border-custom-charcoal rounded-r-full rounded-l-full px-4 py-1.5 focus:outline-none text-sm text-center" type="text" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} placeholder="Título da Música"/>
-                    <input className="border-2 w-full border-custom-charcoal rounded-r-full rounded-l-full px-4 py-1.5 focus:outline-none text-sm text-center" type="text" value={songArtist} onChange={(e) => setSongArtist(e.target.value)} placeholder="Artista ou Banda"/>
+                    <input className="w-full focus:outline-3 outline-custom-grayish-red bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5  text-sm text-center placeholder:text-custom-background-sand" type="text" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} placeholder="Título da Música"/>
+                    <input className="w-full focus:outline-3 outline-custom-grayish-red bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5  text-sm text-center placeholder:text-custom-background-sand" type="text" value={songArtist} onChange={(e) => setSongArtist(e.target.value)} placeholder="Artista ou Banda"/>
                 </div>
 
                 <div className="flex w-full gap-2">
-                    <input className="border-2 w-full border-custom-charcoal rounded-r-full rounded-l-full px-4 py-1.5 focus:outline-none text-sm text-center" type="text" value={songLyrics} onChange={(e) => setSongLyrics(e.target.value)} placeholder="Letra"/>
+                    <input className="w-full focus:outline-3 outline-custom-grayish-red bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5  text-sm text-center placeholder:text-custom-background-sand" type="text" value={songLyrics} onChange={(e) => setSongLyrics(e.target.value)} placeholder="Letra"/>
                 </div>
 
                 <p className="h-12 text-custom-primary-red">{formError ? formError : ''}</p>

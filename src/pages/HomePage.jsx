@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'; // navigate é um state do react
 // ao invés de ser um Link, navigate é uma função (também possibilita enviar dados via states
 import { useState } from 'react';
 
-import { SongForm } from '../../components/SongForm.jsx'; // componente SongForm
-import { SongContainer } from '../../components/SongContainer.jsx';
+import { SongForm } from '../../components/home_page/SongForm.jsx'; // componente SongForm
+import { SongContainer } from '../../components/home_page/SongContainer.jsx';
 
 export const HomePage = () => {
 
@@ -69,7 +69,7 @@ export const HomePage = () => {
     return (
         <main className="w-full min-h-screen flex flex-col items-center justify-center">
             <section className="flex flex-col w-full text-center items-center justify-center">
-                <span className="text-custom-charcoal text-4xl font-medium py-8">O que você está ouvindo?</span>
+                <span className="text-4xl font-medium py-8">O que você está ouvindo?</span>
 
                 <SongForm onSearch={handleSearch} isLoading={isLoading}></SongForm>
             </section>
