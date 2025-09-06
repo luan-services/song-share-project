@@ -67,16 +67,16 @@ export const HomePage = () => {
     };
 
     return (
-        <>
-            <div>Search Song</div>
-            
-            <div>
+        <main className="w-full min-h-screen flex flex-col items-center justify-center">
+            <section className="flex flex-col w-full text-center items-center justify-center">
+                <span className="text-custom-charcoal text-4xl font-medium py-8">O que você está ouvindo?</span>
+
                 <SongForm onSearch={handleSearch} isLoading={isLoading}></SongForm>
-            </div>
+            </section>
             
-            <div>
+            <section>
                 <SongContainer onShare={handleShareSong} songList={searchResults}/>
-            </div>
-        </>
+            </section>
+        </main>
     )
 }
