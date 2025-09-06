@@ -2,7 +2,8 @@ export default async function handler(request, response) {
 	const { artist, track } = request.query;
 
 	if (!artist || !track) {
-		return response.status(400).json({ error: 'Artista e música são obrigatórios.' });
+		response.status(400);
+		return response.json({ message: 'Artista e música são obrigatórios.' });
 	}
 
 	// pegamos o token secreto que está seguro no ambiente da vercel
@@ -17,10 +18,11 @@ export default async function handler(request, response) {
 		const data = await lastFmResponse.json();
 
 		if (!lastFmResponse.ok || data.error) { // se o Lastfm der erro, avisamos nosso frontend
-			return response.status(lastFmResponse.status).json({ message: data.message || 'Erro no Last.fm' });
+			response.status(lastFmResponse.status);
+			return response.json({ message: data.message || 'Erro no Last.fm' });
 		}
 		
-		response.status(200)
+		response.status(200);
 		return response.json(data); // enviamos a resposta do LastFm de volta para o nosso frontend
 
 	} catch (error) {

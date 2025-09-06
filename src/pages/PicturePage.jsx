@@ -30,6 +30,7 @@ export const PicturePage = () => {
 
 	const [lastFmSongData, setLastFmSongData] = useState(null);  // useState para armazenar metadados do lastfm
 	const [lastFmIsLoading, setLastFmIsLoading] = useState(true); // useState para impedir que o fetch das lyrics rode enquanto o lastfm não terminar o dele
+	const [lastFmError, setLastFmError] = useState(null);
 
 	useEffect(() => { // use Effect para pegar meta-dados melhores do lastfm
 
@@ -48,25 +49,35 @@ export const PicturePage = () => {
 
 			try {
 				const response = await fetch(url);
-				if (!response.ok) return; // Falha silenciosamente, mantém a imagem do Genius
+
+				if (!response.ok) {
+					return; // Falha silenciosamente, mantém a imagem do Genius
+				}
+
 				const data = await response.json();
 
-				const lastFmArt = data.track.album?.image.find(img => img.size === 'extralarge')['#text'];
-				const lastFmTrack = data.track.name;
-                const lastFmArtistName = data.track.artist.name;
-
+				console.log(data)
 				// se encontrarmos os dados no lastFm, atualizamos:
-				if (lastFmArt) {
+				if (data.track) {
+					
+					const lastFmArt = data.track.album.image.find(img => img.size === 'extralarge')['#text'];
+					const lastFmTrack = data.track.name;
+					const lastFmArtistName = data.track.artist.name;
+
 					setLastFmSongData({
 						artUrl: lastFmArt, 
 						track: lastFmTrack, 
 						artist: lastFmArtistName,
 					})
-					console.log(lastFmSongData)
+
+					console.log(lastFmSongData);
 				};
+
+				setLastFmError('Nenhum metadado encontrado para combinação de artista/música');
 			} 
-			catch (error) {
-				console.error("Não foi possível aprimorar metadados com LastFm", error);
+			catch (err) {
+				console.error("Não foi possível aprimorar metadados com LastFm", err);
+				setLastFmError("Não foi possível aprimorar metadados com LastFm, motivo desconhecido");
 			}
 			finally {
 				setLastFmIsLoading(false);
@@ -80,7 +91,7 @@ export const PicturePage = () => {
 	// ---
 
 	const [songLyrics, setSongLyrics] = useState(null); // useState para guardar as lyrics que vão ser webscrapped
-	const [isLoading, setIsLoading] = useState(null); // useState isLoading enquanto o fetch está sendo feito
+	const [lyricsIsLoading, setLyricsIsLoading] = useState(null); // useState isLoading enquanto o fetch está sendo feito
 	const [songLyricsError, setSongLyricsError] = useState(null); // useState para guardar erro caso o webscrapping tenha falhado
 
 	useEffect(() => { // useEffect para buscar as letras, só roda após o state lastFmIsLoading ser false
@@ -93,7 +104,7 @@ export const PicturePage = () => {
 		// função para fetch de lyrics
 		const fetchLyrics = async () => {
 
-			setIsLoading(true);
+			setLyricsIsLoading(true);
 			setSongLyricsError('');
 
 			const params = new URLSearchParams({ // gera uma string com os params à serem enviados para a função server-side get-lyrics
@@ -120,7 +131,7 @@ export const PicturePage = () => {
 				setSongLyricsError(err.message);
 				console.log(songLyricsError)
 			} finally {
-				setIsLoading(false);
+				setLyricsIsLoading(false);
 			}
 		};
 
@@ -132,6 +143,8 @@ export const PicturePage = () => {
 	// ----
 
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
+	// se lastFmIsLoading, ainda não terminamos de puxar os dados do lastFm, não renderizamos nada para impedir o código de fazer um 'blink',
+	// mudar os dados mostrados do genius e pros do lastFm.	(dessa forma só vai mostrar dados quando tiver certeza que vai ser ou do genius ou do lastfm)
 	if (!songData || lastFmIsLoading) {
 		return <div>Carregando...</div>;
 	}
