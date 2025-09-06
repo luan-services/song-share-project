@@ -34,17 +34,23 @@ export const SongForm = ({isLoading, onSearch}) => {
 
 
     return (
-        <form onSubmit={(event) => handleSubmit(event)}>
-            <div>
-                <input type="text" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} placeholder="título da música"/>
-                <input type="text" value={songArtist} onChange={(e) => setSongArtist(e.target.value)} placeholder="artista/banda"/>
-                <input type="text" value={songLyrics} onChange={(e) => setSongLyrics(e.target.value)} placeholder="letra"/>
-            </div>
-            <p className="h-12">{formError ? formError : ''}</p>
+        <form className="w-full max-w-212" onSubmit={(event) => handleSubmit(event)}>
+            <div className="flex flex-col gap-2 w-full p-4">
+                <div className="flex flex-col sm:flex-row w-full gap-2">
+                    <input className="border-2 w-full border-custom-charcoal rounded-r-full rounded-l-full px-4 py-1.5 focus:outline-none text-sm text-center" type="text" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} placeholder="Título da Música"/>
+                    <input className="border-2 w-full border-custom-charcoal rounded-r-full rounded-l-full px-4 py-1.5 focus:outline-none text-sm text-center" type="text" value={songArtist} onChange={(e) => setSongArtist(e.target.value)} placeholder="Artista ou Banda"/>
+                </div>
 
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Buscando...' : 'Buscar'}
-            </button>
+                <div className="flex w-full gap-2">
+                    <input className="border-2 w-full border-custom-charcoal rounded-r-full rounded-l-full px-4 py-1.5 focus:outline-none text-sm text-center" type="text" value={songLyrics} onChange={(e) => setSongLyrics(e.target.value)} placeholder="Letra"/>
+                </div>
+
+                <p className="h-12 text-custom-primary-red">{formError ? formError : ''}</p>
+
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Buscando...' : 'Buscar'}
+                </button>
+            </div>
         </form>
     )
 }

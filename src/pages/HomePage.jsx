@@ -74,7 +74,7 @@ export const HomePage = () => {
                 <SongForm onSearch={handleSearch} isLoading={isLoading}></SongForm>
             </section>
             
-            <section>
+            <section className="flex w-full justify-center items-center">
                 <SongContainer onShare={handleShareSong} songList={searchResults}/>
             </section>
         </main>
