@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'; // navigate é um state do react
 // ao invés de ser um Link, navigate é uma função (também possibilita enviar dados via states
 
 import { useLocation } from 'react-router-dom'; // location é um state do react que possibilita ler os dados que foram passados via navigate
+import { TermsFooter } from '../../components/TermsFooter';
 
 export const PicturePage = () => {
 	
@@ -151,28 +152,31 @@ export const PicturePage = () => {
 
 	// se o código chegou até aqui, é 100% seguro que 'songData' existe.
 	return (
-		<div className="container mx-auto p-8">
-			<h1 className="text-4xl font-bold mb-4">Prévia da Imagem</h1>
-			
-			<div className="p-8 bg-white rounded-lg shadow-xl max-w-md mx-auto">
-				<h2 className="text-3xl font-bold text-center">{songData.track}</h2>
-				<p className="text-xl text-center text-gray-600 mb-4">{songData.artist}</p>
-				<div className="w-full h-64 bg-gray-300 rounded flex items-center justify-center mb-4">
-					<img className="h-full" src={songData.albumArtUrl}/>
+		<div className="min-h-screen px-2 md:px-12 py-8 flex flex-col justify-between">
+			<main className="container mx-auto p-8">
+				<h1 className="text-4xl font-bold mb-4">Prévia da Imagem</h1>
+				
+				<div className="p-8 bg-white rounded-lg shadow-xl max-w-md mx-auto">
+					<h2 className="text-3xl font-bold text-center">{songData.track}</h2>
+					<p className="text-xl text-center text-gray-600 mb-4">{songData.artist}</p>
+					<div className="w-full h-64 bg-gray-300 rounded flex items-center justify-center mb-4">
+						<img className="h-full" src={songData.albumArtUrl}/>
+					</div>
+				
 				</div>
-			
-			</div>
 
-			<div>{songLyrics}</div> {/* tá certo as lyrics, estão com \n o problema é que div não lê \n */}
+				<div>{songLyrics}</div> {/* tá certo as lyrics, estão com \n o problema é que div não lê \n */}
 
-			<div className="text-center mt-8">
-				<button onClick={() => navigate('/')} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-					Voltar
-				</button>
-			</div>
+				<div className="text-center mt-8">
+					<button onClick={() => navigate('/')} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+						Voltar
+					</button>
+				</div>
 
-			<img className="h-full" src={lastFmSongData?.artUrl}/>
-			<span>{lastFmSongData?.artist} - {lastFmSongData?.track}</span>
+				<img className="h-full" src={lastFmSongData?.artUrl}/>
+				<span>{lastFmSongData?.artist} - {lastFmSongData?.track}</span>
+			</main>
+			<TermsFooter/>
 		</div>
 	);
 }

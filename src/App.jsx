@@ -8,6 +8,8 @@ import { PicturePage } from './pages/PicturePage';
 
 // import do css global
 import './App.css'
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
       {
         path: "picture",
         element: <PicturePage/>,
+      },
+            {
+        path: "termos",
+        element: <TermsPage/>,
+      },
+            {
+        path: "privacidade",
+        element: <PrivacyPage/>,
       }
     ],
   },
@@ -29,8 +39,8 @@ const router = createBrowserRouter([
 function App() {
 
 	return (
-		<div className="min-h-screen text-custom-charcoal bg-custom-background-sand px-2 md:px-12 py-8">
-			<RouterProvider router={router} />
+		<div className="min-h-screen text-custom-charcoal bg-custom-background-sand">
+        <RouterProvider router={router} />
 		</div>
 	)
 }
