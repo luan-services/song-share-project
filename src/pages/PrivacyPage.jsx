@@ -4,11 +4,11 @@ const PrivacyPage = () => {
   return (
         <div className='min-h-screen flex justify-center bg-white text-black'>
             <div className="py-8 w-180">
-                <p className="text-xl"><b>POLÍTICA DE PRIVACIDADE DO Share Song</b></p>
+                <p className="text-xl"><b>POLÍTICA DE PRIVACIDADE DO Song Share</b></p>
                 <br></br>
                 <p><b>Última atualização:</b> 06 de setembro de 2025</p>
                 <br></br>
-                <p>Esta Política de Privacidade descreve como Share Song ("nós", "nosso") coleta, usa e protege suas informações quando você utiliza o site Share Song, em conformidade com a Lei Geral de Proteção de Dados do Brasil (LGPD - Lei nº 13.709/2018).</p>
+                <p>Esta Política de Privacidade descreve como Song Share ("nós", "nosso") coleta, usa e protege suas informações quando você utiliza o site Song Share, em conformidade com a Lei Geral de Proteção de Dados do Brasil (LGPD - Lei nº 13.709/2018).</p>
                 <br></br>
                 <p><b>1. Quais Dados Coletamos?</b></p>
                 <p>Para fornecer e melhorar nosso serviço, coletamos os seguintes tipos de informações:</p>

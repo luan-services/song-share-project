@@ -3,11 +3,15 @@ import {ShareButton} from "./ShareButton"
 export const SongContainer = ({onShare, songList, isLoading}) => {
 	return (
 		<div className="flex flex-col w-full max-w-120 py-2 gap-2">
-
+			
+			{/* cas haja resultado da busca, mostra esses textos */}
 			{((songList.length > 0)) && 
-				<span className="text-sm self-end">
-					*Dados das músicas disponibilizados pela API do <a className="underline italic" href="https://www.genius.com/" target="_blank"> Genius </a>
-				</span>
+				<>
+					<div className="text-sm italic">Dica: Resultados cujo o título é apenas o nome da música e autor é a banda, possuem dados oficiais, traduções costumam ser fontes não-oficiais.</div>
+					<span className="text-sm self-end">
+						*Dados das músicas disponibilizados pela API do <a className="underline italic" href="https://www.genius.com/" target="_blank"> Genius </a>
+					</span>
+				</>
 			}
 
 			{isLoading && 
