@@ -16,7 +16,7 @@ export const PicturePage = () => {
 	// location.state busca para ver se o navigate que levou até a pagina atual enviou algum state, se sim, ele salva o estado nas duas const
 	const songData = location.state.songData ? location.state.songData : undefined;
 
-	// esse useEffect roda assim que a página inicia, ele checac se songData existe antes de carregar os dados, para evitar quebrar a página
+	// esse useEffect roda assim que a página inicia, ele checa se songData existe antes de carregar os dados, para evitar quebrar a página
 	// caso um usuário acesse /location diretamente pelo browser (sem passar pela homepage)
 	useEffect(() => {
 		if (!songData) {
@@ -28,15 +28,22 @@ export const PicturePage = () => {
 
 	// ---
 
-	const [songImgLastFmUrl, setSongImgLastFmUrl] = useState(null);
+	const [lastFmSongData, setLastFmSongData] = useState(null);  // useState para armazenar metadados do lastfm
+	const [lastFmIsLoading, setLastFmIsLoading] = useState(true); // useState para impedir que o fetch das lyrics rode enquanto o lastfm não terminar o dele
 
-	useEffect(() => {
+	useEffect(() => { // use Effect para pegar meta-dados melhores do lastfm
 
-		const fetchAlbumArt = async () => {
+		if (!songData) { // se não houver dados, não faz nada (será redirecionado)
+			navigate('/');
+			return;
+		}
+
+		const fetchFromLastFm = async () => {
 			const params = new URLSearchParams({
 				artist: songData.artist,
 				track: songData.track,
 			});
+
 			const url = `/api/fetch-lastfm?${params.toString()}`;
 
 			try {
@@ -45,20 +52,30 @@ export const PicturePage = () => {
 				const data = await response.json();
 
 				const lastFmArt = data.track.album?.image.find(img => img.size === 'extralarge')['#text'];
+				const lastFmTrack = data.track.name;
+                const lastFmArtistName = data.track.artist.name;
 
-				// Se encontramos uma imagem de alta qualidade no Last.fm, atualizamos o estado!
+				// se encontrarmos os dados no lastFm, atualizamos:
 				if (lastFmArt) {
-				setSongImgLastFmUrl(lastFmArt);
-				}
-			} catch (error) {
-				console.error("Não foi possível aprimorar a arte do álbum com o Last.fm:", error);
-				// Se der erro, não fazemos nada, apenas mantemos a imagem do Genius
+					setLastFmSongData({
+						artUrl: lastFmArt, 
+						track: lastFmTrack, 
+						artist: lastFmArtistName,
+					})
+					console.log(lastFmSongData)
+				};
+			} 
+			catch (error) {
+				console.error("Não foi possível aprimorar metadados com LastFm", error);
+			}
+			finally {
+				setLastFmIsLoading(false);
 			}
 		};
 
-		fetchAlbumArt();
-	}, [songData, navigate])
-	
+		fetchFromLastFm();
+
+	}, [songData, navigate]);
 
 	// ---
 
@@ -66,15 +83,14 @@ export const PicturePage = () => {
 	const [isLoading, setIsLoading] = useState(null); // useState isLoading enquanto o fetch está sendo feito
 	const [songLyricsError, setSongLyricsError] = useState(null); // useState para guardar erro caso o webscrapping tenha falhado
 
+	useEffect(() => { // useEffect para buscar as letras, só roda após o state lastFmIsLoading ser false
 
-	useEffect(() => { // useEffect inicial que vai 
-		
-		if (!songData) { // se não houver dados, não faz nada (será redirecionado)
-			navigate('/');
-			return;
-		}
+		// vai rodar uma primeira vez ao renderizar a página e vai cair aqui, depois só renderiza de novo se lastFmIsLoading mudar
+		if (lastFmIsLoading) {
+            return;
+        };
 
-		// Função interna para organizar o código
+		// função para fetch de lyrics
 		const fetchLyrics = async () => {
 
 			setIsLoading(true);
@@ -82,9 +98,10 @@ export const PicturePage = () => {
 
 			const params = new URLSearchParams({ // gera uma string com os params à serem enviados para a função server-side get-lyrics
 				id: songData.id,
-				artist: songData.artist,
-				track: songData.track,
+				artist: lastFmSongData?.artist? lastFmSongData.artist : songData.artist, // se existe artista do lastfm envia ele
+				track: lastFmSongData?.track? lastFmSongData.track : songData.track, // se existe titulo do last fm envia ele
 				geniusSongUrl: songData.geniusSongUrl,
+				fromLastFm: lastFmSongData? true : false, // variável para dizer se os params estão vindo do LastFm (para atualizar bd)
 			});
 
 			const url = `/api/get-lyrics?${params.toString()}`; // gera a url para o fetch
@@ -110,12 +127,12 @@ export const PicturePage = () => {
 		// Chamamos a função de busca assim que o efeito é executado
 		fetchLyrics();
 
-	}, [songData, navigate]); // O efeito depende dos dados da música para rodar
+	}, [songData, navigate, lastFmIsLoading, lastFmSongData]); // O efeito depende dos dados da música para rodar
 
 	// ----
 
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
-	if (!songData) {
+	if (!songData || lastFmIsLoading) {
 		return <div>Carregando...</div>;
 	}
 
@@ -141,7 +158,8 @@ export const PicturePage = () => {
 				</button>
 			</div>
 
-			<img className="h-full" src={songImgLastFmUrl}/>
+			<img className="h-full" src={lastFmSongData?.artUrl}/>
+			<span>{lastFmSongData?.artist} - {lastFmSongData?.track}</span>
 		</div>
 	);
 }

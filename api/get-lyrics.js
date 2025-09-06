@@ -49,7 +49,7 @@ async function scrapeLyrics(geniusSongUrl) {
 export default async function handler(request, response) {
 
 	// pega os dados do query
-	const { id, artist, track, geniusSongUrl } = request.query;
+	const { id, artist, track, geniusSongUrl, fromLastFm } = request.query;
 
 	// caso algo esteja faltando retorna erro.
 	if (!id || !artist || !track || !geniusSongUrl) {
@@ -68,7 +68,20 @@ export default async function handler(request, response) {
 
 			console.log(`Id ${docId} existe, retornando lyrics do firebase`);
 
-			return response.status(200).json({ lyrics: doc.data().lyrics, source: 'cache' });
+			if(fromLastFm) { // se os dados vieram do lastFm (meta-dados melhores)
+				
+				// se os dados no bd forem diferente dos metadados que vieram agora provavelmente os dados do bd são do genius
+				if (doc.data().artist != artist || doc.data().track != track) { 
+					await docRef.update({ // atualiza a tabela com os dados atuais
+						artist: artist,
+						track: track,
+						scrapedAt: new Date(),
+						fromLastFm: fromLastFm,
+					});
+				};
+			}
+
+			return response.status(200).json({ lyrics: doc.data().lyrics, source: 'cache' }); // retorna a letra
 		} 
 		else { // caso 2: a tabela não existe, tenta fazer webscrapping do Genius
 
@@ -82,7 +95,8 @@ export default async function handler(request, response) {
 					lyrics: lyrics,
 					artist: artist,
 					track: track,
-					scrapedAt: new Date()
+					scrapedAt: new Date(),
+					fromLastFm: fromLastFm,
 				});
 
 				response.status(200);
