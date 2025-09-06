@@ -67,7 +67,7 @@ export const HomePage = () => {
     };
 
     return (
-        <main className="w-full min-h-screen flex flex-col items-center justify-center">
+        <main className="w-full flex flex-col items-center justify-center">
             <section className="flex flex-col w-full text-center items-center justify-center">
                 <span className="text-4xl font-medium py-8">O que você está ouvindo?</span>
 
