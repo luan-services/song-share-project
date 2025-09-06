@@ -78,6 +78,12 @@ export const HomePage = () => {
                 {error ? <p className="font-bold">Erro: <span className="font-normal">{error}</span></p> : null}
                 <SongContainer onShare={handleShareSong} songList={searchResults} isLoading={isLoading}/>
             </section>
+
+            <section className="flex flex-col w-full text-center items-center justify-center">
+                <span className="text-3xl font-medium py-8">Compartilhe imagens do que você está ouvindo com amigos!</span>
+
+                <span>Para pesquisar uma música, procure pelo nome do artista + nome da música, ou escreva nome do artista + </span>
+            </section>
         </main>
     )
 }

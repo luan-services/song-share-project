@@ -27,7 +27,12 @@ export const SongForm = ({isLoading, onSearch}) => {
             return;
         }
 
-        let searchTerm = `${songArtist} ${songTitle} ${songLyrics}`.trim().replace(/\s+/g, ' ') // cria uma query para buscar os dados;
+        let songL;      // cehck para caso o usuário esteja buscando por letra, daremos prioridade para a letra na busca
+        if (songLyrics != '') {
+            songL = '"' + songLyrics + '"'
+        }
+
+        let searchTerm = `${songArtist} ${songTitle} ${songL}`.trim().replace(/\s+/g, ' ') // cria uma query para buscar os dados;
 
         onSearch(searchTerm); // chama a função onSearch e passa a query.
 
