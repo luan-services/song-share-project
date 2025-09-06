@@ -43,7 +43,7 @@ export const HomePage = () => {
             }));
 
             if (songs.length === 0) {
-                setError('Nenhum resultado encontrado para esta busca.');
+                setError('Nenhum resultado encontrado para essa busca.');
             }
             setSearchResults(songs);
 
@@ -74,8 +74,9 @@ export const HomePage = () => {
                 <SongForm onSearch={handleSearch} isLoading={isLoading}></SongForm>
             </section>
             
-            <section className="flex w-full justify-center items-center">
-                <SongContainer onShare={handleShareSong} songList={searchResults}/>
+            <section className="flex flex-col w-full justify-center items-center">
+                {error ? <p className="font-bold">Erro: <span className="font-normal">{error}</span></p> : null}
+                <SongContainer onShare={handleShareSong} songList={searchResults} isLoading={isLoading}/>
             </section>
         </main>
     )
