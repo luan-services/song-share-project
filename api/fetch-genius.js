@@ -1,5 +1,3 @@
-// /api/search-genius.js
-
 export default async function handler(request, response) {
 
 	const searchTerm = request.query.term; // pega o termo de busca que o frontend enviou por query (ex: /api/search-genius?term=queen)

@@ -39,7 +39,6 @@ export const HomePage = () => {
                 geniusSongUrl: hit.result.url,
                 track: hit.result.title,
                 artist: hit.result.primary_artist.name,
-                albumArtThumbnailUrl: hit.result.song_art_image_thumbnail_url,
                 albumArtUrl: hit.result.song_art_image_url, 
             }));
 

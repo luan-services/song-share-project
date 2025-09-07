@@ -70,8 +70,6 @@ export const PicturePage = () => {
 						track: lastFmTrack, 
 						artist: lastFmArtistName,
 					})
-
-					console.log(lastFmSongData);
 				};
 
 				setLastFmError('Nenhum metadado encontrado para combinação de artista/música');
@@ -91,11 +89,7 @@ export const PicturePage = () => {
 
 	// ---
 
-	const [songLyrics, setSongLyrics] = useState(null); // useState para guardar as lyrics que vão ser webscrapped
-	const [lyricsIsLoading, setLyricsIsLoading] = useState(null); // useState isLoading enquanto o fetch está sendo feito
-	const [songLyricsError, setSongLyricsError] = useState(null); // useState para guardar erro caso o webscrapping tenha falhado
-
-	useEffect(() => { // useEffect para buscar as letras, só roda após o state lastFmIsLoading ser false
+	useEffect(() => { // useEffect para salvar os dados
 
 		// vai rodar uma primeira vez ao renderizar a página e vai cair aqui, depois só renderiza de novo se lastFmIsLoading mudar
 		if (lastFmIsLoading) {
@@ -103,45 +97,57 @@ export const PicturePage = () => {
         };
 
 		// função para fetch de lyrics
-		const fetchLyrics = async () => {
-
-			setLyricsIsLoading(true);
-			setSongLyricsError('');
-
+		const storeData = async () => {
+			
 			const params = new URLSearchParams({ // gera uma string com os params à serem enviados para a função server-side get-lyrics
 				id: songData.id,
 				artist: lastFmSongData?.artist? lastFmSongData.artist : songData.artist, // se existe artista do lastfm envia ele
 				track: lastFmSongData?.track? lastFmSongData.track : songData.track, // se existe titulo do last fm envia ele
+				albumArtUrl: songData.albumArtUrl,
+				lastFmArtUrl: lastFmSongData?.artUrl? lastFmSongData.artUrl : '',
 				geniusSongUrl: songData.geniusSongUrl,
 				fromLastFm: lastFmSongData? true : false, // variável para dizer se os params estão vindo do LastFm (para atualizar bd)
 			});
+			
 
-			const url = `/api/get-lyrics?${params.toString()}`; // gera a url para o fetch
+			const songPayload = {
+				id: songData.id,
+				artist: lastFmSongData?.artist? lastFmSongData.artist : songData.artist, // se existe artista do lastfm envia ele
+				track: lastFmSongData?.track? lastFmSongData.track : songData.track, // se existe titulo do last fm envia ele
+				albumArtUrl: songData.albumArtUrl,
+				lastFmArtUrl: lastFmSongData?.artUrl? lastFmSongData.artUrl : '',
+				geniusSongUrl: songData.geniusSongUrl,
+				fromLastFm: !!lastFmSongData, // variável para dizer se os params estão vindo do LastFm (para atualizar bd)
+			};
 
 			try {
-				const response = await fetch(url);
+				const response = await fetch('/api/store-data', { // A URL fica limpa!
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json', // Informa que estamos enviando JSON
+					},
+					body: JSON.stringify(songPayload), // Converte o objeto JS para uma string JSON
+				});
 
 				if (!response.ok) {
 					const err = await response.json();
-					throw new Error(err.message || 'Não foi possível carregar a letra.');
+					throw new Error(err.message || 'Não foi possível salvar dados.');
 				}
 
 				const data = await response.json();
-				setSongLyrics(data.lyrics); // caso a resposta esteja ok, seta as lyrics
+				
+				console.log('Resposta do store-data:', data.message);
+				
 			} catch (err) {
-				setSongLyricsError(err.message);
-				console.log(songLyricsError)
-			} finally {
-				setLyricsIsLoading(false);
+				console.error(err);
 			}
 		};
 
 		// Chamamos a função de busca assim que o efeito é executado
-		fetchLyrics();
+		storeData();
 
 	}, [songData, navigate, lastFmIsLoading, lastFmSongData]); // O efeito depende dos dados da música para rodar
 
-	// ----
 
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
 	// se lastFmIsLoading, ainda não terminamos de puxar os dados do lastFm, não renderizamos nada para impedir o código de fazer um 'blink',
@@ -164,8 +170,6 @@ export const PicturePage = () => {
 					</div>
 				
 				</div>
-
-				<div>{songLyrics}</div> {/* tá certo as lyrics, estão com \n o problema é que div não lê \n */}
 
 				<div className="text-center mt-8">
 					<button onClick={() => navigate('/')} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
