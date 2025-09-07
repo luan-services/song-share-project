@@ -17,7 +17,11 @@ async function scrapeLyrics(geniusSongUrl) {
     
 	console.log(`Iniciando scrape para: ${geniusSongUrl}`);
 
-    const pageResponse = await fetch(geniusSongUrl);
+    const pageResponse = await fetch(geniusSongUrl, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+    });
 
     if (!pageResponse.ok) throw new Error('Página do Genius não encontrada durante o scrape.');
 
