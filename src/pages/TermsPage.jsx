@@ -3,7 +3,7 @@ import React from 'react'
 const TermsPage = () => {
     return (
         <div className='min-h-screen flex justify-center bg-white text-black'>
-            <div className="py-8 w-180">
+            <div className="py-8 px-2 w-180">
                 <p className="text-xl"><b>TERMOS DE SERVIÇO DO Song Share</b></p>
                 <br></br>
                 <p><b>Última atualização:</b> 06 de setembro de 2025</p>
