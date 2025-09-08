@@ -3,7 +3,7 @@ import { toPng, toBlob } from 'html-to-image'; // função para converter html e
 import Vibrant from 'node-vibrant';
 import { PictureContent } from './PictureContent';
 
-import { backgroundImages } from '../../lib/images';
+import { backgroundImages } from '../../lib/bg-images';
 
 export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => {
 
@@ -88,8 +88,9 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
         // Quando a paleta chegar, definimos um estilo inicial.
         // Seus botões no futuro vão chamar setBgStyle com outros valores.
         setBgStyle({
-            type: 'vibrant', // Vamos começar com o gradiente escuro
-            palette: colorPalette // Passamos a paleta inteira para o filho
+            type: 'img', // Vamos começar com o gradiente escuro
+            palette: colorPalette, // Passamos a paleta inteira para o filho
+            bgImg: backgroundImages.halloween,
         });
 
     }, [colorPalette]);
@@ -99,7 +100,7 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
         <div className="flex flex-col justify-center items-center w-full gap-8">
             {/* A DIV ÚNICA E RESPONSIVA */}
             <div ref={pictureRef} 
-                className="overflow-hidden w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
+                className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
                 <PictureContent artUrl={coverArtUrl} track={trackName} artist={artistName} bgStyle={bgStyle}/>
             </div>
 

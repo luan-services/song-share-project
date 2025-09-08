@@ -1,6 +1,5 @@
-// procurar biblioteca para encontrar cores complementares, inversas, etc no futuro
-
-// tentar gerar imagem 1080x1920 com  o gemini e tirar a dúvida sobre como fazer o bg escalar com o tamanho da imagem p tela
+// procurar biblioteca para encontrar cores complementares, inversas, etc no futuro!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 import shareSongIcon from "../../src/assets/images/share_song_reverse_icon.png"
 
@@ -23,7 +22,7 @@ export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
             finalStyle = { backgroundColor: '#000' };
             break;
         case "img": // se type = img -> usa a bgImg 
-            finalStyle = { backgroundImage: `url(${bgStyle.bgImg})` };
+            finalStyle = { backgroundImage: `url(${bgStyle.bgImg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
             break;
         case "gradient": // se type = gradient -> faz um gradient de Vibrant e Muted
             finalStyle = { backgroundImage: `linear-gradient(to bottom, ${palette?.Vibrant?.hex}, ${palette?.Muted?.hex})` };
@@ -39,21 +38,25 @@ export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
 
     return (
         // Aplicamos o objeto de estilo final aqui
-        <div className="w-full h-full flex flex-col items-center justify-center p-2 sm:p-4 lg:p-8"
-             style={finalStyle}
-        >
-            <div className="w-full bg-black bg-opacity-20 backdrop-blur-md rounded-lg md:rounded-xl flex flex-col items-center p-2 md:p-3 space-y-1 md:space-y-2">
-                
-                <img 
-                    src={artUrl} // Prop renomeada para evitar conflito com a constante no pai
-                    alt={`Capa de ${track}`}
-                    className="w-full aspect-square rounded-sm md:rounded-md object-cover shadow-lg"
-                    crossOrigin="anonymous" 
-                />
-                <div className="text-center w-full">
-                    <h2 className="text-base md:text-2xl font-bold text-white truncate">{track}</h2>
-                    <p className="text-xs md:text-lg text-white/90">{artist}</p>
+        <div className="w-full h-full flex flex-col items-center justify-center p-[19.2px] sm:p-[24px] lg:p-8" style={finalStyle}>
+            <div className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
+
+                {/*fundo preto opaco*/}
+                <div className="absolute inset-0 bg-bottom-center opacity-85 rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl" style={ { backgroundColor: '#121212' }}/>
+
+                <img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-full rounded-[3.6px] sm:rounded-[4.5px] lg:rounded-md object-cover pointer-events-none" crossOrigin="anonymous"/>
+
+                <div className="z-20 text-center w-full">
+                    <p className="text-[12px] sm:text-[15px] lg:text-xl font-bold text-white truncate select-none">{track}</p>
+                    <p className="text-[10.8px] sm:text-[13.5px] lg:text-lg text-gray-100 truncate select-none">{artist}</p>
                 </div>
+
+                {/* logo */}
+                <div className="z-20 self-end flexx gap-[4.8px] sm:gap-[6px] lg:gap-2 items-center hidden">
+                    <img src={shareSongIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline pointer-events-none" crossOrigin="anonymous"/>
+                    <span className="text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Share</span>
+                </div>
+
             </div>
         </div>
     );
