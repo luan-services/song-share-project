@@ -9,9 +9,21 @@ export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
     let finalStyle = {}; 
 
     const palette = bgStyle?.palette;
-
+    
     // esse switch lida com todos os types possíveis
     switch (bgStyle?.type) {
+        case "thief1": // se type = dominant -> cor destaque do thiefPallet
+            finalStyle = { backgroundImage: `linear-gradient(${bgStyle?.thiefPalette[0]}, ${bgStyle?.thiefPalette[0]})` };
+            break;
+        case "thief2": // se type = dominant -> cor destaque do thiefPallet
+            finalStyle = { backgroundImage: `linear-gradient(${bgStyle?.thiefPalette[1]}, ${bgStyle?.thiefPalette[1]})` };
+            break;
+        case "thief3": // se type = dominant -> cor destaque do thiefPallet
+            finalStyle = { backgroundImage: `linear-gradient(${bgStyle?.thiefPalette[2]}, ${bgStyle?.thiefPalette[2]})` };
+            break;
+        case "thief4": // se type = dominant -> cor destaque do thiefPallet
+            finalStyle = { backgroundImage: `linear-gradient(${bgStyle?.thiefPalette[3]}, ${bgStyle?.thiefPalette[3]})` };
+            break;
         case "vibrant": // se type = vibrant -> sem gradiante cor Vibrant
             finalStyle = { backgroundImage: `linear-gradient(${palette?.Vibrant?.hex}, ${palette?.Vibrant?.hex})` };
             break;

@@ -1,9 +1,10 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
-import { toPng, toBlob } from 'html-to-image'; // função para converter html em png
-import Vibrant from 'node-vibrant';
 import { PictureContent } from './PictureContent';
+import { backgroundImages } from '../../lib/bg-images'; // importa as imagens de bg pro story
+import { toPng, toBlob } from 'html-to-image'; // libary para converter html em png
+import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
+import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
 
-import { backgroundImages } from '../../lib/bg-images';
 
 export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => {
 
@@ -19,52 +20,70 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
     // ---xxx
 
     const [colorPalette, setColorPalette] = useState(null)
+    const [thiefColorPalette, setThiefColorPalette] = useState(null) // para guardar a cor dominante do colorthief
 
-    useEffect(() => { // useEffect para pegar a paleta de cores
+    useEffect(() => { // useEffect para pegar a paleta de cores, a cor em destaque, etc
         
         if (!coverArtUrl) { // se não tiverm uma url de imagem, retorna
             return;
         };
 
-        // Função assíncrona para extrair a paleta
-        const extractPalette = async () => {
+        // Função assíncrona para extrair as cores
+        const extractColors = async () => {
             try {
-                
-                const proxiedImageUrl = `/api/image-proxy?url=${encodeURIComponent(coverArtUrl)}`;
 
+                const proxiedImageUrl = `/api/image-proxy?url=${encodeURIComponent(coverArtUrl)}`; // faz um url proxy da imagem (é necessário 'baixar' a imagem no backend)
+
+                console.log(proxiedImageUrl)
+                const img = new Image(); // cria um novo objeto img
+                img.crossOrigin = 'Anonymous'; // previne cors
+                
+                img.onload = () => { // cria um listener pegar a cor dominante assim que img carregar (precisa ficar antes da img.src)
+                    
+                    const colorThief = new ColorThief(); // instancia o colorThief
+
+                     
+                    const thiefPalette = colorThief.getPalette(img, 4); // 1. gera uma paleta de 4 cores 
+                    
+                    if (!thiefPalette) { // se não conseguiu retorna
+                        console.error("Não foi possível gerar paletta color-thief");
+                        return;
+                    }
+
+                    console.log("Paleta do thief", thiefPalette);
+                    setThiefColorPalette(thiefPalette);
+                };
+
+                img.src = proxiedImageUrl; // seta um url p image, quando carregar vai rodar img.onload
+
+                // pega a paleta do Vibrant
                 const vibrantPalette = await Vibrant.from(proxiedImageUrl).getPalette();
-                setColorPalette(vibrantPalette);
+                
+                setColorPalette(vibrantPalette); // seta a paletta no useState
+
                 console.log("Paleta de cores extraída:", vibrantPalette);
+
             } catch (error) {
                 console.error("Erro ao extrair a paleta de cores:", error);
             }
         };
 
-        extractPalette();
-        console.log(colorPalette);
+        extractColors();
 
     }, [coverArtUrl]);
 
     // ---xxx
 
-    const handleDownload = useCallback(() => {
+    const handleDownload = useCallback(() => {  // função para criar botão de download do story
         if (pictureRef.current === null) {
             return;
         }
 
-        // --- A MÁGICA ACONTECE AQUI ---
-        // 1. Medimos a largura ATUAL do nosso div de preview.
-        const currentWidth = pictureRef.current.offsetWidth;
+        const currentWidth = pictureRef.current.offsetWidth; // mede a largura atual da div do story
 
-        // 2. Calculamos o pixelRatio necessário para chegar em 1080px.
-        // Se o preview tem 180px, ratio = 6. Se tem 360px, ratio = 3.
-        const pixelRatio = 1080 / currentWidth;
-        // --- FIM DA MÁGICA ---
+        const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
 
-        toPng(pictureRef.current, { 
-            cacheBust: true,
-            pixelRatio: pixelRatio // Usamos o valor calculado dinamicamente!
-        })
+        toPng(pictureRef.current, { cacheBust: true, pixelRatio: pixelRatio })
         .then((dataUrl) => {
             const link = document.createElement('a');
             link.download = 'meu-story-1080p.png';
@@ -74,29 +93,47 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
         .catch((err) => {
             console.error('Erro ao gerar imagem:', err);
         });
+
+
+
     }, [pictureRef]);
 
     // ---xxx useState bgStyle, que guarda o tipo do bg escolhido e passa pro PictureContent
     // também há um useEffect que fica ouvindo quando a paleta de cores estiver pronta, para passar pro bgStyle
 
-    const [bgStyle, setBgStyle] = useState({type: null, palette: null, bgImg: null})
+    const [bgStyle, setBgStyle] = useState({type: null, palette: null, averageColor: null, bgImg: null})
 
     useEffect(() => {
-        // Se a paleta ainda não chegou, não fazemos nada
-        if (!colorPalette) return;
+        if (!colorPalette || !thiefColorPalette) { // se a paleta ainda não chegou, não fazemos nada
+            return;
+        }
 
-        // Quando a paleta chegar, definimos um estilo inicial.
-        // Seus botões no futuro vão chamar setBgStyle com outros valores.
+        // pega todas as palettas do thief e transforma em um array de strings rgb(x,y,z)  
+        const thiefRgb = thiefColorPalette.map(palet => (
+            `rgb(${palet[0]}, ${palet[1]}, ${palet[2]})`
+        ));
+       
+        // Quando as paleta chegarem, definimos um estilo inicial. seus botões no futuro vão chamar setBgStyle com outros valores.
         setBgStyle({
-            type: 'img', // Vamos começar com o gradiente escuro
+            type: 'thief1', // Vamos começar com o gradiente escuro
             palette: colorPalette, // Passamos a paleta inteira para o filho
+            thiefPalette: thiefRgb, // passa o array de strings rgb
             bgImg: backgroundImages.halloween,
         });
 
-    }, [colorPalette]);
+    }, [colorPalette, thiefColorPalette]);
 
 
-     return (
+    if (!bgStyle) { // se não houver um estilo inicial, carregando...
+        return (
+            <div className="flex flex-col">
+                Carregando imagem...
+            </div>
+        )
+    }
+
+
+    return (
         <div className="flex flex-col justify-center items-center w-full gap-8">
             {/* A DIV ÚNICA E RESPONSIVA */}
             <div ref={pictureRef} 

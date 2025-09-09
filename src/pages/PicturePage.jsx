@@ -14,7 +14,7 @@ export const PicturePage = () => {
 
 	// EXTRAINDO OS DADOS DE FORMA SEGURA
 	// location.state busca para ver se o navigate que levou até a pagina atual enviou algum state, se sim, ele salva o estado nas duas const
-	const songData = location.state.songData ? location.state.songData : undefined;
+	const songData = location.state?.songData ? location.state.songData : undefined;
 
 	// esse useEffect roda assim que a página inicia, ele checa se songData existe antes de carregar os dados, para evitar quebrar a página
 	// caso um usuário acesse /location diretamente pelo browser (sem passar pela homepage)
