@@ -1,41 +1,49 @@
-// pages/api/image-proxy.js - baixar a imagem no backend para a biblioteca de cores ler
+// baixar a imagem no backend para a biblioteca de cores ler
+
+/* a política de segurança (Same-Origin Policy) proibe que um endereço (vercel) pegue e analise o conteúdo de imagens de outros endereços (last.fm), 
+a menos que a outra api dê uma permissão explicita
+
+essa "permissão explícita" é um cabeçalho de resposta chamado Access-Control-Allow-Origin. os servidores de imagem como os do Last.fm e Genius não
+enviam essa permissão, eles fazem isso para proteger seus dados e evitar que sites maliciosos roubem informações ou abusem de seus servidores.
+
+a solução: criar uma rota image-proxy, que vai ser chamada passando a url da imagem, essa rota vai fazer o fetch da imagem (baixá-la), adicionar
+os headers certos no request, e enviá-lo de volta ao frontend como response. 
+
+dessa forma, uma cópia da imagem é enviada, só que agora é enviada do nosso servidor para o nosso servidor (Same-Origin está OK e os dados podem ser acessados)
+*/
 
 export default async function handler(req, res) {
-  // 1. Pega a URL da imagem dos parâmetros da query
-  const imageUrl = req.query.url;
+	
+	const imageUrl = req.query.url; // pega a URL da imagem dos parâmetros da query
 
-  // 2. Validação de segurança básica: verifica se a URL foi fornecida
-  if (!imageUrl || typeof imageUrl !== 'string') {
-    return res.status(400).json({ error: 'A URL da imagem é obrigatória.' });
-  }
+	if (!imageUrl || typeof imageUrl !== 'string') { // verifica se a URL foi fornecida
+		return res.status(400).json({ error: 'A URL da imagem é obrigatória.' });
+	}
 
-  try {
-    // 3. Usa o 'fetch' para buscar a imagem do URL externo
-    const imageResponse = await fetch(imageUrl);
+	try {
+	
+		const imageResponse = await fetch(imageUrl); // fazer fetch do url de uma imagem pega os dados brutos (binários da imagem)
 
-    // 4. Verifica se a busca foi bem-sucedida
-    if (!imageResponse.ok) {
-      // Retorna o mesmo erro que a API externa retornou
-      return res.status(imageResponse.status).json({ error: 'Falha ao buscar a imagem.' });
-    }
+		
+		if (!imageResponse.ok) { // verifica se a busca foi bem-sucedida
+			return res.status(imageResponse.status).json({ error: 'Falha ao buscar a imagem.' });
+		}
 
-    // 5. Pega a imagem como um Buffer (dados binários)
-    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+		const imageBuffer = Buffer.from(await imageResponse.arrayBuffer()); // buffer é um container padrão de node.js para armazenar os dados da imagem da forma correta
 
-    // 6. Pega o tipo de conteúdo original (ex: 'image/jpeg', 'image/png')
-    const contentType = imageResponse.headers.get('content-type') || 'application/octet-stream';
+		
+		const contentType = imageResponse.headers.get('content-type') || 'application/octet-stream'; // pega o tipo do conteúdo original da imagem (ex: 'image/jpeg', 'image/png')
 
-    // 7. Configura os cabeçalhos da resposta para o navegador
-    //    Cache-Control: Instruímos o navegador e a Vercel a guardarem essa imagem em cache por um ano.
-    //    Isso melhora MUITO a performance e evita buscar a mesma imagem várias vezes.
-    res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, stale-while-revalidate');
-    res.setHeader('Content-Type', contentType);
+		// configura os headers
+		// cache-Control: instrui o navegador e a Vercel a guardarem essa imagem em cache por um ano
+		res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, stale-while-revalidate');
 
-    // 8. Envia a imagem de volta para o seu frontend
-    res.send(imageBuffer);
+		res.setHeader('Content-Type', contentType); // adiciona o header do tipo do conteúdo pego anteriormente
 
-  } catch (error) {
-    console.error('Erro no proxy de imagem:', error);
-    res.status(500).json({ error: 'Ocorreu um erro interno no servidor.' });
-  }
+		res.send(imageBuffer); // envia a resposta de volta pro frontend
+
+	} catch (error) {
+		console.error('Erro no proxy de imagem:', error);
+		res.status(500).json({ error: 'Ocorreu um erro interno no servidor.' });
+	}
 }
