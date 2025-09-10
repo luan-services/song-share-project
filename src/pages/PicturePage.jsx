@@ -157,8 +157,8 @@ export const PicturePage = () => {
 
 	// se o código chegou até aqui, é 100% seguro que 'songData' existe.
 	return (
-		<div className="min-h-screen px-2 md:px-12 py-8 flex flex-col justify-between">
-			<main className="container flex flex-col items-center justify-center w-full p-8">	
+		<div className="min-h-screen px-2 md:px-12 py-8 flex flex-col items-center justify-between">
+			<main className="container flex flex-col items-center justify-center w-full px-3 py-8 md:px-8">	
 			
 				<PictureContainer songData={songData} lastFmSongData={lastFmSongData} selectedLyrics={null}/>
 

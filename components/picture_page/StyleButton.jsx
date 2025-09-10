@@ -23,14 +23,10 @@ export const StyleButton = ({onClick, isActive, btnStyle}) => {
     }
 
 	return (
-            <div className="bg-gray-200 border-2 border-gray-500 rounded-lg p-0.5">
-                <div className='flex transition duration-300 cursor-pointer active:scale-90 rounded-full bg-white border-2 border-gray-500 shadow-xs'>
-                    <button type="button" onClick={onClick} style={btnBg}
-                        className={`${btnClass} w-8 h-8 rounded-full transition duration-300 cursor-pointer`}>
-                    </button>
-                </div>
-            </div>
-
-
+        <div className='flex transition duration-300 cursor-pointer active:scale-90 rounded-full bg-white'>
+            <button type="button" onClick={onClick} style={btnBg}
+                className={`${btnClass} w-8 h-8 rounded-full transition duration-300 cursor-pointer`}>
+            </button>
+        </div>
 	)
 };

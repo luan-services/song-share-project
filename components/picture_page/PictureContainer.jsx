@@ -139,26 +139,29 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
         <div className="flex flex-col justify-center items-center w-full gap-8">
 
             {/* container dos botões e do story */}
-            <div className="flex flex-col justify-center items-center w-full max-w-128 gap-8 p-4 bg-gray-100">
+            <div className="flex flex-col sm:flex-row justify-center items-center max-w-72 sm:max-w-98 lg:max-w-120 gap-2 p-4 rounded-xl">
 
                 {/* botões */}
-                <div className="flex flex-wrap justify-center gap-2 bg-custom-secundary-red px-3 py-3 w-full max-w-120">
+                <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
                     <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
                     <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
-                <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
+                <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
                     <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
-                <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
+                <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
                     <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
-                <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
+                <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
                     <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
                 
                 </div>
-            
-                {/* div responsiva */}
-                <div ref={pictureRef} 
-                    className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
-                    <PictureContent artUrl={coverArtUrl} track={trackName} artist={artistName} bgStyle={bgStyle}/>
+        
+                
+                <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl"> {/* div responsiva */}
+                    <div ref={pictureRef} 
+                        className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
+                        <PictureContent artUrl={coverArtUrl} track={trackName} artist={artistName} bgStyle={bgStyle}/>
+                    </div>
                 </div>
+
             </div>
 
             {/* download */}
