@@ -138,18 +138,30 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
     return (
         <div className="flex flex-col justify-center items-center w-full gap-8">
 
-            <div className="flex gap-2">
+            {/* container dos botões e do story */}
+            <div className="flex flex-col justify-center items-center w-full max-w-128 gap-8 p-4 bg-gray-100">
+
+                {/* botões */}
+                <div className="flex flex-wrap justify-center gap-2 bg-custom-secundary-red px-3 py-3 w-full max-w-120">
+                    <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
+                    <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
                 <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
-                <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
+                    <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
+                <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
+                    <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
+                <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
+                    <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
+                
+                </div>
+            
+                {/* div responsiva */}
+                <div ref={pictureRef} 
+                    className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
+                    <PictureContent artUrl={coverArtUrl} track={trackName} artist={artistName} bgStyle={bgStyle}/>
+                </div>
             </div>
 
-            {/* A DIV ÚNICA E RESPONSIVA */}
-            <div ref={pictureRef} 
-                className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
-                <PictureContent artUrl={coverArtUrl} track={trackName} artist={artistName} bgStyle={bgStyle}/>
-            </div>
-
-            {/* O BOTÃO DE DOWNLOAD QUE ACIONA A LÓGICA INTELIGENTE */}
+            {/* download */}
             <button 
                 onClick={handleDownload} 
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700">

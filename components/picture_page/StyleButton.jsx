@@ -3,7 +3,7 @@ import React from 'react'
 export const StyleButton = ({onClick, isActive, btnStyle}) => {
 	// btnStyle -> {type: null, bg: null, colors = []}
 	let btnBg = {};
-	let btnClass = isActive ? 'opacity-100' : 'opacity-60'
+	let btnClass = isActive ? 'ring-3 ring-white ring-inset' : 'ring-3 ring-white/60 ring-inset'
 
 
 	switch (btnStyle?.type) {
@@ -23,11 +23,14 @@ export const StyleButton = ({onClick, isActive, btnStyle}) => {
     }
 
 	return (
-			<div className='flex transition duration-300 cursor-pointer active:scale-90 rounded-full bg-white border-3 lg:border-2 border-gray-700 shadow-xs ring-1 ring-black'>
-				<button type="button" onClick={onClick} style={btnBg}
-					className={`${btnClass} w-8 h-8 lg:w-11 lg:h-11 rounded-full transition duration-300 cursor-pointer`}>
-				</button>
-			</div>
+            <div className="bg-gray-200 border-2 border-gray-500 rounded-lg p-0.5">
+                <div className='flex transition duration-300 cursor-pointer active:scale-90 rounded-full bg-white border-2 border-gray-500 shadow-xs'>
+                    <button type="button" onClick={onClick} style={btnBg}
+                        className={`${btnClass} w-8 h-8 rounded-full transition duration-300 cursor-pointer`}>
+                    </button>
+                </div>
+            </div>
+
 
 	)
 };
