@@ -1,9 +1,10 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
 import { PictureContent } from './PictureContent';
-import { backgroundImages } from '../../lib/bg-images'; // importa as imagens de bg pro story
+import { bgImgsSrc } from '../../lib/bg-images'; // importa as imagens de bg pro story
 import { toPng, toBlob } from 'html-to-image'; // libary para converter html em png
 import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
+import { StyleButton } from './StyleButton';
 
 
 export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => {
@@ -24,11 +25,11 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
     useEffect(() => { // useEffect para pegar a paleta de cores, a cor em destaque, etc
         
-        if (!coverArtUrl) { // se não tiverm uma url de imagem, retorna
+        if (!coverArtUrl) { // se não tiverm uma url de imagem (provavelmente impossível, mas garante que nada quebre), retorna
             return;
         };
 
-        // Função assíncrona para extrair as cores
+        // Função assíncrona para extrair as cores, não precisa de useCallBack por estar dentro do useEffect (que vai executar renderizar e executar uma unica vez)
         const extractColors = async () => {
             try {
 
@@ -74,8 +75,8 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
     // ---xxx
 
-    const handleDownload = useCallback(() => {  // função para criar botão de download do story
-        if (pictureRef.current === null) {
+    const handleDownload = useCallback( async () => {  // função para criar botão de download do story, useCallback impede ela de ser recriada (já que não está em um useEffect)
+        if (pictureRef.current === null) {  // enquanto a div não existir a ser transformada em imagem não existir, não chama a função
             return;
         }
 
@@ -83,18 +84,16 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
 
-        toPng(pictureRef.current, { cacheBust: true, pixelRatio: pixelRatio })
-        .then((dataUrl) => {
-            const link = document.createElement('a');
-            link.download = 'meu-story-1080p.png';
+        try {
+
+            const dataUrl = await toPng(pictureRef.current, { cacheBust: true, pixelRatio: pixelRatio });
+            link.download = 'song-share-story.png';
             link.href = dataUrl;
             link.click();
-        })
-        .catch((err) => {
-            console.error('Erro ao gerar imagem:', err);
-        });
 
-
+        } catch(err) {
+            console.error('Erro ao gerar imagem para download:', err);
+        };
 
     }, [pictureRef]);
 
@@ -102,8 +101,9 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
     // também há um useEffect que fica ouvindo quando a paleta de cores estiver pronta, para passar pro bgStyle
 
     const [bgStyle, setBgStyle] = useState({type: null, palette: null, averageColor: null, bgImg: null})
+    const [currentBgType, setCurrentBgType] = useState('img');
 
-    useEffect(() => {
+    useEffect(() => { 
         if (!colorPalette || !thiefColorPalette) { // se a paleta ainda não chegou, não fazemos nada
             return;
         }
@@ -115,14 +115,16 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
        
         // Quando as paleta chegarem, definimos um estilo inicial. seus botões no futuro vão chamar setBgStyle com outros valores.
         setBgStyle({
-            type: 'thief1', // Vamos começar com o gradiente escuro
+            type: 'img', // Vamos começar com o gradiente escuro
             palette: colorPalette, // Passamos a paleta inteira para o filho
             thiefPalette: thiefRgb, // passa o array de strings rgb
-            bgImg: backgroundImages.halloween,
+            bgImg: bgImgsSrc.halloween.full,
         });
 
     }, [colorPalette, thiefColorPalette]);
 
+
+    // ---xxx
 
     if (!bgStyle) { // se não houver um estilo inicial, carregando...
         return (
@@ -135,6 +137,12 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
     return (
         <div className="flex flex-col justify-center items-center w-full gap-8">
+
+            <div className="flex gap-2">
+                <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
+                <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
+            </div>
+
             {/* A DIV ÚNICA E RESPONSIVA */}
             <div ref={pictureRef} 
                 className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
