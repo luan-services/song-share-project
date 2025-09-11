@@ -4,6 +4,7 @@
 import shareSongIcon from "../../src/assets/images/share_song_reverse_icon.png"
 
 export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
+    // btnStyle -> {type: null, data: img || string[a,b] || string}
     
     // final style é um objeto que vai receber as props pro estilo final do bg
     let finalStyle = {}; 
@@ -12,26 +13,23 @@ export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
     
     // esse switch lida com todos os types possíveis
     switch (bgStyle?.type) {
-        case "thief1": // se type = dominant -> cor destaque do thiefPallet
-            finalStyle = { backgroundImage: `linear-gradient(${bgStyle?.thiefPalette[0]}, ${bgStyle?.thiefPalette[0]})` };
+        case "thief-0": // se type = dominant -> cor destaque do thiefPallet
+            finalStyle = { backgroundColor: bgStyle?.data};
             break;
-        case "thief2": // se type = dominant -> cor destaque do thiefPallet
-            finalStyle = { backgroundImage: `linear-gradient(${bgStyle?.thiefPalette[1]}, ${bgStyle?.thiefPalette[1]})` };
+        case "thief-1": // se type = dominant -> cor destaque do thiefPallet
+            finalStyle = { backgroundColor: bgStyle?.data};
             break;
-        case "thief3": // se type = dominant -> cor destaque do thiefPallet
-            finalStyle = { backgroundImage: `linear-gradient(${bgStyle?.thiefPalette[2]}, ${bgStyle?.thiefPalette[2]})` };
+        case "thief-2": // se type = dominant -> cor destaque do thiefPallet
+            finalStyle = { backgroundColor: bgStyle?.data};
             break;
-        case "thief4": // se type = dominant -> cor destaque do thiefPallet
-            finalStyle = { backgroundImage: `linear-gradient(${bgStyle?.thiefPalette[3]}, ${bgStyle?.thiefPalette[3]})` };
+        case "thief-3": // se type = dominant -> cor destaque do thiefPallet
+            finalStyle = { backgroundColor: bgStyle?.data};
             break;
         case "vibrant": // se type = vibrant -> sem gradiante cor Vibrant
             finalStyle = { backgroundImage: `linear-gradient(${palette?.Vibrant?.hex}, ${palette?.Vibrant?.hex})` };
             break;
         case "muted": // se type = muted -> sem gradiente cor Muted
             finalStyle = { backgroundImage: `linear-gradient(${palette?.Muted?.hex}, ${palette?.Muted?.hex})` };
-            break;
-        case "black": // se type = black -> all black igual spotify
-            finalStyle = { backgroundColor: '#000' };
             break;
         case "img": // se type = img -> usa a bgImg 
             finalStyle = { backgroundImage: `url(${bgStyle.bgImg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};

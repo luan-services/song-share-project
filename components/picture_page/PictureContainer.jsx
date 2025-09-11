@@ -35,7 +35,6 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
                 const proxiedImageUrl = `/api/image-proxy?url=${encodeURIComponent(coverArtUrl)}`; // faz um url proxy da imagem (é necessário 'baixar' a imagem no backend)
 
-                console.log(proxiedImageUrl)
                 const img = new Image(); // cria um novo objeto img
                 img.crossOrigin = 'Anonymous'; // previne cors
                 
@@ -44,25 +43,42 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                     const colorThief = new ColorThief(); // instancia o colorThief
 
                      
-                    const thiefPalette = colorThief.getPalette(img, 4); // 1. gera uma paleta de 4 cores 
+                    const thiefPalette = colorThief.getPalette(img, 8); // 1. gera uma paleta de 4 cores 
                     
                     if (!thiefPalette) { // se não conseguiu retorna
                         console.error("Não foi possível gerar paletta color-thief");
                         return;
                     }
 
-                    console.log("Paleta do thief", thiefPalette);
-                    setThiefColorPalette(thiefPalette);
+                    // pega todas as palettas do thief e transforma em um array de strings rgb(x,y,z)  
+                    const thiefRgb = thiefPalette.map(palet => (
+                        `rgb(${palet[0]}, ${palet[1]}, ${palet[2]})`
+                    ));
+
+                    console.log("Paleta do thief", thiefRgb);
+                    setThiefColorPalette(thiefRgb);
                 };
 
                 img.src = proxiedImageUrl; // seta um url p image, quando carregar vai rodar img.onload
 
                 // pega a paleta do Vibrant
                 const vibrantPalette = await Vibrant.from(proxiedImageUrl).getPalette();
-                
-                setColorPalette(vibrantPalette); // seta a paletta no useState
 
-                console.log("Paleta de cores extraída:", vibrantPalette);
+                if (!vibrantPalette) { // se não conseguiu retorna
+                    console.error("Não foi possível gerar paletta Vibrant");
+                    return;
+                }
+
+                const colors = [
+                    {type: 'vibrant', data: vibrantPalette.Vibrant?.hex || '#000'},
+                    {type: 'muted', data: vibrantPalette.Muted?.hex || '#000'},
+                    {type: 'gradient', data: [vibrantPalette.Vibrant?.hex || '#000', vibrantPalette.Muted?.hex || '#000']},
+                    {type: 'darkGradient', data: [vibrantPalette.DarkVibrant?.hex || '#000', vibrantPalette.DarkMuted?.hex || '#000']}
+                ]
+
+                setColorPalette(colors); // seta a paletta no useState
+
+                console.log("Paleta de cores extraída:", colors);
 
             } catch (error) {
                 console.error("Erro ao extrair a paleta de cores:", error);
@@ -101,27 +117,31 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
     // também há um useEffect que fica ouvindo quando a paleta de cores estiver pronta, para passar pro bgStyle
 
     const [bgStyle, setBgStyle] = useState({type: null, palette: null, averageColor: null, bgImg: null})
-    const [currentBgType, setCurrentBgType] = useState('img');
+
+    const [currentBgKey, setCurrentBgKey] = useState('img');
 
     useEffect(() => { 
         if (!colorPalette || !thiefColorPalette) { // se a paleta ainda não chegou, não fazemos nada
             return;
         }
-
-        // pega todas as palettas do thief e transforma em um array de strings rgb(x,y,z)  
-        const thiefRgb = thiefColorPalette.map(palet => (
-            `rgb(${palet[0]}, ${palet[1]}, ${palet[2]})`
-        ));
        
         // Quando as paleta chegarem, definimos um estilo inicial. seus botões no futuro vão chamar setBgStyle com outros valores.
         setBgStyle({
             type: 'img', // Vamos começar com o gradiente escuro
             palette: colorPalette, // Passamos a paleta inteira para o filho
-            thiefPalette: thiefRgb, // passa o array de strings rgb
+            thiefPalette: thiefColorPalette, // passa o array de strings rgb
             bgImg: bgImgsSrc.halloween.full,
         });
 
     }, [colorPalette, thiefColorPalette]);
+
+    const handleSetBgStyle = (type, style) => {
+
+        setBgStyle({
+            type: type,
+            data: style,
+        })
+    };
 
 
     // ---xxx
@@ -143,15 +163,22 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
                 {/* botões */}
                 <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
-                    <StyleButton isActive={currentBgType === 'img'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
-                    <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
-                <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
-                    <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
-                <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
-                    <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
-                <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'img', bgImg: bgImgsSrc.halloween.full, colors: []}}/>
-                    <StyleButton isActive={currentBgType === 'color'} btnStyle={{type: 'color', bgImg: null, colors: [colorPalette?.Vibrant?.hex]}}/>
-                
+                    
+                    {/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
+                    { /*thiefColorPalette && thiefColorPalette.map((palett, index) => {
+                        return (
+                            <StyleButton onClick={() => handleSetBgStyle(`thief-${index}`, palett)} isActive={currentBgKey === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
+                        )
+                    })*/}
+
+                    {/* pega o state das paletts do vibrant (arr[{type, color}]e adiciona um botão pra cada */}
+                    { colorPalette && colorPalette.map((palett, index) => {
+                        return (
+                            <StyleButton onClick={() => handleSetBgStyle(palett.type, palett.data)} isActive={currentBgKey === palett.type} btnStyle={{type: palett.type, data: palett.data}}/>     
+                        )
+                    })}
+                    
+
                 </div>
         
                 

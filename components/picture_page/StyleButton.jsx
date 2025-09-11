@@ -1,24 +1,27 @@
 import React from 'react'
 
 export const StyleButton = ({onClick, isActive, btnStyle}) => {
-	// btnStyle -> {type: null, bg: null, colors = []}
+	// btnStyle -> {type: null, data: img || string[a,b] || string}
 	let btnBg = {};
 	let btnClass = isActive ? 'ring-3 ring-white ring-inset' : 'ring-3 ring-white/60 ring-inset'
-
+    console.log(btnStyle?.type, btnStyle?.data)
 
 	switch (btnStyle?.type) {
-        case "color": // se type = vibrant -> sem gradiante cor Vibrant
-            btnBg = { backgroundColor: btnStyle.colors[0] };
+        case "color": 
+        case "vibrant": 
+        case "muted": // se type = vibrant -> sem gradiante cor Vibrant
+            btnBg = { backgroundColor: btnStyle.data };
             break;
         case "img": // se type = img -> usa a bgImg 
-            btnBg = { backgroundImage: `url(${btnStyle.bgImg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
+            btnBg = { backgroundImage: `url(${btnStyle.data})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
             break;
-        case "gradient": // se type = gradient -> faz um gradient de Vibrant e Muted
-            btnBg = { backgroundImage: `linear-gradient(to bottom, ${btnStyle.colors[0]}, ${btnStyle.colors[1]})` };
+        case "gradient":
+        case "darkGradient": // se type = gradient ou darkGradient -> faz um gradient de Vibrant e Muted
+            btnBg = { backgroundImage: `linear-gradient(to bottom, ${btnStyle.data[0]}, ${btnStyle.data[1]})` };
             break;
         default:
             // Bg padrão enquanto os dados não carregam
-            btnBg = { backgroundColor: '#121212' };
+            btnBg = { backgroundColor: '#000' };
             break;
     }
 
