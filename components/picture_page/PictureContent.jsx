@@ -9,10 +9,9 @@ export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
     // final style é um objeto que vai receber as props pro estilo final do bg
     let finalStyle = {}; 
 
-    const palette = bgStyle?.palette;
     
     // esse switch lida com todos os types possíveis
-    switch (bgStyle?.type) {
+    switch (bgStyle.type) {
         case "color": 
         case "vibrant": 
         case "muted": // se type = vibrant -> sem gradiante cor Vibrant

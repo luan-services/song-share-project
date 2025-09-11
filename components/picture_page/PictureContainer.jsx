@@ -6,6 +6,7 @@ import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
 import { StyleButton } from './StyleButton';
 
+import { filterColorPalette } from "../../lib/saturation-filter"
 
 export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => {
 
@@ -50,8 +51,16 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                         return;
                     }
 
+                    const filteredPalette = filterColorPalette(thiefPalette, {
+                        minSaturation: 0.25, // Remove cores muito acinzentadas
+                        minLightness: 0.15,  // Remove cores muito escuras
+                        maxLightness: 0.90,  // Remove cores muito claras/brancas
+                    });
+
+                    const finalPalette = filteredPalette.length >= 3 ? filteredPalette : thiefPalette.slice(0, 4);
+
                     // pega todas as palettas do thief e transforma em um array de strings rgb(x,y,z)  
-                    const thiefRgb = thiefPalette.map(palet => (
+                    const thiefRgb = finalPalette.map(palet => (
                         `rgb(${palet[0]}, ${palet[1]}, ${palet[2]})`
                     ));
 
@@ -116,7 +125,7 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
     // ---xxx useState bgStyle, que guarda o tipo do bg escolhido e passa pro PictureContent
     // também há um useEffect que fica ouvindo quando a paleta de cores estiver pronta, para passar pro bgStyle
 
-    const [bgStyle, setBgStyle] = useState({type: null, palette: null, averageColor: null, bgImg: null})
+    const [bgStyle, setBgStyle] = useState({type: null, data: null})
 
     const [currentBgKey, setCurrentBgKey] = useState('img');
 
@@ -127,22 +136,22 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
        
         // Quando as paleta chegarem, definimos um estilo inicial. seus botões no futuro vão chamar setBgStyle com outros valores.
         setBgStyle({
-            type: 'img', // Vamos começar com o gradiente escuro
-            palette: colorPalette, // Passamos a paleta inteira para o filho
-            thiefPalette: thiefColorPalette, // passa o array de strings rgb
-            bgImg: bgImgsSrc.halloween.full,
+            type: 'vibrant', // vamos começar com a cor vibrant do Vibrant
+            data: colorPalette[0].data, // passamos a paleta cor da cor vibrant 
         });
+
+        setCurrentBgKey('vibrant'); // setamos a key do bg como vibrant
 
     }, [colorPalette, thiefColorPalette]);
 
-    const handleSetBgStyle = (type, style) => {
+    const handleSetBgStyle = (type, key, style) => {
 
         setBgStyle({
             type: type,
             data: style,
         })
 
-        setCurrentBgKey(type);
+        setCurrentBgKey(key); // seta a key do bg (o nome)
     };
 
 
@@ -169,16 +178,25 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                     {/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
                     { thiefColorPalette && thiefColorPalette.map((palett, index) => {
                         return (
-                            <StyleButton onClick={() => handleSetBgStyle('color', palett)} isActive={currentBgKey === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
+                            <StyleButton onClick={() => handleSetBgStyle('color', `thief-${index}`, palett)} isActive={currentBgKey === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
                         )
                     })}
 
                     {/* pega o state das paletts do vibrant (arr[{type, color}]e adiciona um botão pra cada */}
                     { colorPalette && colorPalette.map((palett) => {
                         return (
-                            <StyleButton onClick={() => handleSetBgStyle(palett.type, palett.data)} isActive={currentBgKey === palett.type} btnStyle={{type: palett.type, data: palett.data}}/>     
+                            <StyleButton onClick={() => handleSetBgStyle(palett.type, palett.type, palett.data)} isActive={currentBgKey === palett.type} btnStyle={{type: palett.type, data: palett.data}}/>     
                         )
                     })}
+
+                    {/* pega as imagens de bg e faz um botão p cada */}
+                    { bgImgsSrc && bgImgsSrc.map((bg) => {
+                        return (
+                            <StyleButton onClick={() => handleSetBgStyle('img', bg.name, bg.full)} isActive={currentBgKey === bg.name} btnStyle={{type: 'img', data: bg.icon}}/>     
+                        )
+                    })
+
+                    }
                     
 
                 </div>
