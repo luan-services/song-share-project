@@ -141,6 +141,8 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
             type: type,
             data: style,
         })
+
+        setCurrentBgKey(type);
     };
 
 
@@ -165,14 +167,14 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                 <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
                     
                     {/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
-                    { /*thiefColorPalette && thiefColorPalette.map((palett, index) => {
+                    { thiefColorPalette && thiefColorPalette.map((palett, index) => {
                         return (
-                            <StyleButton onClick={() => handleSetBgStyle(`thief-${index}`, palett)} isActive={currentBgKey === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
+                            <StyleButton onClick={() => handleSetBgStyle('color', palett)} isActive={currentBgKey === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
                         )
-                    })*/}
+                    })}
 
                     {/* pega o state das paletts do vibrant (arr[{type, color}]e adiciona um botão pra cada */}
-                    { colorPalette && colorPalette.map((palett, index) => {
+                    { colorPalette && colorPalette.map((palett) => {
                         return (
                             <StyleButton onClick={() => handleSetBgStyle(palett.type, palett.data)} isActive={currentBgKey === palett.type} btnStyle={{type: palett.type, data: palett.data}}/>     
                         )

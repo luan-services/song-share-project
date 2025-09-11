@@ -4,7 +4,7 @@
 import shareSongIcon from "../../src/assets/images/share_song_reverse_icon.png"
 
 export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
-    // btnStyle -> {type: null, data: img || string[a,b] || string}
+    // bgStyle -> {type: null, data: img || string[a,b] || string}
     
     // final style é um objeto que vai receber as props pro estilo final do bg
     let finalStyle = {}; 
@@ -13,36 +13,21 @@ export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
     
     // esse switch lida com todos os types possíveis
     switch (bgStyle?.type) {
-        case "thief-0": // se type = dominant -> cor destaque do thiefPallet
-            finalStyle = { backgroundColor: bgStyle?.data};
-            break;
-        case "thief-1": // se type = dominant -> cor destaque do thiefPallet
-            finalStyle = { backgroundColor: bgStyle?.data};
-            break;
-        case "thief-2": // se type = dominant -> cor destaque do thiefPallet
-            finalStyle = { backgroundColor: bgStyle?.data};
-            break;
-        case "thief-3": // se type = dominant -> cor destaque do thiefPallet
-            finalStyle = { backgroundColor: bgStyle?.data};
-            break;
-        case "vibrant": // se type = vibrant -> sem gradiante cor Vibrant
-            finalStyle = { backgroundImage: `linear-gradient(${palette?.Vibrant?.hex}, ${palette?.Vibrant?.hex})` };
-            break;
-        case "muted": // se type = muted -> sem gradiente cor Muted
-            finalStyle = { backgroundImage: `linear-gradient(${palette?.Muted?.hex}, ${palette?.Muted?.hex})` };
+        case "color": 
+        case "vibrant": 
+        case "muted": // se type = vibrant -> sem gradiante cor Vibrant
+            finalStyle = { backgroundColor: bgStyle.data };
             break;
         case "img": // se type = img -> usa a bgImg 
-            finalStyle = { backgroundImage: `url(${bgStyle.bgImg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
+            finalStyle = { backgroundImage: `url(${bgStyle.data})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
             break;
-        case "gradient": // se type = gradient -> faz um gradient de Vibrant e Muted
-            finalStyle = { backgroundImage: `linear-gradient(to bottom, ${palette?.Vibrant?.hex}, ${palette?.Muted?.hex})` };
-            break;
-        case "darkGradient": // se type = darkGradient -> faz um gradient de DarkVibrant e DarkMuted
-            finalStyle = { backgroundImage: `linear-gradient(to bottom, ${palette?.DarkVibrant?.hex}, ${palette?.DarkMuted?.hex})` };
+        case "gradient":
+        case "darkGradient": // se type = gradient ou darkGradient -> faz um gradient de Vibrant e Muted
+            finalStyle = { backgroundImage: `linear-gradient(to bottom, ${bgStyle.data[0]}, ${bgStyle.data[1]})` };
             break;
         default:
             // Estilo padrão enquanto os dados não carregam
-            finalStyle = { backgroundColor: '#121212' };
+            finalStyle = { backgroundColor: '#000' };
             break;
     }
 
