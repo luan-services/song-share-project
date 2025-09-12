@@ -6,7 +6,7 @@ import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
 import { StyleButton } from './StyleButton';
 
-import { filterColorPalette } from "../../lib/saturation-filter" // utilitário para filtrar paletas com pouca saturação
+import { filterColorPalette, mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utilitário para filtrar paletas com pouca saturação
 
 /* lógica atual:
 
@@ -38,10 +38,12 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
     const pictureRef = useRef(null); // referência à div da picture
 
-    // ---xxx
+    // ---xxx states para salvar um novo url proxy para a imagem
 
     const [geniusProxyArtUrl, setGeniusProxyArtUrl] = useState(null);
-    const [lastFmProxyArtUrl, setLastFmProxyArtUrl] = useState(null);
+    const [lastFmProxyArtUrl, setLastFmProxyArtUrl] = useState(null); 
+    const [geniusProxyIsLoading, setGeniusProxyIsLoading] = useState(true);
+    const [lastFmProxyIsLoading, setLastFmProxyIsLoading] = useState(true); // state para definir se imagem proxy ainda está sendo baixada
 
     useEffect(() => { // useEffect inicial para fazer o fetch do url da imagem do Genius, para baixar a foto e fazer um novo url (o cors não permite usar algumas imagem do genius para baixar imagem, e não permite nem lastFm nem Genius de 'ler' os dados da imagem para busca de palettas)
 
@@ -58,25 +60,31 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                 }
                 const proxiedImageUrl = `/api/image-proxy?url=${encodeURIComponent(url)}`;
 
-                // 1. Fetch the image data through the proxy
-                const response = await fetch(proxiedImageUrl);
+                const response = await fetch(proxiedImageUrl); // faz o fetch do url do proxy
                 if (!response.ok) {
                     throw new Error('Failed to fetch image via proxy');
                 }
 
-                const imageBlob = await response.blob();
-                let objectUrl = URL.createObjectURL(imageBlob);
+                const data = await response.json()
+                const objectUrl = data.dataUrl
 
                 if (source === 'genius') {
                     geniusObjectUrl = objectUrl; // Armazena na variável local
                     setGeniusProxyArtUrl(objectUrl);
+                    setGeniusProxyIsLoading(false);
                 } else {
                     lastFmObjectUrl = objectUrl; // Armazena na variável local
                     setLastFmProxyArtUrl(objectUrl);
+                    setLastFmProxyIsLoading(false);
                 }
                 
             } catch (error) {
                 console.error("Error ao tentar fazer o fetch da imagem do Genius:", error);
+                if (source === 'genius') {
+                    setGeniusProxyIsLoading(false);
+                } else {
+                    setLastFmProxyIsLoading(false);
+                }
             };
         }
 
@@ -151,20 +159,9 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                         return;
                     }
 
-                    const filteredPalette = filterColorPalette(thiefPalette, {
-                        minSaturation: 0.25, // Remove cores muito acinzentadas
-                        minLightness: 0.15,  // Remove cores muito escuras
-                        maxLightness: 0.90,  // Remove cores muito claras/brancas
-                    });
+                    const finalPalette = mapPaletteToBase(thiefPalette, BASE_PALETTE); // função p comparar as cores do thief com a paleta base e retornar resultados parecidos
 
-                    const finalPalette = filteredPalette.length >= 3 ? filteredPalette : thiefPalette.slice(0, 4);
-
-                    // pega todas as palettas do thief e transforma em um array de strings rgb(x,y,z)  
-                    const thiefRgb = finalPalette.map(palet => (
-                        `rgb(${palet[0]}, ${palet[1]}, ${palet[2]})`
-                    ));
-
-                    setThiefColorPalette(thiefRgb);
+                    setThiefColorPalette(finalPalette);
                 };
 
                 img.src = coverArtUrl; // seta um url p image, quando carregar vai rodar img.onload
@@ -242,7 +239,7 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
     // ---xxx
 
     useEffect(() => {  // useEffect para definir a imagem de capa inicial
-        if ( (!geniusProxyArtUrl && !lastFmProxyArtUrl) || coverArtUrl ) { // se pelo menos uma imagem ainda não chegou, não fazemos nada
+        if ( geniusProxyIsLoading || lastFmProxyIsLoading || coverArtUrl ) { // se pelo menos uma imagem ainda não chegou, não fazemos nada
             console.log(geniusProxyArtUrl, lastFmProxyArtUrl, coverArtUrl)
             return;
         }
