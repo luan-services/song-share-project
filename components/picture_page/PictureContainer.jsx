@@ -96,17 +96,6 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
             getProxiedUrl(lastFmSongData?.artUrl, 'lastFm');
         }
 
-
-        return () => {
-            // Quando o componente for desmontado, revoga as URLs que foram criadas
-            if (geniusObjectUrl) {
-                URL.revokeObjectURL(geniusObjectUrl);
-            }
-            if (lastFmObjectUrl) {
-                URL.revokeObjectURL(lastFmObjectUrl);
-            }
-        };
-
     }, [songData, lastFmSongData]);
 
     // ---xxx coverArtUrl é um state que guarda qual é o url da imagem que está sendo usada atualmente, genius ou lastfm
