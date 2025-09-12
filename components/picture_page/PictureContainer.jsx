@@ -14,8 +14,79 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
     // ---xxx
 
+    const [geniusProxyArtUrl, setGeniusProxyArtUrl] = useState(null);
+    const [lastFmProxyArtUrl, setLastFmProxyArtUrl] = useState(null);
+
+    useEffect(() => { // useEffect inicial para fazer o fetch do url da imagem do Genius, para baixar a foto e fazer um novo url (o cors não permite usar algumas imagem do genius para baixar imagem, e não permite nem lastFm nem Genius de 'ler' os dados da imagem para busca de palettas)
+
+                    
+        let geniusObjectUrl = null;
+        let lastFmObjectUrl = null;
+
+        const getProxiedUrl = async (url, source) => {
+
+            try {
+
+                if (!url) { // se não houver url, retorna
+                    return;
+                }
+                const proxiedImageUrl = `/api/image-proxy?url=${encodeURIComponent(url)}`;
+
+                // 1. Fetch the image data through the proxy
+                const response = await fetch(proxiedImageUrl);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch image via proxy');
+                }
+
+                const imageBlob = await response.blob();
+                let objectUrl = URL.createObjectURL(imageBlob);
+
+                if (source === 'genius') {
+                    geniusObjectUrl = objectUrl; // Armazena na variável local
+                    setGeniusProxyArtUrl(objectUrl);
+                } else {
+                    lastFmObjectUrl = objectUrl; // Armazena na variável local
+                    setLastFmProxyArtUrl(objectUrl);
+                }
+                
+            } catch (error) {
+                console.error("Error ao tentar fazer o fetch da imagem do Genius:", error);
+            };
+        }
+
+        getProxiedUrl(songData.albumArtUrl, 'genius');
+
+        getProxiedUrl(lastFmSongData?.artUrl, 'lastFm');
+
+        return () => {
+            // Quando o componente for desmontado, revoga as URLs que foram criadas
+            if (geniusObjectUrl) {
+                URL.revokeObjectURL(geniusObjectUrl);
+            }
+            if (lastFmObjectUrl) {
+                URL.revokeObjectURL(lastFmObjectUrl);
+            }
+        };
+
+    }, [songData, lastFmSongData]);
+
+    // ---xxx coverArtUrl é um state que guarda qual é o url da imagem que está sendo usada atualmente, genius ou lastfm
+
+    const [coverArtUrl, setCoverArtUrl] = useState(null);
+
+    const handleSetCoverArt = (type) => {
+
+        if (type === 'lastFm' && lastFmProxyArtUrl) {
+            setCoverArtUrl(lastFmProxyArtUrl)
+            return;
+        };
+
+        setCoverArtUrl(geniusProxyArtUrl);
+    };
+
+    // ---xxx
+
     // const referenciando o dado final, sendo do lastFm caso houver, ou do Genius, caso contrário.
-    const coverArtUrl = lastFmSongData?.artUrl || songData.albumArtUrl;
     const trackName = lastFmSongData?.track || songData.track;
     const artistName = lastFmSongData?.artist || songData.artist;
 
@@ -33,8 +104,6 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
         // Função assíncrona para extrair as cores, não precisa de useCallBack por estar dentro do useEffect (que vai executar renderizar e executar uma unica vez)
         const extractColors = async () => {
             try {
-
-                const proxiedImageUrl = `/api/image-proxy?url=${encodeURIComponent(coverArtUrl)}`; // faz um url proxy da imagem (é necessário 'baixar' a imagem no backend)
 
                 const img = new Image(); // cria um novo objeto img
                 img.crossOrigin = 'Anonymous'; // previne cors
@@ -64,14 +133,13 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                         `rgb(${palet[0]}, ${palet[1]}, ${palet[2]})`
                     ));
 
-                    console.log("Paleta do thief", thiefRgb);
                     setThiefColorPalette(thiefRgb);
                 };
 
-                img.src = proxiedImageUrl; // seta um url p image, quando carregar vai rodar img.onload
+                img.src = coverArtUrl; // seta um url p image, quando carregar vai rodar img.onload
 
                 // pega a paleta do Vibrant
-                const vibrantPalette = await Vibrant.from(proxiedImageUrl).getPalette();
+                const vibrantPalette = await Vibrant.from(coverArtUrl).getPalette();
 
                 if (!vibrantPalette) { // se não conseguiu retorna
                     console.error("Não foi possível gerar paletta Vibrant");
@@ -87,7 +155,6 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
                 setColorPalette(colors); // seta a paletta no useState
 
-                console.log("Paleta de cores extraída:", colors);
 
             } catch (error) {
                 console.error("Erro ao extrair a paleta de cores:", error);
@@ -104,6 +171,8 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
         if (pictureRef.current === null) {  // enquanto a div não existir a ser transformada em imagem não existir, não chama a função
             return;
         }
+
+        const link = document.createElement('a');
 
         const currentWidth = pictureRef.current.offsetWidth; // mede a largura atual da div do story
 
@@ -123,26 +192,10 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
     }, [pictureRef]);
 
     // ---xxx useState bgStyle, que guarda o tipo do bg escolhido e passa pro PictureContent
-    // também há um useEffect que fica ouvindo quando a paleta de cores estiver pronta, para passar pro bgStyle
 
     const [bgStyle, setBgStyle] = useState({type: null, data: null})
 
-    const [currentBgKey, setCurrentBgKey] = useState('img');
-
-    useEffect(() => { 
-        if (!colorPalette || !thiefColorPalette) { // se a paleta ainda não chegou, não fazemos nada
-            return;
-        }
-       
-        // Quando as paleta chegarem, definimos um estilo inicial. seus botões no futuro vão chamar setBgStyle com outros valores.
-        setBgStyle({
-            type: 'vibrant', // vamos começar com a cor vibrant do Vibrant
-            data: colorPalette[0].data, // passamos a paleta cor da cor vibrant 
-        });
-
-        setCurrentBgKey('vibrant'); // setamos a key do bg como vibrant
-
-    }, [colorPalette, thiefColorPalette]);
+    const [currentBgKey, setCurrentBgKey] = useState(null);
 
     const handleSetBgStyle = (type, key, style) => {
 
@@ -157,7 +210,37 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
     // ---xxx
 
-    if (!bgStyle) { // se não houver um estilo inicial, carregando...
+    useEffect(() => {  // useEffect para definir a imagem de capa inicial
+        if ( !geniusProxyArtUrl || !lastFmProxyArtUrl || coverArtUrl ) { // se pelo menos uma imagem ainda não chegou, não fazemos nada
+            return;
+        }
+       
+        // quando as imagens chegarem, definimos uma imagem inicial
+        if (lastFmProxyArtUrl && lastFmSongData?.artist === lastFmSongData?.albumArtist) { // o segundo check verifica se o artista da música é o mesmo artista do album (check básico para ver incosistencia na arte do album)
+            setCoverArtUrl(lastFmProxyArtUrl); 
+            return;
+        }
+
+        setCoverArtUrl(geniusProxyArtUrl);
+
+    }, [lastFmProxyArtUrl, geniusProxyArtUrl, coverArtUrl]);
+
+    useEffect(() => {  // useEffect final, para definir o estilo inicial do fundo da imagem
+        if (!colorPalette || !thiefColorPalette ) { // se a paleta ainda não chegou, não fazemos nada
+            return;
+        }
+       
+        // Quando as paleta chegarem, definimos um estilo inicial
+        setBgStyle({
+            type: 'vibrant', // vamos começar com a cor vibrant do Vibrant
+            data: colorPalette[0].data, // passamos a paleta cor da cor vibrant 
+        });
+
+        setCurrentBgKey('vibrant'); // setamos a key do bg como vibrant
+
+    }, [colorPalette, thiefColorPalette, lastFmProxyArtUrl, geniusProxyArtUrl]);
+
+    if (!bgStyle || !coverArtUrl) { // se não houver um estilo inicial, carregando...
         return (
             <div className="flex flex-col">
                 Carregando imagem...
@@ -172,7 +255,9 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
             {/* container dos botões e do story */}
             <div className="flex flex-col sm:flex-row justify-center items-center max-w-72 sm:max-w-98 lg:max-w-120 gap-2 p-4 rounded-xl">
 
-                {/* botões */}
+
+
+                {/* botões do fundo */}
                 <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
                     
                     {/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
@@ -197,7 +282,6 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                     })
 
                     }
-                    
 
                 </div>
         
@@ -208,6 +292,22 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                         <PictureContent artUrl={coverArtUrl} track={trackName} artist={artistName} bgStyle={bgStyle}/>
                     </div>
                 </div>
+
+                {/*
+                    check verifica se o artista da música é o mesmo artista do album (check básico para ver incosistencia na arte do album)
+                    caso sim, disponíbiliza botões pro usuário selecionar a arte
+                */}
+                {!(lastFmSongData?.artist === lastFmSongData?.albumArtist) && (
+                    <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
+                        <div className='flex transition duration-300 cursor-pointer active:scale-90 rounded-full bg-white'>
+                            <button type="button" onClick={() => handleSetCoverArt('lastFm')} className={`${coverArtUrl === lastFmProxyArtUrl ? 'ring-3 ring-white ring-inset' : 'ring-3 ring-white/60 ring-inset' } w-8 h-8 rounded-full transition duration-300 cursor-pointer`} style={{ backgroundImage: `url(${lastFmSongData?.artUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}/>
+                        </div>
+                        <div className='flex transition duration-300 cursor-pointer active:scale-90 rounded-full bg-white'>
+                            <button type="button" onClick={() => handleSetCoverArt('genius')} className={`${coverArtUrl === geniusProxyArtUrl ? 'ring-3 ring-white ring-inset' : 'ring-3 ring-white/60 ring-inset' } w-8 h-8 rounded-full transition duration-300 cursor-pointer`} style={{ backgroundImage: `url(${songData.albumArtUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}/>
+                        </div>
+                    </div>
+                )}
+
 
             </div>
 

@@ -63,11 +63,13 @@ export const PicturePage = () => {
 					const lastFmArt = data.track.album.image.find(img => img.size === 'extralarge')['#text'];
 					const lastFmTrack = data.track.name;
 					const lastFmArtistName = data.track.artist.name;
+					const lastFmAlbumArtist = data.track.album.artist;
 
 					setLastFmSongData({
 						artUrl: lastFmArt, 
 						track: lastFmTrack, 
 						artist: lastFmArtistName,
+						albumArtist: lastFmAlbumArtist,
 					})
 				};
 
