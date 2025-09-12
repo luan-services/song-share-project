@@ -65,8 +65,9 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                     throw new Error('Failed to fetch image via proxy');
                 }
 
-                const data = await response.json()
-                const objectUrl = data.dataUrl
+                const imageBlob = await response.blob();
+
+                const objectUrl = URL.createObjectURL(imageBlob);
 
                 if (source === 'genius') {
                     geniusObjectUrl = objectUrl; // Armazena na variável local
@@ -97,6 +98,19 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
         if (lastFmSongData?.artUrl) {
             getProxiedUrl(lastFmSongData?.artUrl, 'lastFm');
         }
+
+        return () => {
+            if (geniusObjectUrl) {
+                console.log("UHUL")
+                URL.revokeObjectURL(geniusObjectUrl);
+                console.log("Revoked Genius Object URL");
+            }
+            if (lastFmObjectUrl) {
+                console.log("UHUL")
+                URL.revokeObjectURL(lastFmObjectUrl);
+                console.log("Revoked LastFM Object URL");
+            }
+        };
 
     }, [songData, lastFmSongData]);
 
@@ -259,7 +273,7 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
 
         setCurrentBgKey('vibrant'); // setamos a key do bg como vibrant
 
-    }, [colorPalette, thiefColorPalette, lastFmProxyArtUrl, geniusProxyArtUrl]);
+    }, [colorPalette, thiefColorPalette]);
 
     if (!bgStyle || !coverArtUrl) { // se não houver um estilo inicial, carregando...
         return (
