@@ -97,7 +97,7 @@ export const PicturePage = () => {
             return;
         };
 
-		// função para fetch de lyrics
+		// função para fetch de lyric
 		const storeData = async () => {
 			
 			const params = new URLSearchParams({ // gera uma string com os params à serem enviados para a função server-side get-lyrics
