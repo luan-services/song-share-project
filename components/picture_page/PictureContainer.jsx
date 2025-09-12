@@ -79,10 +79,12 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                 }
                 
             } catch (error) {
-                console.error("Error ao tentar fazer o fetch da imagem do Genius:", error);
                 if (source === 'genius') {
+                    console.error("Error ao tentar fazer o fetch da imagem do Genius:", error);
                     setGeniusProxyIsLoading(false);
                 } else {
+                    
+                    console.error("Error ao tentar fazer o fetch da imagem do LastFm:", error);
                     setLastFmProxyIsLoading(false);
                 }
             };
