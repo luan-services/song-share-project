@@ -6,7 +6,33 @@ import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
 import { StyleButton } from './StyleButton';
 
-import { filterColorPalette } from "../../lib/saturation-filter"
+import { filterColorPalette } from "../../lib/saturation-filter" // utilitário para filtrar paletas com pouca saturação
+
+/* lógica atual:
+
+como o genius precisa de um proxy para mostrar a imagem no container 1080x1920 e como tanto lastFm como genius precisam de proxy p baixar as cores da imagem,
+resolvi criar dois states do url proxy deles, para não repetir código
+
+inicialmente o código tenta pegar esses dois proxy, em seguida ele cria as const trackName e artistName
+
+logo em seguida, ele chama um state para setar a imagem de capa inicial, 
+    caso existe capa do spotify e o artista da música é o mesmo artista do album (check básico para ver incosistencia na arte do album),
+        a capa é do spotify
+    caso contrário, é do genius
+
+tendo uma imagem de capa, o useEffect para extrair as palletas é chamado, e faz isso
+
+tendo as paletas e a imagem de capa, o useEffect para definir o estilo inicial (a imagem e fundo que vão aparecer na div) é chamado
+
+tendo uma imagem de capa e o estilo definido, a tela sai de 'carregando' para o editor do story
+
+tendo o editor, os botões de download e share são criados
+
+Nota: caso a imagem do lastFm exista mas o artista da música não é o mesmo artista do album, pode haver incosistencia no album, então a imagem
+do genius é setada como principal e uma div para escolher qual imagem o usuário quer aparece.
+
+
+*/
 
 export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => {
 
@@ -54,9 +80,14 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
             };
         }
 
-        getProxiedUrl(songData.albumArtUrl, 'genius');
+        if (songData.albumArtUrl) {
+            getProxiedUrl(songData.albumArtUrl, 'genius');
+        }
 
-        getProxiedUrl(lastFmSongData?.artUrl, 'lastFm');
+        if (lastFmSongData?.artUrl) {
+            getProxiedUrl(lastFmSongData?.artUrl, 'lastFm');
+        }
+
 
         return () => {
             // Quando o componente for desmontado, revoga as URLs que foram criadas
@@ -211,12 +242,14 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
     // ---xxx
 
     useEffect(() => {  // useEffect para definir a imagem de capa inicial
-        if ( !geniusProxyArtUrl || !lastFmProxyArtUrl || coverArtUrl ) { // se pelo menos uma imagem ainda não chegou, não fazemos nada
+        if ( (!geniusProxyArtUrl && !lastFmProxyArtUrl) || coverArtUrl ) { // se pelo menos uma imagem ainda não chegou, não fazemos nada
+            console.log(geniusProxyArtUrl, lastFmProxyArtUrl, coverArtUrl)
             return;
         }
        
         // quando as imagens chegarem, definimos uma imagem inicial
         if (lastFmProxyArtUrl && lastFmSongData?.artist === lastFmSongData?.albumArtist) { // o segundo check verifica se o artista da música é o mesmo artista do album (check básico para ver incosistencia na arte do album)
+          
             setCoverArtUrl(lastFmProxyArtUrl); 
             return;
         }
@@ -294,10 +327,10 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
                 </div>
 
                 {/*
-                    check verifica se o artista da música é o mesmo artista do album (check básico para ver incosistencia na arte do album)
+                    check verifica se o artista da música é o mesmo artista do album (check básico para ver incosistencia na arte do album) e se existe imagem do lastFm
                     caso sim, disponíbiliza botões pro usuário selecionar a arte
                 */}
-                {!(lastFmSongData?.artist === lastFmSongData?.albumArtist) && (
+                {!(lastFmSongData?.artist === lastFmSongData?.albumArtist) && lastFmProxyArtUrl && (
                     <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
                         <div className='flex transition duration-300 cursor-pointer active:scale-90 rounded-full bg-white'>
                             <button type="button" onClick={() => handleSetCoverArt('lastFm')} className={`${coverArtUrl === lastFmProxyArtUrl ? 'ring-3 ring-white ring-inset' : 'ring-3 ring-white/60 ring-inset' } w-8 h-8 rounded-full transition duration-300 cursor-pointer`} style={{ backgroundImage: `url(${lastFmSongData?.artUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}/>

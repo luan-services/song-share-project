@@ -60,10 +60,10 @@ export const PicturePage = () => {
 				// se encontrarmos os dados no lastFm, atualizamos:
 				if (data.track) {
 					
-					const lastFmArt = data.track.album.image.find(img => img.size === 'extralarge')['#text'];
+					const lastFmArt = data.track.album?.image.find(img => img.size === 'extralarge')['#text'];
 					const lastFmTrack = data.track.name;
 					const lastFmArtistName = data.track.artist.name;
-					const lastFmAlbumArtist = data.track.album.artist;
+					const lastFmAlbumArtist = data.track.album?.artist;
 
 					setLastFmSongData({
 						artUrl: lastFmArt, 
