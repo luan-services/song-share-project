@@ -20,10 +20,10 @@ export default async function handler(request, response) {
     }
 
     // validação de dados de entrada
-    const { id, artist, track, geniusSongUrl, albumArtUrl, lastFmArtUrl, fromLastFm } = request.body;
+    const { id, artist, track, lyrics } = request.body;
 
-    if (!id || !artist || !track || !geniusSongUrl) {
-        return response.status(400).json({ message: 'Parâmetros id, artist, track e geniusSongUrl são obrigatórios.' });
+    if (!id || !artist || !track || !lyrics ) {
+        return response.status(400).json({ message: 'Parâmetros id, artist e track são obrigatórios.' });
     }
 
     const docId = String(id); // pega o id do genius e faz ser o id do documento
@@ -33,11 +33,8 @@ export default async function handler(request, response) {
     const songPayload = {
         artist: artist,
         track: track,
-        geniusSongUrl: geniusSongUrl,
-        albumArtUrl: albumArtUrl || '', // Garante que não seja undefined
-        lastFmArtUrl: lastFmArtUrl || '', // Garante que não seja undefined
         scrapedAt: new Date(),
-        fromLastFm: fromLastFm || false,
+        lyrics: lyrics,
     };
     
     
@@ -51,18 +48,7 @@ export default async function handler(request, response) {
             return response.status(201).json({ message: `Documento ${docId} criado com sucesso.` });
         }
 
-        const existingData = doc.data(); // salva os dados existentes no bd
-        
-		// constante para checar se os dados devem ser atualizados
-        const shouldUpdate = fromLastFm && !existingData.fromLastFm && (existingData.artist !== artist || existingData.track !== track);
-
-        // caso 2: documento existe e as condições para atualização são atendidas, atualiza o bd
-        if (shouldUpdate) {
-            await docRef.update(songPayload);
-            return response.status(200).json({ message: `Documento ${docId} atualizado com metadados do Last.fm.` });
-        }
-        
-        // caso 3: documento existe e não é necessário atualizar o bd.
+        // caso 2: documento existe
         return response.status(200).json({ message: `Documento ${docId} já existe e não necessita de atualização.` });
 
     } catch (error) {
