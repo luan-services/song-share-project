@@ -7,9 +7,8 @@ export const SongContainer = ({onShare, songList, isLoading}) => {
 			{/* cas haja resultado da busca, mostra esses textos */}
 			{((songList.length > 0)) && 
 				<>
-					<div className="text-sm italic">Dica: Resultados cujo o título é apenas o nome da música e autor é a banda, possuem dados oficiais, traduções costumam ser fontes não-oficiais.</div>
 					<span className="text-sm self-end">
-						*Dados das músicas disponibilizados pela API do <a className="underline italic" href="https://www.genius.com/" target="_blank"> Genius </a>
+						*Dados das músicas disponibilizados pela API do <a className="underline italic" href="https://www.deezer.com/" target="_blank"> Deezer </a>
 					</span>
 				</>
 			}

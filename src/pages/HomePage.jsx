@@ -24,8 +24,6 @@ export const HomePage = () => {
         setError(null);
         setSearchResults([]);
 
-        // const url = `/api/fetch-genius?term=${encodeURIComponent(searchTerm)}`; // faz o fetch com os termos
-
 		const url = `/api/search-deezer?searchTerms=${encodeURIComponent(searchTerm)}`;
 
         try {
