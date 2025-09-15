@@ -142,11 +142,13 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
             alert("Seu navegador não suporta o compartilhamento nativo. Tente baixar a imagem.");
             return;
         }
+
+        const currentWidth = pictureRef.current.offsetWidth; // mede a largura atual da div do story
+
+        const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
         
         try {
-            const blob = await toBlob(pictureRef.current, { 
-                pixelRatio: 1 
-            });
+            const blob = await toBlob(pictureRef.current, { pixelRatio: pixelRatio });
 
             if (!blob) {
                 throw new Error("Não foi possível gerar a imagem para compartilhamento.");
