@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'; // navigate é um state do react
 import { useLocation } from 'react-router-dom'; // location é um state do react que possibilita ler os dados que foram passados via navigate
 import { TermsFooter } from '../../components/TermsFooter';
 import { PictureContainer } from '../../components/picture_page/PictureContainer';
+import { LoadingPage } from "../../src/layout/LoadingPage"
 
 export const PicturePage = () => {
 	
@@ -69,8 +70,10 @@ export const PicturePage = () => {
 
 
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
-	if (!songData) {
-		return <div>Carregando...</div>;
+	if (!songData || songData) {
+		return (
+			<LoadingPage/>
+		)
 	}
 
 	// se o código chegou até aqui, é 100% seguro que 'songData' existe.

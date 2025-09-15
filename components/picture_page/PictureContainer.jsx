@@ -5,8 +5,8 @@ import { toPng, toBlob } from 'html-to-image'; // libary para converter html em 
 import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
 import { StyleButton } from './StyleButton';
-
 import { mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utilitário para filtrar paletas com pouca saturação
+import { LoadingPage } from "../../src/layout/LoadingPage"
 
 export const PictureContainer = ({songData, selectedLyrics}) => {
 
@@ -190,9 +190,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
     if (!bgStyle || !proxyArtUrl) { // se não houver um estilo inicial, carregando...
         return (
-            <div className="flex flex-col">
-                Carregando imagem...
-            </div>
+			<LoadingPage/>
         )
     }
 
