@@ -70,7 +70,7 @@ export const PicturePage = () => {
 
 
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
-	if (!songData || songData) {
+	if (!songData) {
 		return (
 			<LoadingPage/>
 		)
