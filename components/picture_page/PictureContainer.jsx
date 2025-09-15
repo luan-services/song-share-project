@@ -129,7 +129,59 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
     }, [proxyArtUrl]);
 
-    // ---xxxx
+    // ---xxxx funções para share e download
+
+    //... depois do seu useCallback do handleDownload
+
+    const handleShare = useCallback(async () => {
+    if (pictureRef.current === null) {
+        return;
+    }
+    
+    // Verifica se o navegador suporta a Web Share API e o compartilhamento de arquivos
+    if (!navigator.share || !navigator.canShare) {
+        alert("Seu navegador não suporta o compartilhamento nativo. Tente baixar a imagem.");
+        // Como alternativa, você poderia chamar o handleDownload() aqui
+        // handleDownload(); 
+        return;
+    }
+    
+    try {
+        // Passo 1: Gera a imagem como um Blob (mais eficiente para compartilhar)
+        const blob = await toBlob(pictureRef.current, { 
+        pixelRatio: 2 // Usar 2x já é ótimo para qualidade em redes sociais
+        });
+
+        if (!blob) {
+            throw new Error("Não foi possível gerar a imagem para compartilhamento.");
+        }
+        
+        // Passo 2: Cria um objeto File a partir do Blob
+        const file = new File([blob], "song-share-story.png", { type: blob.type });
+        
+        // Passo 3: Cria o objeto de dados para o compartilhamento
+        const shareData = {
+            title: `Música: ${songData.track}`,
+            text: `Veja essa música que estou ouvindo: ${songData.track} por ${songData.artist}!`,
+            files: [file],
+        };
+
+        // Passo 4: Verifica se o navegador consegue compartilhar esses dados
+        if (navigator.canShare(shareData)) {
+            // Passo 5: Chama a API de compartilhamento
+            await navigator.share(shareData);
+            console.log("Conteúdo compartilhado com sucesso!");
+        } 
+        else {
+            throw new Error("Não é possível compartilhar este tipo de arquivo.");
+        }
+        
+    } catch (err) {
+        console.error('Erro ao tentar compartilhar a imagem:', err);
+        // Em caso de erro, oferecer o download como alternativa
+        alert("Ocorreu um erro ao compartilhar.");
+    }
+    }, [pictureRef, songData]); // Adicione songData e handleDownload às dependências
 
     const handleDownload = useCallback( async () => {  // função para criar botão de download do story, useCallback impede ela de ser recriada (já que não está em um useEffect)
         if (pictureRef.current === null) {  // enquanto a div não existir a ser transformada em imagem não existir, não chama a função

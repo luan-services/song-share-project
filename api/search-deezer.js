@@ -17,7 +17,7 @@ export default async function handler(request, response) {
 
 		if (!deezerResponse.ok || data.error) { // se o Lastfm der erro, avisamos nosso frontend
 			response.status(deezerResponse.status);
-			return response.json({ message: data.message || 'Erro no deezer' });
+			return response.json({ message: data.message || 'Erro no deezer'});
 		}
 
 		response.status(200);
