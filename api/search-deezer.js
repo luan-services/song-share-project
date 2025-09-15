@@ -9,7 +9,7 @@ export default async function handler(request, response) {
 
 	/* termos de busca com " " ou "&" são lidos pela api de forma errada, ex: 'Florence + The Machine' o query só vai ler 
 	q=Florence, para contornar isso usamos encodeURIComponent(), que transforma a string em Florence%20%2B%20The%20Machine */
-	const deezerUrl = `https://api.deezer.com/search?q=${encodeURIComponent(searchTerms)}`;
+	const deezerUrl = `https://api.deezer.com/search?q=${encodeURIComponent(searchTerms)}&limit=15`;
 
 	try {
 		const deezerResponse = await fetch(deezerUrl);

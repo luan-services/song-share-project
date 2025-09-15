@@ -34,7 +34,7 @@ export const PicturePage = () => {
 		const storeData = async () => {
 
 			const songPayload = {
-				id: songData.id,
+				id: String(songData.id),
 				artist: songData.artist, 
 				track: songData.track,
 				lyrics: '.'

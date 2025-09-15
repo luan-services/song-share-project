@@ -1,6 +1,11 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
+
+import { z } from 'zod'; // biblioteca de validação de inputs
+
+
+
 // check para ver se o firebase já está inicializado (pode acontecer de mais de uma instância inicializar), se não:
 if (!getApps().length) { 
 	initializeApp({ // inicializaça
@@ -11,12 +16,31 @@ if (!getApps().length) {
 // coloca a instância do banco de dados em db
 const db = getFirestore(); 
 
+const containsNoScripts = (text) => { // função auxiliar para checar se o texto não contém código malicioso
+    return !/<script|onerror|onload|onclick|onmouseover/i.test(text);
+}
+
+// Define a "forma" que o request.body deve ter
+const songSchema = z.object({
+    id: z.string().min(1, { message: "O ID não pode ser vazio." }).max(20, { message: "O ID não pode ultrapassar 15 caracteres."}),
+    artist: z.string().trim().min(1).max(100, { message: "Nome do artista muito longo." }).refine(containsNoScripts, { message: "O nome do artista contém conteúdo inválido." }),
+    track: z.string().trim().min(1).max(100, { message: "Nome da música muito longo." }).refine(containsNoScripts, { message: "O nome da música contém conteúdo inválido." }),
+    lyrics: z.string().trim().min(1).max(15000, { message: "Letra da música muito longa." }).refine(containsNoScripts, { message: "A letra da música contém conteúdo inválido ou scripts." }),
+});
+
+
 // função server-side de fetch do backend para realizar o webscrapping e salvar o resultado no firebase
 export default async function handler(request, response) {
 
     if (request.method !== 'POST') { // aceita apenas requests post
         response.setHeader('Allow', ['POST']);
         return response.status(405).end(`Method ${request.method} Not Allowed`);
+    }
+
+    try {
+        songSchema.parse(request.body); // tenta validar com zod, se falhar, ele joga um erro
+    } catch (err) {
+        return response.status(400).json({ message: err.message});
     }
 
     // validação de dados de entrada
