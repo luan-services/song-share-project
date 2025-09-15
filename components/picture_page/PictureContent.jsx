@@ -32,7 +32,8 @@ export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
 
     return (
         // Aplicamos o objeto de estilo final aqui
-        <div className="w-full h-full flex flex-col items-center justify-center p-[19.2px] sm:p-[24px] lg:p-8" style={finalStyle}>
+        <div className="w-full h-full flex flex-col items-center justify-center p-[21.6px] sm:p-[27px] lg:p-9" style={finalStyle}>
+
             <div className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
 
                 {/*fundo preto opaco*/}

@@ -7,6 +7,7 @@ import ColorThief from 'colorthief'; // library colorThief para pegar outras pal
 import { StyleButton } from './StyleButton';
 import { mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utilitário para filtrar paletas com pouca saturação
 import { LoadingPage } from "../../src/layout/LoadingPage"
+import { DownloadButton } from './DownloadButton';
 
 export const PictureContainer = ({songData, selectedLyrics}) => {
 
@@ -20,7 +21,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
     useEffect(() => { // useEffect inicial para fazer o fetch do url da imagem, para baixar a foto e fazer um novo url (o cors não permite usar algumas imagens de api para baixar imagem, nem para ler de 'ler' os dados da imagem para busca de palettas)
 
         let proxyObjectUrl = null;
-
+        
         const getProxiedUrl = async (url) => {
 
             try {
@@ -87,7 +88,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
                     const colorThief = new ColorThief(); // instancia o colorThief
 
                      
-                    const thiefPalette = colorThief.getPalette(img, 8); // 1. gera uma paleta de 4 cores 
+                    const thiefPalette = colorThief.getPalette(img, 6); // 1. gera uma paleta de 4 cores 
                     
                     if (!thiefPalette) { // se não conseguiu retorna
                         console.error("Não foi possível gerar paletta color-thief");
@@ -199,12 +200,17 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
         <div className="flex flex-col justify-center items-center w-full gap-8">
 
             {/* container dos botões e do story */}
-            <div className="flex flex-col sm:flex-row justify-center items-center max-w-72 sm:max-w-98 lg:max-w-120 gap-2 p-4 rounded-xl">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 p-4 rounded-xl">
 
-
+                <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl"> {/* div responsiva */}
+                    <div ref={pictureRef} 
+                        className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
+                        <PictureContent artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
+                    </div>
+                </div>
 
                 {/* botões do fundo */}
-                <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
+                <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 max-w-78 sm:max-w-12 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
                     
                     {/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
                     { thiefColorPalette && thiefColorPalette.map((palett, index) => {
@@ -231,22 +237,15 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
                 </div>
         
+        
+
                 
-                <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl"> {/* div responsiva */}
-                    <div ref={pictureRef} 
-                        className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
-                        <PictureContent artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
-                    </div>
-                </div>
 
             </div>
 
-            {/* download */}
-            <button 
-                onClick={handleDownload} 
-                className="">
-                Baixar Imagem 1080p
-            </button>
+            
+                <DownloadButton onClick={() => handleDownload()} />
+
         </div>
     )
 }
