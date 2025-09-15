@@ -65,13 +65,11 @@ export const PicturePage = () => {
 		// chama a função de busca assim que o efeito é executado
 		storeData();
 
-	}, [songData, navigate, lastFmIsLoading, lastFmSongData]); // o efeito depende dos dados da música para rodar
+	}, [songData, navigate]); // o efeito depende dos dados da música para rodar
 
 
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
-	// se lastFmIsLoading, ainda não terminamos de puxar os dados do lastFm, não renderizamos nada para impedir o código de fazer um 'blink',
-	// mudar os dados mostrados do genius e pros do lastFm.	(dessa forma só vai mostrar dados quando tiver certeza que vai ser ou do genius ou do lastfm)
-	if (!songData || songData) {
+	if (!songData) {
 		return <div>Carregando...</div>;
 	}
 
@@ -80,7 +78,7 @@ export const PicturePage = () => {
 		<div className="min-h-screen px-2 md:px-12 py-8 flex flex-col items-center justify-between">
 			<main className="container flex flex-col items-center justify-center w-full px-3 py-8 md:px-8">	
 			
-				<PictureContainer songData={songData} lastFmSongData={lastFmSongData} selectedLyrics={null}/>
+				<PictureContainer songData={songData} selectedLyrics={null}/>
 
 				<div className="text-center mt-8">
 					<button onClick={() => navigate('/')} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
