@@ -20,7 +20,7 @@ const PrivacyPage = () => {
                 <br></br>
                 a. Para operar e manter o serviço.
                 <br></br>
-                <p className='pl-6'><li>Para se comunicar com as APIs de terceiros (Genius, Last.fm).</li></p>
+                <p className='pl-6'><li>Para se comunicar com as APIs de terceiros (Deezer).</li></p>
                 
                 <p className='pl-6'><li>Para implementar nosso sistema de cache de letras no Firebase.</li></p>
                 
@@ -35,7 +35,7 @@ const PrivacyPage = () => {
                 <br></br>
                 <b>b. Google Firebase (Banco de Dados):</b> Usamos o serviço Firestore do Google para armazenar em cache as letras das músicas que são buscadas, a fim de acelerar o carregamento futuro.
                 <br></br>
-                <b>c. APIs de Músicas (Genius, Last.fm):</b> As buscas que você realiza são repassadas para as APIs do Genius e/ou Last.fm para obter os dados das músicas.
+                <b>c. APIs de Músicas (Deezer):</b> As buscas que você realiza são repassadas para as APIs do Deezer para obter os dados das músicas.
                 <br></br><br></br>
                 <p><b>4. Política de Cookies</b></p>
                 <p>a. O que são Cookies? Cookies são pequenos arquivos de texto armazenados no seu navegador que ajudam o site a funcionar e a lembrar de certas informações.</p>

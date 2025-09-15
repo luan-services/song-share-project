@@ -14,7 +14,7 @@ const TermsPage = () => {
                 O Song Share é uma ferramenta online que permite aos usuários buscar informações sobre músicas e gerar imagens personalizadas com base nesses dados. O serviço utiliza APIs de terceiros para obter metadados de músicas, incluindo, mas não se limitando a, título, artista, arte de álbum e letras.
                 <br></br><br></br>
                 <p><b>2. Fontes de Dados e Propriedade Intelectual</b></p>
-                a. Os dados de músicas, incluindo títulos, artistas, artes de álbuns e letras, são fornecidos por APIs de terceiros, como Genius, Last.fm e outras. Nós não reivindicamos a propriedade sobre esses dados. Toda a propriedade intelectual e direitos autorais sobre as músicas, letras e artes de álbuns pertencem aos seus respectivos detentores (artistas, gravadoras, compositores, etc.).
+                a. Os dados de músicas, incluindo títulos, artistas, artes de álbuns e letras, são fornecidos por APIs de terceiros, como Deezer, e outras. Nós não reivindicamos a propriedade sobre esses dados. Toda a propriedade intelectual e direitos autorais sobre as músicas, letras e artes de álbuns pertencem aos seus respectivos detentores (artistas, gravadoras, compositores, etc.).
                 <br></br>
                 b. Nosso serviço atua como uma ferramenta de visualização e transformação desses dados. Não garantimos a precisão, integridade ou qualidade das informações fornecidas por essas APIs.
                 <br></br><br></br>

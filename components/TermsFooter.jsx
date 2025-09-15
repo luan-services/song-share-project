@@ -15,7 +15,7 @@ export const TermsFooter = () => {
 
 			<div className="flex justify-center gap-2">
 				<p className="text-sm"> 
-					Dados fornecidos por <a href="https://www.last.fm/api" target="_blank" rel="noopener noreferrer" className="underline"> Last.fm </a> e <a href="https://genius.com" target="_blank" rel="noopener noreferrer" className="underline"> Genius</a>.
+					Dados fornecidos por <a href="https://developers.deezer.com/" target="_blank" rel="noopener noreferrer" className="underline"> Deezer </a>.
 				</p>
 			</div>
 			
