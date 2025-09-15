@@ -192,13 +192,13 @@ export const PictureContainer = ({songData, lastFmSongData, selectedLyrics}) => 
             } catch (error) {
                 console.error("Erro ao extrair a paleta de cores:", error);
             }
-        };
+        }
 
         extractColors();
 
     }, [coverArtUrl]);
 
-    // ---xxx
+    // ---xxxx
 
     const handleDownload = useCallback( async () => {  // função para criar botão de download do story, useCallback impede ela de ser recriada (já que não está em um useEffect)
         if (pictureRef.current === null) {  // enquanto a div não existir a ser transformada em imagem não existir, não chama a função

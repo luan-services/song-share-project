@@ -8,7 +8,6 @@ export const SongForm = ({isLoading, onSearch}) => {
     // states para guardar os termos escritos no formulário.
     const [songTitle, setSongTitle] = useState('');
     const [songArtist, setSongArtist] = useState('');
-    const [songLyrics, setSongLyrics] = useState('');
 
     const [formError, setFormError] = useState(null);
 
@@ -22,13 +21,13 @@ export const SongForm = ({isLoading, onSearch}) => {
         }
 
         // caso 2: usuário preencheu artista, mas não preencheu letra/música
-        if (songArtist && (songTitle == '' && songLyrics == '')) {
-            setFormError("Campo título ou letra precisa ser preenchido.");
+        if (songTitle == '') {
+            setFormError("Campo título precisa ser preenchido");
             return;
         }
 
-        let searchTerm = `${songArtist} ${songTitle} ${songLyrics}`.trim().replace(/\s+/g, ' ') // cria uma query para buscar os dados;
-        console.log(searchTerm)
+        let searchTerm = `${songArtist} ${songTitle}`.trim().replace(/\s+/g, ' ') // cria uma query para buscar os dados;
+        console.log("termo de busca deezer", searchTerm)
         onSearch(searchTerm); // chama a função onSearch e passa a query.
 
     };
@@ -40,10 +39,6 @@ export const SongForm = ({isLoading, onSearch}) => {
                 <div className="flex flex-col sm:flex-row w-full gap-2">
                     <input className="w-full focus:outline-3 outline-custom-grayish-red bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5 text-center placeholder:text-custom-background-sand text-custom-background-sand" type="text" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} placeholder="Título da Música"/>
                     <input className="w-full focus:outline-3 outline-custom-grayish-red bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5 text-center placeholder:text-custom-background-sand text-custom-background-sand" type="text" value={songArtist} onChange={(e) => setSongArtist(e.target.value)} placeholder="Artista ou Banda"/>
-                </div>
-
-                <div className="flex w-full gap-2">
-                    <input className="w-full focus:outline-3 outline-custom-grayish-red bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5 text-center placeholder:text-custom-background-sand text-custom-background-sand" type="text" value={songLyrics} onChange={(e) => setSongLyrics(e.target.value)} placeholder="Letra da Música"/>
                 </div>
 
                 <p className="h-8 text-custom-charcoal">{formError ? formError : ''}</p>

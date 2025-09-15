@@ -24,7 +24,9 @@ export const HomePage = () => {
         setError(null);
         setSearchResults([]);
 
-        const url = `/api/fetch-genius?term=${encodeURIComponent(searchTerm)}`; // faz o fetch com os termos
+        // const url = `/api/fetch-genius?term=${encodeURIComponent(searchTerm)}`; // faz o fetch com os termos
+
+		const url = `/api/search-deezer?searchTerms=${encodeURIComponent(searchTerm)}`;
 
         try {
             const response = await fetch(url);
@@ -33,19 +35,22 @@ export const HomePage = () => {
                 throw new Error(errorData.message || 'Falha ao buscar as músicas.');
             }
             const data = await response.json();
-            console.log(data.response.hits)
-            const songs = data.response.hits.map(hit => ({
-                id: hit.result.id,
-                geniusSongUrl: hit.result.url,
-                track: hit.result.title,
-                artist: hit.result.primary_artist.name,
-                albumArtUrl: hit.result.song_art_image_url, 
+            
+            const results = data.data.map(track => ({
+                id: track.id,
+                track: track.title,
+                artist: track.artist.name,
+                album: track.album.title,
+                coverArtUrl: track.album.cover_xl, // A capa em alta resolução!
+                coverArtThumbnailUrl: track.album.cover_small,
+                previewUrl: track.preview,       // A prévia de 30 segundos
             }));
 
-            if (songs.length === 0) {
+            console.log("resultados: ", results)
+            if (results.length === 0) {
                 setError('Nenhum resultado encontrado para essa busca.');
             }
-            setSearchResults(songs);
+            setSearchResults(results);
 
         } catch (err) {
             setError(err.message);

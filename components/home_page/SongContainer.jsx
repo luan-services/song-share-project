@@ -38,6 +38,7 @@ export const SongContainer = ({onShare, songList, isLoading}) => {
 		{songList.map((song, index) => {
 			return (
 			<div key={song.id} className="flex w-full bg-custom-light-red p-4 gap-2 justify-between rounded-lg border-1 border-custom-secundary-red">
+				
 				<div className="flex flex-col w-full gap-1">
 					<div className="">
 						<span className="font-bold">Título: </span>
