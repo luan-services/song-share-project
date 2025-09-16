@@ -91,8 +91,13 @@ export const PicturePage = () => {
                     <span className="text-4xl font-bold py-2 pb-4 text-center">Costumize seu sticker do seu jeito</span>
                     <span className='text-center text-sm sm:text-[16px]'>Selecione o tipo e a cor do background, decida entre adicionar texto ou não, e em seguida faça o download ou compartilhe o resultado com seus amigos!</span>
                 </section>
-			
+
+				<span className="text-sm self-center">
+					*Considere adicionar um link para nosso site no seu story. =)
+				</span>	
+				
 				<section className='container flex-col items-center justify-center'>
+
 					<PictureContainer songData={songData} selectedLyrics={null}/>
 				</section>
 

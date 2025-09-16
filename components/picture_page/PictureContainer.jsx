@@ -266,13 +266,13 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
                     })}
 
                     {/* pega as imagens de bg e faz um botão p cada */}
-                    { bgImgsSrc && bgImgsSrc.map((bg) => {
+                    {/* bgImgsSrc && bgImgsSrc.map((bg) => {
                         return (
                             <StyleButton onClick={() => handleSetBgStyle('img', bg.name, bg.full)} isActive={currentBgKey === bg.name} btnStyle={{type: 'img', data: bg.icon}}/>     
                         )
                     })
 
-                    }
+                    */}
 
                 </div>
 
