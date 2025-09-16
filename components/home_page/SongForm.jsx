@@ -37,8 +37,8 @@ export const SongForm = ({isLoading, onSearch}) => {
         <form className="w-full max-w-180" onSubmit={(event) => handleSubmit(event)}>
             <div className="flex flex-col gap-2 w-full p-4 items-center">
                 <div className="flex flex-col sm:flex-row w-full gap-2">
-                    <input className="w-full focus:outline-3 outline-custom-grayish-red bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5 text-center placeholder:text-custom-background-sand text-custom-background-sand" type="text" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} placeholder="Título da Música"/>
-                    <input className="w-full focus:outline-3 outline-custom-grayish-red bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5 text-center placeholder:text-custom-background-sand text-custom-background-sand" type="text" value={songArtist} onChange={(e) => setSongArtist(e.target.value)} placeholder="Artista ou Banda"/>
+                    <input className="w-full focus:outline-none focus:ring-3 focus:ring-custom-charcoal bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5 text-center placeholder:text-custom-background-sand text-custom-background-sand" type="text" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} placeholder="Título da Música"/>
+                    <input className="w-full focus:outline-none focus:ring-3 focus:ring-custom-charcoal bg-custom-secundary-red rounded-r-full rounded-l-full px-4 py-1.5 text-center placeholder:text-custom-background-sand text-custom-background-sand" type="text" value={songArtist} onChange={(e) => setSongArtist(e.target.value)} placeholder="Artista ou Banda"/>
                 </div>
 
                 <p className="h-8 text-custom-charcoal">{formError ? formError : ''}</p>
