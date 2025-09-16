@@ -53,10 +53,10 @@ export const CookieBanner = () => {
 
     return (
         <div className="fixed bottom-0 left-0 right-0 bg-black/80 z-50 flex justify-center">
-            <div className="container flex flex-col gap-4 p-2 sm:flex-row items-center justify-between">
+            <div className="container flex flex-col gap-4 p-3 sm:flex-row items-center justify-between">
 
                 <div className="text-sm text-white">
-                    Este site usa cookies para melhorar a experiência. Saiba mais em nossa <Link to="/privacidade" className="cursor-pointer inline underline font-medium text-custom-secundary-red"> Política de Privacidade.</Link>
+                    Este site utiliza cookies para melhorar sua experiência. Saiba mais em nossa <Link to="/privacidade" className="cursor-pointer inline underline font-medium text-custom-secundary-red"> Política de Privacidade.</Link>
                 </div>
 
                 <div className="flex gap-2 self-end">

@@ -79,20 +79,20 @@ export const PicturePage = () => {
 
 	// se o código chegou até aqui, é 100% seguro que 'songData' existe.
 	return (
-		<div className="min-h-screen px-2 md:px-12 py-4 md:py-8 flex flex-col items-center justify-between">
+		<div className="min-h-screen px-2 md:px-12 py-4 sm:py-8 flex flex-col items-center justify-between">
 			
 			<nav className="text-center w-full">
 				<ReturnButton onClick={() => navigate('/')}/>
 			</nav>
 
-			<main className="flex flex-col items-center justify-center w-full">	
+			<main className="flex flex-col items-center justify-center w-full pb-8">	
 
 				<section className="flex flex-col w-full gap-2 pb-8 tems-center justify-center max-w-180">
-                    <span className="text-3xl font-bold py-4 text-center">Costumize sua música do seu jeito</span>
-                    <span className='text-center text-sm sm:text-[16px]'>Selecione o background, selecione o formato da imagem, ou adicione texto e em seguida faça o download ou compartilhe o resultado com seus amigos!</span>
+                    <span className="text-4xl font-bold py-2 pb-4 text-center">Costumize seu sticker do seu jeito</span>
+                    <span className='text-center text-sm sm:text-[16px]'>Selecione o tipo e a cor do background, decida entre adicionar texto ou não, e em seguida faça o download ou compartilhe o resultado com seus amigos!</span>
                 </section>
 			
-				<section className='container flex- flex-col items-center justify-center'>
+				<section className='container flex-col items-center justify-center'>
 					<PictureContainer songData={songData} selectedLyrics={null}/>
 				</section>
 

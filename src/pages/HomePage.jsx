@@ -70,10 +70,10 @@ export const HomePage = () => {
     };
 
     return (
-        <div className="min-h-screen px-2 md:px-12 py-8 flex flex-col justify-between">
+        <div className="min-h-screen px-2 md:px-12 py-4 sm:py-8 flex flex-col justify-between">
             <main className="w-full flex flex-col items-center justify-center">
                 <section className="flex flex-col w-full text-center items-center justify-center">
-                    <span className="text-4xl font-bold py-8">O que você está ouvindo?</span>
+                    <span className="text-4xl font-bold py-8">Qual música você está ouvindo hoje?</span>
 
                     <SongForm onSearch={handleSearch} isLoading={isLoading}></SongForm>
                 </section>
@@ -83,11 +83,11 @@ export const HomePage = () => {
                     <SongContainer onShare={handleShareSong} songList={searchResults} isLoading={isLoading}/>
                 </section>
 
-                <section className="flex flex-col w-full gap-2 tems-center justify-center max-w-180">
+                <section className="flex flex-col w-full pb-8 gap-2 tems-center justify-center max-w-180">
                     <span className="text-3xl font-bold py-8 text-center">Compartilhe suas músicas favoritas com amigos!</span>
 
-                    <span className='text-center text-sm sm:text-[16px]'>Procure pelo som que você está ouvindo agora, crie um story totalmente personalizado e compartilhe-o no Instagram, Whatsapp, Facebook, entre outros.</span>
-                    <span className='text-center text-sm sm:text-[16px]'>Para pesquisar uma música, procure pelo nome do artista + nome da música, ou escreva nome do artista + um trecho da música. </span>
+                    <span className='text-center text-sm sm:text-[16px]'>Procure pelo som que você está ouvindo agora, crie um story totalmente personalizável e compartilhe-o no Instagram, Whatsapp, Facebook, entre outros.</span>
+                    <span className='text-center text-sm sm:text-[16px]'>Para pesquisar uma música, procure pelo nome do artista + nome da música. </span>
                 </section>
             </main>
             <TermsFooter/>
