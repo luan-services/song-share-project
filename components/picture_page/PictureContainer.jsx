@@ -8,6 +8,7 @@ import { StyleButton } from './StyleButton';
 import { mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utilitário para filtrar paletas com pouca saturação
 import { LoadingPage } from "../../src/layout/LoadingPage"
 import { DownloadButton } from './DownloadButton';
+import { ShareButton } from "./ShareButton"
 
 export const PictureContainer = ({songData, selectedLyrics}) => {
 
@@ -247,13 +248,6 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
             {/* container dos botões e do story */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 p-4 rounded-xl">
 
-                <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl"> {/* div responsiva */}
-                    <div ref={pictureRef} 
-                        className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
-                        <PictureContent artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
-                    </div>
-                </div>
-
                 {/* botões do fundo */}
                 <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 max-w-78 sm:max-w-12 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
                     
@@ -281,24 +275,26 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
                     }
 
                 </div>
-        
-        
 
-                
+                <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl sm:mr-18"> {/* div responsiva */}
+                    <div ref={pictureRef} 
+                        className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
+                        <PictureContent artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
+                    </div>
+                </div>
 
             </div>
 
-              {navigator.share && navigator.canShare && (
-    <button 
-      onClick={handleShare}
-      className="seu-estilo-para-o-botao-de-share"
-    >
-      Compartilhar
-    </button>
-  )}
 
-            
+            <div className="flex flex-row gap-4 justify-center">
+                {/* caso seja possível usar o webshare API no navegador do usuário */}
+                {navigator.share && navigator.canShare && 
+                    <ShareButton onClick={handleShare}/>
+                }
+
                 <DownloadButton onClick={() => handleDownload()} />
+
+            </div>
 
         </div>
     )
