@@ -10,6 +10,7 @@ import { PicturePage } from './pages/PicturePage';
 import './App.css'
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
+import { PageWrapper } from './layout/PageWrapper';
 
 const router = createBrowserRouter([
   {
@@ -17,19 +18,19 @@ const router = createBrowserRouter([
     children: [
       {
         index: true, // "index: true" indica que este é o componente padrão para a rota pai "/"
-        element: <HomePage />,
+        element: <PageWrapper><HomePage /></PageWrapper>,
       },
       {
         path: "picture",
-        element: <PicturePage/>,
+        element: <PageWrapper><PicturePage/></PageWrapper>,
       },
             {
         path: "termos",
-        element: <TermsPage/>,
+        element: <PageWrapper><TermsPage/></PageWrapper>,
       },
             {
         path: "privacidade",
-        element: <PrivacyPage/>,
+        element: <PageWrapper><PrivacyPage/></PageWrapper>,
       }
     ],
   },

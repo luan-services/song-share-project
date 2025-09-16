@@ -4,14 +4,14 @@ const TermsPage = () => {
     return (
         <div className='min-h-screen flex justify-center bg-white text-black'>
             <div className="py-8 px-2 w-180">
-                <p className="text-xl"><b>TERMOS DE SERVIÇO DO Song Share</b></p>
+                <p className="text-xl"><b>TERMOS DE SERVIÇO DO Song Sticker</b></p>
                 <br></br>
-                <p><b>Última atualização:</b> 06 de setembro de 2025</p>
+                <p><b>Última atualização:</b> 15 de setembro de 2025</p>
                 <br></br>
-                <p>Bem-vindo ao Song Share! Ao acessar ou usar nosso serviço, você concorda em cumprir e se vincular aos seguintes termos e condições. Por favor, leia-os com atenção.</p>
+                <p>Bem-vindo ao Song Sticker! Ao acessar ou usar nosso serviço, você concorda em cumprir e se vincular aos seguintes termos e condições. Por favor, leia-os com atenção.</p>
                 <br></br>
                 <p><b>1. Descrição do Serviço</b></p>
-                O Song Share é uma ferramenta online que permite aos usuários buscar informações sobre músicas e gerar imagens personalizadas com base nesses dados. O serviço utiliza APIs de terceiros para obter metadados de músicas, incluindo, mas não se limitando a, título, artista, arte de álbum e letras.
+                O Song Sticker é uma ferramenta online que permite aos usuários buscar informações sobre músicas e gerar imagens personalizadas com base nesses dados. O serviço utiliza APIs de terceiros para obter metadados de músicas, incluindo, mas não se limitando a, título, artista, arte de álbum e letras.
                 <br></br><br></br>
                 <p><b>2. Fontes de Dados e Propriedade Intelectual</b></p>
                 a. Os dados de músicas, incluindo títulos, artistas, artes de álbuns e letras, são fornecidos por APIs de terceiros, como Deezer, e outras. Nós não reivindicamos a propriedade sobre esses dados. Toda a propriedade intelectual e direitos autorais sobre as músicas, letras e artes de álbuns pertencem aos seus respectivos detentores (artistas, gravadoras, compositores, etc.).
@@ -25,10 +25,10 @@ const TermsPage = () => {
                 <p>c. Sobrecarregar nossa infraestrutura com um número excessivo de requisições.</p>
                 <br></br>
                 <p><b>4. Conteúdo Gerado pelo Usuário</b></p>
-                As imagens geradas por você através do nosso serviço são de sua responsabilidade. Ao criar e compartilhar essas imagens, você deve respeitar os direitos autorais do material original (letras e arte de álbum). O Song Share não se responsabiliza pelo uso que você faz do conteúdo gerado.
+                As imagens geradas por você através do nosso serviço são de sua responsabilidade. Ao criar e compartilhar essas imagens, você deve respeitar os direitos autorais do material original (letras e arte de álbum). O Song Sticker não se responsabiliza pelo uso que você faz do conteúdo gerado.
                 <br></br><br></br>
                 <p><b>5. Limitação de Responsabilidade</b></p>
-                O serviço é fornecido "no estado em que se encontra" ("as is"), sem garantias de qualquer tipo. Em nenhuma circunstância Song Share será responsável por quaisquer danos diretos ou indiretos resultantes do uso ou da incapacidade de usar este serviço.
+                O serviço é fornecido "no estado em que se encontra" ("as is"), sem garantias de qualquer tipo. Em nenhuma circunstância Song Sticker será responsável por quaisquer danos diretos ou indiretos resultantes do uso ou da incapacidade de usar este serviço.
                 <br></br><br></br>
                 <p><b>6. Modificações nos Termos</b></p>
                 Reservamo-nos o direito de modificar estes termos a qualquer momento. Notificaremos sobre as alterações atualizando a data no topo deste documento. O uso continuado do serviço após tais alterações constitui sua aceitação dos novos termos.

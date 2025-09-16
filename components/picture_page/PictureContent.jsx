@@ -1,7 +1,7 @@
 // procurar biblioteca para encontrar cores complementares, inversas, etc no futuro!!!!!!!!!!!!!!!!
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-import shareSongIcon from "../../src/assets/images/share_song_reverse_icon.png"
+import SongStickerIcon from "../../src/assets/images/song_sticker_icon.png"
 
 export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
     // bgStyle -> {type: null, data: img || string[a,b] || string}
@@ -48,8 +48,8 @@ export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
 
                 {/* logo */}
                 <div className="z-20 self-end flexx gap-[4.8px] sm:gap-[6px] lg:gap-2 items-center hidden">
-                    <img src={shareSongIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline pointer-events-none" crossOrigin="anonymous"/>
-                    <span className="text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Share</span>
+                    <img src={SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline pointer-events-none" crossOrigin="anonymous"/>
+                    <span className="text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Sticker</span>
                 </div>
 
             </div>
