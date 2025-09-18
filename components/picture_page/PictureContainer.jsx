@@ -1,14 +1,19 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
-import { ClassicTemplate } from './ClassicTemplate'; // template de foto apenas com nome da música
-import { bgImgsSrc } from '../../lib/bg-images'; // importa as imagens de bg pro story
+
 import { toPng, toBlob } from 'html-to-image'; // libary para converter html em png
 import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
-import { StyleButton } from './StyleButton';
 import { mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utilitário para filtrar paletas com pouca saturação
+
 import { LoadingPage } from "../../src/layout/LoadingPage"
+
+import { ClassicTemplate } from './ClassicTemplate'; // template de foto apenas com nome da música
+
+import ColorSelector from './ColorSelector'; // componente para definir a cor do bg
+
 import { DownloadButton } from './DownloadButton';
 import { ShareButton } from "./ShareButton"
+
 
 export const PictureContainer = ({songData, selectedLyrics}) => {
 
@@ -17,13 +22,15 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
     // ---xxx states para salvar um novo url proxy para a imagem
 
     const [proxyArtUrl, setProxyArtUrl] = useState(null);
-    const [ProxyartUrlIsLoading, setProxyIsLoading] = useState(true);
+    const [ProxyartUrlIsLoading, setProxyArtUrlIsLoading] = useState(true);
 
     useEffect(() => { // useEffect inicial para fazer o fetch do url da imagem, para baixar a foto e fazer um novo url (o cors não permite usar algumas imagens de api para baixar imagem, nem para ler de 'ler' os dados da imagem para busca de palettas)
 
         let proxyObjectUrl = null;
         
         const getProxiedUrl = async (url) => {
+
+            setProxyArtUrlIsLoading(true)
 
             try {
 
@@ -50,7 +57,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
             } catch (error) {
                 console.error("Error ao tentar fazer o proxy da capa do álbum.");
             } finally {
-                setProxyIsLoading(false);
+                setProxyArtUrlIsLoading(false);
             }
         }
         
@@ -73,7 +80,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
     useEffect(() => { // useEffect para pegar a paleta de cores, a cor em destaque, etc
         
-        if (!proxyArtUrl) { // se não tiver uma url de imagem (provavelmente impossível, mas garante que nada quebre), retorna
+        if (ProxyartUrlIsLoading || !proxyArtUrl) { // se não tiver uma url de imagem (provavelmente impossível, mas garante que nada quebre), retorna
             return;
         };
 
@@ -128,7 +135,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
         extractColors();
 
-    }, [proxyArtUrl]);
+    }, [proxyArtUrl, ProxyartUrlIsLoading]);
 
     // ---xxxx funções para share e download
 
@@ -201,20 +208,15 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
     }, [pictureRef]);
 
-    // ---xxx useState bgStyle, que guarda o tipo do bg escolhido e passa pro PictureContent
+    // ---xxx  useState bgStyle, que guarda o tipo do bg escolhido pelo colorSelector e passa pro PictureContent
 
     const [bgStyle, setBgStyle] = useState({type: null, data: null})
 
-    const [currentBgKey, setCurrentBgKey] = useState(null);
-
     const handleSetBgStyle = (type, key, style) => {
-
         setBgStyle({
             type: type,
             data: style,
         })
-
-        setCurrentBgKey(key); // seta a key do bg (o nome)
     };
 
     // ---xxx
@@ -231,7 +233,6 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
             data: colorPalette[0].data, // passamos a paleta cor da cor vibrant 
         });
 
-        setCurrentBgKey('vibrant'); // setamos a key do bg como vibrant
 
     }, [colorPalette, thiefColorPalette]);
 
@@ -246,32 +247,9 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
         <div className="flex flex-col justify-center items-center w-full gap-8 p-4 py-6">
 
 
-                {/* botões do fundo */}
-                <div className="flex flex-wrap justify-center gap-2 px-2 py-2 bg-custom-secundary-red rounded-xl">
-                    
-                    {/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
-                    { thiefColorPalette && thiefColorPalette.map((palett, index) => {
-                        return (
-                            <StyleButton onClick={() => handleSetBgStyle('color', `thief-${index}`, palett)} isActive={currentBgKey === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
-                        )
-                    })}
+                {/* Container dos botões de fundo, eles recebem o style atual, palettas, e função para setar o style atual*/}
+                <ColorSelector bgStyle={bgStyle} onSetBgStyle={handleSetBgStyle} thiefColorPalette={thiefColorPalette} vibrantColorPalette={colorPalette}/>
 
-                    {/* pega o state das paletts do vibrant (arr[{type, color}]e adiciona um botão pra cada */}
-                    { colorPalette && colorPalette.map((palett) => {
-                        return (
-                            <StyleButton onClick={() => handleSetBgStyle(palett.type, palett.type, palett.data)} isActive={currentBgKey === palett.type} btnStyle={{type: palett.type, data: palett.data}}/>     
-                        )
-                    })}
-
-                    {/* pega as imagens de bg e faz um botão p cada */}
-                    {/* bgImgsSrc && bgImgsSrc.map((bg) => {
-                        return (
-                            <StyleButton onClick={() => handleSetBgStyle('img', bg.name, bg.full)} isActive={currentBgKey === bg.name} btnStyle={{type: 'img', data: bg.icon}}/>     
-                        )
-                    })
-
-                    */}
-                </div>
 
                 <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl"> {/* div responsiva */}
                     <div ref={pictureRef} 

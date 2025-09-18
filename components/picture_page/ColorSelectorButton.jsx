@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const StyleButton = ({onClick, isActive, btnStyle}) => {
+export const ColorSelectorButton = ({onClick, isActive, btnStyle}) => {
 	// btnStyle -> {type: null, data: img || string[a,b] || string}
 	let btnBg = {};
 	let btnClass = isActive ? 'ring-3 ring-white ring-inset' : 'ring-3 ring-white/60 ring-inset'
