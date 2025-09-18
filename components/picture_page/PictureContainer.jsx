@@ -13,6 +13,7 @@ import ColorSelector from './ColorSelector'; // componente para definir a cor do
 
 import { DownloadButton } from './DownloadButton';
 import { ShareButton } from "./ShareButton"
+import { LyricsSelector } from './LyricsSelector';
 
 
 export const PictureContainer = ({songData, selectedLyrics}) => {
@@ -219,6 +220,11 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
         })
     };
 
+    // ---xxx  useState currentTemplate, que guarda o template da imagem selecionada, e useState SongLyrics, que guarda a letra adicionada
+
+    const [currentTemplate, setCurrentTemplate] = useState('image');
+    const [songLyrics, setSongLyrics] = useState(null);
+
     // ---xxx
 
     useEffect(() => {  // useEffect final, para definir o estilo inicial do fundo da imagem
@@ -247,8 +253,14 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
         <div className="flex flex-col justify-center items-center w-full gap-8 p-4 py-6">
 
 
+            <div className="flex gap-4 flex-col">
+                
+                <LyricsSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} onSetLyrics={setSongLyrics}/>
+                
                 {/* Container dos botões de fundo, eles recebem o style atual, palettas, e função para setar o style atual*/}
                 <ColorSelector bgStyle={bgStyle} onSetBgStyle={handleSetBgStyle} thiefColorPalette={thiefColorPalette} vibrantColorPalette={colorPalette}/>
+
+            </div>
 
 
                 <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl"> {/* div responsiva */}
