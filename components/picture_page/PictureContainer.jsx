@@ -246,7 +246,7 @@ export const PictureContainer = ({songData}) => {
         <div className="flex flex-col justify-center items-center w-full gap-8">
 
             {/* container dos botões e do story */}
-            <div className="flex flex-col justify-center items-center gap-4 sm:gap-6 p-4 rounded-xl">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 p-4 rounded-xl">
 
                 {/* botões do fundo */}
                 <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 max-w-78 sm:max-w-12 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
@@ -299,5 +299,6 @@ export const PictureContainer = ({songData}) => {
         </div>
     )
 }
+
 
 
