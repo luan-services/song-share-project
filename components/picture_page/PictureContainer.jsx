@@ -10,7 +10,7 @@ import { LoadingPage } from "../../src/layout/LoadingPage"
 import { DownloadButton } from './DownloadButton';
 import { ShareButton } from "./ShareButton"
 
-export const PictureContainer = ({songData, selectedLyrics}) => {
+export const PictureContainer = ({songData}) => {
 
     const pictureRef = useRef(null); // referência à div da picture
 
@@ -246,7 +246,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
         <div className="flex flex-col justify-center items-center w-full gap-8">
 
             {/* container dos botões e do story */}
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 p-4 rounded-xl">
+            <div className="flex flex-col justify-center items-center gap-4 sm:gap-6 p-4 rounded-xl">
 
                 {/* botões do fundo */}
                 <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 max-w-78 sm:max-w-12 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">

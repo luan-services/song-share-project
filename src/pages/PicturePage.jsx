@@ -97,8 +97,7 @@ export const PicturePage = () => {
 				</span>	
 				
 				<section className='container flex-col items-center justify-center'>
-
-					<PictureContainer songData={songData} selectedLyrics={null}/>
+					<PictureContainer songData={songData}/>
 				</section>
 
 
