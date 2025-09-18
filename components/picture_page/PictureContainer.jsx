@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
-import { PictureContent } from './PictureContent';
+import { ClassicTemplate } from './ClassicTemplate'; // template de foto apenas com nome da música
 import { bgImgsSrc } from '../../lib/bg-images'; // importa as imagens de bg pro story
 import { toPng, toBlob } from 'html-to-image'; // libary para converter html em png
 import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
@@ -243,13 +243,11 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
 
     return (
-        <div className="flex flex-col justify-center items-center w-full gap-8">
+        <div className="flex flex-col justify-center items-center w-full gap-8 p-4 py-6">
 
-            {/* container dos botões e do story */}
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 p-4 rounded-xl">
 
                 {/* botões do fundo */}
-                <div className="flex flex-wrap justify-center gap-2 px-2 py-2 sm:px-1 sm:py-4 max-w-78 sm:max-w-12 bg-custom-secundary-red rounded-xl sm:rounded-t-full sm:rounded-b-full">
+                <div className="flex flex-wrap justify-center gap-2 px-2 py-2 bg-custom-secundary-red rounded-xl">
                     
                     {/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
                     { thiefColorPalette && thiefColorPalette.map((palett, index) => {
@@ -273,17 +271,15 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
                     })
 
                     */}
-
                 </div>
 
-                <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl sm:mr-18"> {/* div responsiva */}
+                <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl"> {/* div responsiva */}
                     <div ref={pictureRef} 
                         className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
-                        <PictureContent artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
+                        <ClassicTemplate artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
                     </div>
                 </div>
 
-            </div>
 
 
             <div className="flex flex-row gap-4 justify-center">

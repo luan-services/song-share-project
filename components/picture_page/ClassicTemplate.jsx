@@ -3,7 +3,7 @@
 
 import SongStickerIcon from "../../src/assets/images/song_sticker_reverse_icon.png"
 
-export const PictureContent = ({ artUrl, track, artist, bgStyle }) => {
+export const ClassicTemplate = ({ artUrl, track, artist, bgStyle }) => {
     // bgStyle -> {type: null, data: img || string[a,b] || string}
     
     // final style é um objeto que vai receber as props pro estilo final do bg
