@@ -250,29 +250,27 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
 
     return (
-        <div className="flex flex-col justify-center items-center w-full gap-8 p-4 py-6">
+        <div className="flex lg:flex-row flex-col lg:justify-between justify-center lg:items-start items-center  w-full gap-8  py-6">
 
 
-            <div className="flex gap-4 flex-col">
-                
-                <LyricsSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} onSetLyrics={setSongLyrics}/>
-                
+            <div className="flex flex-col lg:w-3/10 lg:pt-12">
                 {/* Container dos botões de fundo, eles recebem o style atual, palettas, e função para setar o style atual*/}
                 <ColorSelector bgStyle={bgStyle} onSetBgStyle={handleSetBgStyle} thiefColorPalette={thiefColorPalette} vibrantColorPalette={colorPalette}/>
 
+                <LyricsSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} onSetLyrics={setSongLyrics}/>
             </div>
 
 
-                <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-xl"> {/* div responsiva */}
-                    <div ref={pictureRef} 
-                        className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
-                        <ClassicTemplate artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
-                    </div>
+            <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-sm"> {/* div responsiva */}
+                <div ref={pictureRef} 
+                    className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
+                    <ClassicTemplate artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
                 </div>
+            </div>
 
 
 
-            <div className="flex flex-row gap-4 justify-center">
+            <div className="flex flex-wrap flex-row gap-4 justify-center w-full lg:w-3/10 lg:pt-12">
                 {/* caso seja possível usar o webshare API no navegador do usuário */}
                 {navigator.share && navigator.canShare && 
                     <ShareButton onClick={handleShare}/>
