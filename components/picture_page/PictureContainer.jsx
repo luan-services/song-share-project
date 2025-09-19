@@ -27,6 +27,10 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
     useEffect(() => { // useEffect inicial para fazer o fetch do url da imagem, para baixar a foto e fazer um novo url (o cors não permite usar algumas imagens de api para baixar imagem, nem para ler de 'ler' os dados da imagem para busca de palettas)
 
+        if (!songData) { // sem dado de música, retorna
+            return;
+        }
+
         let proxyObjectUrl = null;
         
         const getProxiedUrl = async (url) => {
@@ -84,6 +88,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
         if (ProxyartUrlIsLoading || !proxyArtUrl) { // se não tiver uma url de imagem (provavelmente impossível, mas garante que nada quebre), retorna
             return;
         };
+        
 
         // função assíncrona para extrair as cores, não precisa de useCallBack por estar dentro do useEffect (que vai executar renderizar e executar uma unica vez)
         const extractColors = async () => {
@@ -220,10 +225,64 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
         })
     };
 
-    // ---xxx  useState currentTemplate, que guarda o template da imagem selecionada, e useState SongLyrics, que guarda a letra adicionada
-
+    // ---xxx  useState currentTemplate, que guarda o template da imagem selecionada, e useState SongText, que guarda o texto do template (selecionado pelo usuário)
     const [currentTemplate, setCurrentTemplate] = useState('image');
-    const [songLyrics, setSongLyrics] = useState(null);
+
+    const [songText, setSongText] = useState(null);
+
+    // ---xxx useState e Effect para fazer o fetch do texto da música e salvar.
+
+    const [songFullText, setSongFullText] = useState(null);
+
+    useEffect(() => {
+
+        if (!songData) { // sem dado de música, retorna
+            return;
+        }
+
+
+        const fetchText = async (artist, track) => {
+
+            if (!artist.trim() || !track.trim()) {
+                return;
+            }
+            
+            setSongText(null);
+
+            try {
+                const params = new URLSearchParams({
+                    artist_name:  artist,
+                    track_name: track,
+                });
+                
+                const response = await fetch(`https://lrclib.net/api/search?${params}`);
+
+                if (!response.ok) {
+                    throw new Error(`Não foi possível fazer o fetch dos dados. (status: ${response.status})`);
+                }
+
+                const data = await response.json();
+
+                if (!data || data.length === 0) {
+                    throw new Error('Nenhum resultado para essa música');
+                }
+
+                const filteredData = data.filter((data) => {
+                    data.trackName.toLowerCase().trim() === track.toLowerCase().trim()
+                });
+            
+                setSongFullText(filteredData[0] ?? data[0] ?? null);
+
+            } catch (err) {
+                console.error("Não foi possível fazer o fetch dos dados.", err.message);
+            } finally {
+            }
+        };
+
+        fetchText(songData.artist, songData.track);
+
+
+    }, [songData])
 
     // ---xxx
 
@@ -257,7 +316,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
                 {/* Container dos botões de fundo, eles recebem o style atual, palettas, e função para setar o style atual*/}
                 <ColorSelector bgStyle={bgStyle} onSetBgStyle={handleSetBgStyle} thiefColorPalette={thiefColorPalette} vibrantColorPalette={colorPalette}/>
 
-                <LyricsSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} onSetLyrics={setSongLyrics}/>
+                <LyricsSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} onSetText={setSongText} songFullText={songFullText}/>
             </div>
 
 

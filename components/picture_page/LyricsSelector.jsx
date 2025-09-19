@@ -3,9 +3,14 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage, faFileLines, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-export const LyricsSelector = ({currentTemplate, onSetTemplate, onSetLyrics}) => {
+export const LyricsSelector = ({currentTemplate, onSetTemplate, onSetText, songFullText}) => {
 
 	const [isExpanded, setIsExpanded] = useState(false);
+
+	// const textArray = songFullText?.plainLyrics.replace(/\n+/g, '\n')?.split('\n');
+	const textArray = songFullText?.plainLyrics.replace(/\n+/g, '\n')?.split('\n');
+    
+	console.log(textArray)
 
 	return (
 		<div className="flex flex-wrap flex-col gap-2 py-2">
@@ -15,10 +20,19 @@ export const LyricsSelector = ({currentTemplate, onSetTemplate, onSetLyrics}) =>
 					<FontAwesomeIcon icon={faImage}></FontAwesomeIcon>
 				</button>
 
-				<button type="button" disabled={currentTemplate == 'lyric'} onClick={() => {onSetTemplate('lyric'), setIsExpanded(false)}} 
-					className='flex bg-custom-secundary-red justify-center py-2 px-2 text-white/95 text-2xl font-medium rounded-lg cursor-pointer transition active:scale-92 disabled:active:scale-100 disabled:brightness-85 disabled:cursor-pointer items-center'>
-					<FontAwesomeIcon icon={faFileLines}></FontAwesomeIcon>
-				</button>
+				{songFullText &&
+					<button type="button" disabled={currentTemplate == 'lyric'} onClick={() => {onSetTemplate('lyric'), setIsExpanded(false)}} 
+						className='flex bg-custom-secundary-red justify-center py-2 px-2 text-white/95 text-2xl font-medium rounded-lg cursor-pointer transition active:scale-92 disabled:active:scale-100 disabled:brightness-85 disabled:cursor-pointer items-center'>
+						<FontAwesomeIcon icon={faFileLines}></FontAwesomeIcon>
+					</button>
+				}
+
+				{!songFullText &&
+					<button type="button" disabled={true}
+						className='flex bg-gray-300 justify-center py-2 px-2 text-white/95 text-2xl font-medium rounded-lg cursor-pointer brightness-90 items-center'>
+						<FontAwesomeIcon icon={faFileLines}></FontAwesomeIcon>
+					</button>
+				}
 
 			</div>
 			
@@ -41,7 +55,6 @@ export const LyricsSelector = ({currentTemplate, onSetTemplate, onSetLyrics}) =>
 
                     {/* div com detalhes da letra */}
                     <div className={`w-full flex flex-col px-4 origin-top transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100 py-2' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                            <p className="mt-2 text-gray-700">placeholder</p>
                             <ul className="mt-2 space-y-1">
                                 <li className="p-2 hover:bg-gray-300 rounded-md cursor-pointer">texto 1</li>
                                 <li className="p-2 hover:bg-gray-300 rounded-md cursor-pointer">texto 2</li>
