@@ -13,10 +13,11 @@ import ColorSelector from './ColorSelector'; // componente para definir a cor do
 
 import { DownloadButton } from './DownloadButton';
 import { ShareButton } from "./ShareButton"
-import { LyricsSelector } from './LyricsSelector';
+import { TemplateSelector } from './TemplateSelector';
+import { TextSelector } from './TextSelector';
 
 
-export const PictureContainer = ({songData, selectedLyrics}) => {
+export const PictureContainer = ({songData}) => {
 
     const pictureRef = useRef(null); // referência à div da picture
 
@@ -316,7 +317,12 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
                 {/* Container dos botões de fundo, eles recebem o style atual, palettas, e função para setar o style atual*/}
                 <ColorSelector bgStyle={bgStyle} onSetBgStyle={handleSetBgStyle} thiefColorPalette={thiefColorPalette} vibrantColorPalette={colorPalette}/>
 
-                <LyricsSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} onSetText={setSongText} songFullText={songFullText}/>
+                <TemplateSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} textExists={songFullText !== null}/>
+
+                {currentTemplate == 'lyric' &&
+                    <TextSelector onSetText={setSongText} songFullText={songFullText}/>
+                }
+            
             </div>
 
 
