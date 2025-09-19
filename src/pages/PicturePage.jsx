@@ -28,48 +28,6 @@ export const PicturePage = () => {
 		}
 	}, [songData, navigate]); // Dependências: o efeito roda se songData ou navigate mudarem.
 
-	// ---
-
-	useEffect(() => { // useEffect para salvar os dados escolhidos no firebase
-
-		const storeData = async () => {
-
-			const songPayload = {
-				id: String(songData.id),
-				artist: songData.artist, 
-				track: songData.track,
-				lyrics: '.'
-			};
-
-			try {
-				const response = await fetch('/api/store-data', { 
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json', 
-					},
-					body: JSON.stringify(songPayload),
-				});
-
-				if (!response.ok) {
-					const err = await response.json();
-					throw new Error(err.message || 'Não foi possível salvar dados.');
-				}
-
-				const data = await response.json();
-				
-				console.log('Resposta do store-data:', data.message);
-				
-			} catch (err) {
-				console.error(err);
-			}
-		};
-
-		// chama a função de busca assim que o efeito é executado
-		storeData();
-
-	}, [songData, navigate]); // o efeito depende dos dados da música para rodar
-
-
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
 	if (!songData) {
 		return (

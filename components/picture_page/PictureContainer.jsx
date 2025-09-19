@@ -234,7 +234,7 @@ export const PictureContainer = ({songData, selectedLyrics}) => {
 
     const [songFullText, setSongFullText] = useState(null);
 
-    useEffect(() => {
+    useEffect(() => { // faz o fetch da letra 
 
         if (!songData) { // sem dado de música, retorna
             return;
