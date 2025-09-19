@@ -42,8 +42,8 @@ export const ClassicTemplate = ({ artUrl, track, artist, bgStyle }) => {
                 <img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-full rounded-[3.6px] sm:rounded-[4.5px] lg:rounded-md object-cover pointer-events-none" crossOrigin="anonymous"/>
 
                 <div className="z-20 text-center w-full">
-                    <p className="text-[12px] sm:text-[15px] lg:text-xl font-bold text-white truncate select-none">{track}</p>
-                    <p className="text-[10.8px] sm:text-[13.5px] lg:text-lg text-gray-100 truncate select-none">{artist}</p>
+                    <p translate="no" className="text-[12px] sm:text-[15px] lg:text-xl font-bold text-white truncate select-none">{track}</p>
+                    <p translate="no" className="text-[10.8px] sm:text-[13.5px] lg:text-lg text-gray-100 truncate select-none">{artist}</p>
                 </div>
                 
                 <div className="w-full border-b-1 border-white/50 z-20"></div>
@@ -51,7 +51,7 @@ export const ClassicTemplate = ({ artUrl, track, artist, bgStyle }) => {
                 {/* logo */}
                 <div className="z-20 self-end flex gap-[4.8px] sm:gap-[6px] lg:gap-2 items-center">
                     <img src={SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline pointer-events-none" crossOrigin="anonymous"/>
-                    <span className="text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Sticker</span>
+                    <span translate="no" className="text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Sticker</span>
                 </div>
 
             </div>
