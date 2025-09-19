@@ -3,7 +3,7 @@
 
 import SongStickerIcon from "../../src/assets/images/song_sticker_reverse_icon.png"
 
-export const ClassicTemplate = ({ artUrl, track, artist, bgStyle }) => {
+export const ClassicTemplate = ({ artUrl, contentRef, track, artist, bgStyle }) => {
     // bgStyle -> {type: null, data: img || string[a,b] || string}
     
     // final style é um objeto que vai receber as props pro estilo final do bg
@@ -25,16 +25,14 @@ export const ClassicTemplate = ({ artUrl, track, artist, bgStyle }) => {
             finalStyle = { backgroundImage: `linear-gradient(to bottom, ${bgStyle.data[0]}, ${bgStyle.data[1]})` };
             break;
         default:
-            // Estilo padrão enquanto os dados não carregam
             finalStyle = { backgroundColor: '#000' };
             break;
     }
 
     return (
-        // Aplicamos o objeto de estilo final aqui
-        <div className="w-full h-full flex flex-col items-center justify-center p-[21.6px] sm:p-[27px] lg:p-9" style={finalStyle}>
+        <div className="w-full h-full flex flex-col items-center justify-center px-[21.6px] sm:px-[27px] lg:px-9" style={finalStyle}>
 
-            <div className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
+            <div ref={contentRef} className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
 
                 {/*fundo preto opaco*/}
                 <div className="absolute inset-0 bg-bottom-center opacity-85 rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl" style={ { backgroundColor: '#121212' }}/>

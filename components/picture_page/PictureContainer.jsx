@@ -15,11 +15,19 @@ import { DownloadButton } from './DownloadButton';
 import { ShareButton } from "./ShareButton"
 import { TemplateSelector } from './TemplateSelector';
 import { TextSelector } from './TextSelector';
+import { TextTemplate } from './TextTemplate';
 
 
 export const PictureContainer = ({songData}) => {
 
     const pictureRef = useRef(null); // referência à div da picture
+    const contentRef = useRef(null); // referencia apenas ao sticker
+
+    // ---xxx  useState currentTemplate, que guarda o template da imagem selecionada, e useState SongText, que guarda o texto do template (selecionado pelo usuário)
+    
+    const [currentTemplate, setCurrentTemplate] = useState('image');
+
+    const [songText, setSongText] = useState('uhul\noba');
 
     // ---xxx states para salvar um novo url proxy para a imagem
 
@@ -149,7 +157,10 @@ export const PictureContainer = ({songData}) => {
     //... depois do seu useCallback do handleDownload
 
     const handleShare = useCallback(async () => {
-        if (pictureRef.current === null) {
+
+        const targetContainer = (currentTemplate === 'image' || currentTemplate === 'lyric') ? pictureRef.current : contentRef.current;
+        
+        if (targetContainer === null) {
             return;
         }
         
@@ -158,12 +169,12 @@ export const PictureContainer = ({songData}) => {
             return;
         }
 
-        const currentWidth = pictureRef.current.offsetWidth; // mede a largura atual da div do story
+        const currentWidth = targetContainer.offsetWidth; // mede a largura atual da div do story
 
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
         
         try {
-            const blob = await toBlob(pictureRef.current, { pixelRatio: pixelRatio });
+            const blob = await toBlob(targetContainer, { pixelRatio: pixelRatio });
 
             if (!blob) {
                 throw new Error("Não foi possível gerar a imagem para compartilhamento.");
@@ -189,22 +200,25 @@ export const PictureContainer = ({songData}) => {
             console.error('Erro ao tentar compartilhar a imagem:', err);
             alert("Ocorreu um erro ao compartilhar.");
         }
-    }, [pictureRef, songData]); // Adicione songData e handleDownload às dependências
+    }, [pictureRef, contentRef, currentTemplate, songData]); // Adicione songData e handleDownload às dependências
 
     const handleDownload = useCallback( async () => {  // função para criar botão de download do story, useCallback impede ela de ser recriada (já que não está em um useEffect)
-        if (pictureRef.current === null) {  // enquanto a div não existir a ser transformada em imagem não existir, não chama a função
-            return;
+        
+        const targetContainer = (currentTemplate === 'image' || currentTemplate === 'lyric') ? pictureRef.current : contentRef.current;
+        
+        if (targetContainer === null) { // enquanto a div não existir a ser transformada em imagem não existir, não chama a função
+            return; 
         }
 
         const link = document.createElement('a');
 
-        const currentWidth = pictureRef.current.offsetWidth; // mede a largura atual da div do story
+        const currentWidth = targetContainer.offsetWidth; // mede a largura atual da div do story
 
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
 
         try {
 
-            const dataUrl = await toPng(pictureRef.current, { pixelRatio: pixelRatio });
+            const dataUrl = await toPng(targetContainer, { pixelRatio: pixelRatio });
             link.download = 'song-share-story.png';
             link.href = dataUrl;
             link.click();
@@ -213,7 +227,7 @@ export const PictureContainer = ({songData}) => {
             console.error('Erro ao gerar imagem para download:', err);
         };
 
-    }, [pictureRef]);
+    }, [pictureRef, contentRef, currentTemplate]);
 
     // ---xxx  useState bgStyle, que guarda o tipo do bg escolhido pelo colorSelector e passa pro PictureContent
 
@@ -225,11 +239,6 @@ export const PictureContainer = ({songData}) => {
             data: style,
         })
     };
-
-    // ---xxx  useState currentTemplate, que guarda o template da imagem selecionada, e useState SongText, que guarda o texto do template (selecionado pelo usuário)
-    const [currentTemplate, setCurrentTemplate] = useState('image');
-
-    const [songText, setSongText] = useState(null);
 
     // ---xxx useState e Effect para fazer o fetch do texto da música e salvar.
 
@@ -248,7 +257,7 @@ export const PictureContainer = ({songData}) => {
                 return;
             }
             
-            setSongText(null);
+            setSongFullText(null)
 
             try {
                 const params = new URLSearchParams({
@@ -322,17 +331,26 @@ export const PictureContainer = ({songData}) => {
                 {currentTemplate == 'lyric' &&
                     <TextSelector onSetText={setSongText} songFullText={songFullText}/>
                 }
+
+                
             
             </div>
 
 
             <div className="rounded-lg p-3 bg-white border-1 border-gray-300 shadow-sm"> {/* div responsiva */}
                 <div ref={pictureRef} 
-                    className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300">
-                    <ClassicTemplate artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
+                    className="w-[216px] h-[384px] sm:w-[270px] sm:h-[480px] lg:w-[360px] lg:h-[640px] transition-all duration-300 items-center flex">
+                    
+
+                    {currentTemplate === 'image' &&
+                        <ClassicTemplate contentRef={contentRef} artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
+                    }
+
+                    {currentTemplate === 'lyric' && 
+                        <TextTemplate contentRef={contentRef} songText={songText} artUrl={proxyArtUrl} track={songData.track} artist={songData.artist} bgStyle={bgStyle}/>
+                    }
                 </div>
             </div>
-
 
 
             <div className="flex flex-wrap flex-row gap-4 justify-center w-full lg:w-3/10 lg:pt-12">
