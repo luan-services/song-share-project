@@ -1,62 +1,77 @@
 // ./components/templates/TextTemplate.js
 
 import SongStickerIcon from "../../src/assets/images/song_sticker_reverse_icon.png"
+import SongStickerBlackIcon from "../../src/assets/images/song_sticker_reverse_icon_black.png"
+import { getContrastingShade, isInnerBgLight } from "../../lib/color-filter";
+
 
 export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgStyle }) => {
-    // A lógica para definir o estilo do background é idêntica à do ClassicTemplate.
-    // Podemos reutilizá-la aqui.
-    let finalStyle = {}; 
+
+	songText = ["Helloaosdka opsdkopaskdo paksdopkaop sdkopaskdoas ", '\n', "It is me agau", "Okay"]
+	
+    let outerBgStyle = {}; 
+
+	let innerBgStyle = {};
+
+	const contrastingColor = bgStyle.type === 'img' ? '#121212' : (bgStyle.type === 'gradient' || bgStyle.type === 'darkGradient') ? getContrastingShade(bgStyle.data[0]) : getContrastingShade(bgStyle.data);
+
+	const bgIsLight = isInnerBgLight(contrastingColor);
+
 
     switch (bgStyle.type) {
         case "color": 
         case "vibrant": 
         case "muted":
-            finalStyle = { backgroundColor: bgStyle.data };
+            outerBgStyle = { backgroundColor: bgStyle.data };
+			innerBgStyle = { backgroundColor: contrastingColor };
             break;
         case "img":
-            finalStyle = { backgroundImage: `url(${bgStyle.data})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
+            outerBgStyle = { backgroundImage: `url(${bgStyle.data})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
+			innerBgStyle = { backgroundColor: '#121212' };
             break;
         case "gradient":
         case "darkGradient":
-            finalStyle = { backgroundImage: `linear-gradient(to bottom, ${bgStyle.data[0]}, ${bgStyle.data[1]})` };
+            outerBgStyle = { backgroundImage: `linear-gradient(to bottom, ${bgStyle.data[0]}, ${bgStyle.data[1]})` };
+			innerBgStyle = { backgroundColor: contrastingColor };
             break;
         default:
-            finalStyle = { backgroundColor: '#000' };
+            outerBgStyle = { backgroundColor: '#000' };
+			innerBgStyle = { backgroundColor: '#121212' };
             break;
     }
 
     return (
-		<div className="w-full h-full flex flex-col items-center justify-center px-[21.6px] sm:px-[27px] lg:px-9" style={finalStyle}>
+		<div className="w-full h-full flex flex-col items-center justify-center px-[21.6px] sm:px-[27px] lg:px-9" style={outerBgStyle}>
 
 			<div ref={contentRef} className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
 
 				{/*fundo colorido opaco*/}
-				<div className="absolute inset-0 bg-bottom-center rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl lg:shadow-lg border-1 border-black/20" style={finalStyle?.backgroundImage ? { backgroundColor: '#121212' } : finalStyle}/>
+				<div className="absolute inset-0 bg-bottom-center rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl lg:shadow-lg" style={innerBgStyle}/>
 
 				<div className="z-20 w-full flex-row flex items-center justify-between">
 
 					<div className="z-20">
-						<p translate="no" className="text-[9.6px] sm:text-[12px] lg:text-[16px] font-bold text-white truncate select-none">{track}</p>
-						<p translate="no" className="text-[8.4px] sm:text-[10.5px] lg:text-[14px] text-gray-100 truncate select-none">{artist}</p>
+						<p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-bold  truncate select-none ${bgIsLight ? 'text-custom-charcoal/90' : 'text-white'}`}>{track}</p>
+						<p translate="no" className={`text-[8.4px] sm:text-[10.5px] lg:text-[14px]  truncate select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>{artist}</p>
 					</div>
 					
 					<img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-[33.6px] h-[33.6px] sm:w-[42px] sm:h-[42px] lg:w-[56px] lg:h-[56px] object-cover pointer-events-none" crossOrigin="anonymous"/>
 				</div>
 
-				<div className="w-full border-b-1 border-white/50 z-20"></div>
+				<div className={`w-full border-b-1  z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
 
-				<div className="w-full z-20 text-white font-medium">
-					<p translate="no" className="text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium text-white truncate select-none">sdfdsf</p>
-					<p translate="no" className="text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium text-white truncate select-none">sdfdsf</p>
-					<p translate="no" className="text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium text-white truncate select-none">sdfdsf</p>
+				<div className={`w-full z-20 font-medium ${bgIsLight ? 'text-custom-charcoal' : 'text-white'}`}>
+					{songText.map((line) => {
+						return <p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium select-none ${line == '\n' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
+					})}
 				</div>
 				
-				<div className="w-full border-b-1 border-white/50 z-20"></div>
+				<div className={`w-full border-b-1  z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
 
 				{/* logo */}
 				<div className="z-20 self-end flex gap-[4.8px] sm:gap-[6px] lg:gap-2 items-center">
-					<img src={SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline pointer-events-none" crossOrigin="anonymous"/>
-					<span translate="no" className="text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Sticker</span>
+					<img src={bgIsLight ? SongStickerBlackIcon : SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline pointer-events-none" crossOrigin="anonymous"/>
+					<span translate="no" className={`text-[7.2px] sm:text-[9px] lg:text-xs font-medium select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>Song Sticker</span>
 				</div>
 
 			</div>

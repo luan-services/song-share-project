@@ -10,7 +10,7 @@ export const ColorSelector = ({bgStyle, onSetBgStyle, thiefColorPalette, vibrant
 			{/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
 			{ thiefColorPalette && thiefColorPalette.map((palett, index) => {
 				return (
-					<ColorSelectorButton onClick={() => onSetBgStyle('color', `thief-${index}`, palett)} isActive={bgStyle.type === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
+					<ColorSelectorButton onClick={() => onSetBgStyle('color', `thief-${index}`, palett)} isActive={bgStyle.key === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
 				)
 			})}
 

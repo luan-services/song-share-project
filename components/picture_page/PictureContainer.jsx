@@ -236,6 +236,7 @@ export const PictureContainer = ({songData}) => {
     const handleSetBgStyle = (type, key, style) => {
         setBgStyle({
             type: type,
+            key: key,
             data: style,
         })
     };
