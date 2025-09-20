@@ -49,17 +49,10 @@ export const PicturePage = () => {
 			setSongDataTextIsLoading(true);
 
             try {
-                const params = new URLSearchParams({
-                    artist_name: artist,
-                    track_name: track,
-                });
+                const query = `https://lrclib.net/api/search?q=${artist} ${track}`;
+            
+                const response = await fetch(query);
 
-                const queryOne = `https://lrclib.net/api/search?${params}`;
-                const queryTwo = `https://lrclib.net/api/search?q=${artist} ${track}`;
-
-
-                
-                const response = await fetch(queryTwo);
                 if (!response.ok) {
                     throw new Error(`Não foi possível fazer o fetch dos dados. (status: ${response.status})`);
                 }
@@ -74,7 +67,6 @@ export const PicturePage = () => {
                 });
 
                 setSongDataText(filteredData[0] ?? data[0] ?? null);
-                console.log(filteredData[0])
 
             } catch (err) {
                 console.error("Não foi possível fazer o fetch dos dados.", err.message);
