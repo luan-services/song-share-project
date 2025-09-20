@@ -6,8 +6,6 @@ import { getContrastingShade, isInnerBgLight } from "../../lib/color-filter";
 
 
 export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgStyle }) => {
-
-	songText = ["Helloaosdka opsdkopaskdo paksdopkaop sdkopaskdoas ", '\n', "It is me agau", "Okay"]
 	
     let outerBgStyle = {}; // cor do fundo
 
@@ -66,7 +64,7 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 				{/*div da letra, se a linha é '\n', dá espaço, caso contrário, escreve a linha*/}
 				<div className={`w-full z-20 font-medium ${bgIsLight ? 'text-custom-charcoal' : 'text-white'}`}>
 					{songText.map((line) => {
-						return <p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium select-none ${line == '\n' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
+						return <p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium select-none ${line == '' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
 					})}
 				</div>
 

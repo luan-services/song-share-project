@@ -27,7 +27,7 @@ export const PictureContainer = ({songData}) => {
     
     const [currentTemplate, setCurrentTemplate] = useState('image');
 
-    const [songText, setSongText] = useState('uhul\noba');
+    const [songText, setSongText] = useState(["Helloaosdka opsdkopaskdo paksdopkaop sdkopaskdoas", '', "It is me agau", "Okay", '', "I tryrtrt", "OH OKEEE", "NMV"]);
 
     // ---xxx states para salvar um novo url proxy para a imagem
 
@@ -259,15 +259,20 @@ export const PictureContainer = ({songData}) => {
             }
             
             setSongFullText(null)
+                setSongFullText({plainLyrics: "Helloaosdka opsdkopaskdo paksdopkaop sdkopaskdoas\n\nIt is me agau\nOkay\n\nI tryrtrt\nOH OKEEE\nNMV"})
 
             try {
                 const params = new URLSearchParams({
-                    artist_name:  artist,
+                    artist_name: artist,
                     track_name: track,
                 });
-                
-                const response = await fetch(`https://lrclib.net/api/search?${params}`);
 
+                const queryOne = `https://lrclib.net/api/search?${params}`;
+                const queryTwo = `https://lrclib.net/api/search?q=${artist} ${track}`;
+
+
+                
+                const response = await fetch(queryTwo);
                 if (!response.ok) {
                     throw new Error(`Não foi possível fazer o fetch dos dados. (status: ${response.status})`);
                 }
@@ -277,12 +282,12 @@ export const PictureContainer = ({songData}) => {
                 if (!data || data.length === 0) {
                     throw new Error('Nenhum resultado para essa música');
                 }
-
                 const filteredData = data.filter((data) => {
-                    data.trackName.toLowerCase().trim() === track.toLowerCase().trim()
+                    return data.trackName.toLowerCase().trim() === track.toLowerCase().trim()
                 });
-            
+
                 setSongFullText(filteredData[0] ?? data[0] ?? null);
+                console.log(filteredData[0])
 
             } catch (err) {
                 console.error("Não foi possível fazer o fetch dos dados.", err.message);
@@ -332,8 +337,6 @@ export const PictureContainer = ({songData}) => {
                 {currentTemplate == 'lyric' &&
                     <TextSelector onSetText={setSongText} songFullText={songFullText}/>
                 }
-
-                
             
             </div>
 
