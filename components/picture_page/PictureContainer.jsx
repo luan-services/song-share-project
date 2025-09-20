@@ -27,7 +27,7 @@ export const PictureContainer = ({songData, songDataText}) => {
     
     const [currentTemplate, setCurrentTemplate] = useState('image');
 
-    const [songText, setSongText] = useState(["Helloaosdka opsdkopaskdo paksdopkaop sdkopaskdoas", '', "It is me agau", "Okay", '', "I tryrtrt", "OH OKEEE", "NMV"]);
+    const [songText, setSongText] = useState([]);
 
     // ---xxx states para salvar um novo url proxy para a imagem
 
@@ -269,11 +269,11 @@ export const PictureContainer = ({songData, songDataText}) => {
         <div className="flex lg:flex-row flex-col lg:justify-between justify-center lg:items-start items-center  w-full gap-8  py-6">
 
 
-            <div className="flex flex-col lg:w-3/10 lg:pt-12">
+            <div className="flex flex-col max-w-120 lg:max-w-full lg:w-3/10 lg:pt-12">
                 {/* Container dos botões de fundo, eles recebem o style atual, palettas, e função para setar o style atual*/}
                 <ColorSelector bgStyle={bgStyle} onSetBgStyle={handleSetBgStyle} thiefColorPalette={thiefColorPalette} vibrantColorPalette={colorPalette}/>
 
-                <TemplateSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} textExists={songDataText !== null}/>
+                <TemplateSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate}/>
 
                 {currentTemplate == 'lyric' &&
                     <TextSelector onSetText={setSongText} songFullText={songDataText}/>
