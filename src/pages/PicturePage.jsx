@@ -28,8 +28,68 @@ export const PicturePage = () => {
 		}
 	}, [songData, navigate]); // Dependências: o efeito roda se songData ou navigate mudarem.
 
+    // ---xxx useState e Effect para fazer o fetch do texto da música e salvar.
+
+    const [songDataText, setSongDataText] = useState(null);
+	const [songDataTextIsLoading, setSongDataTextIsLoading] = useState(true);
+
+    useEffect(() => { 
+
+        if (!songData) { // sem dado de música, retorna
+            return;
+        }
+
+        const fetchText = async (artist, track) => {
+
+            if (!artist.trim() || !track.trim()) {
+                return;
+            }
+            
+            setSongDataText(null);
+			setSongDataTextIsLoading(true);
+
+            try {
+                const params = new URLSearchParams({
+                    artist_name: artist,
+                    track_name: track,
+                });
+
+                const queryOne = `https://lrclib.net/api/search?${params}`;
+                const queryTwo = `https://lrclib.net/api/search?q=${artist} ${track}`;
+
+
+                
+                const response = await fetch(queryTwo);
+                if (!response.ok) {
+                    throw new Error(`Não foi possível fazer o fetch dos dados. (status: ${response.status})`);
+                }
+
+                const data = await response.json();
+
+                if (!data || data.length === 0) {
+                    throw new Error('Nenhum resultado para essa música');
+                }
+                const filteredData = data.filter((data) => {
+                    return data.trackName.toLowerCase().trim() === track.toLowerCase().trim()
+                });
+
+                setSongDataText(filteredData[0] ?? data[0] ?? null);
+                console.log(filteredData[0])
+
+            } catch (err) {
+                console.error("Não foi possível fazer o fetch dos dados.", err.message);
+            } finally {
+				setSongDataTextIsLoading(false);
+            }
+        };
+
+        fetchText(songData.artist, songData.track);
+
+
+    }, [songData])
+
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
-	if (!songData) {
+	if (!songData || songDataTextIsLoading) {
 		return (
 			<LoadingPage/>
 		)
@@ -56,7 +116,7 @@ export const PicturePage = () => {
 				
 				<section className='container flex-col items-center justify-center'>
 
-					<PictureContainer songData={songData} selectedLyrics={null}/>
+					<PictureContainer songData={songData} songDataText={songDataText}/>
 				</section>
 
 

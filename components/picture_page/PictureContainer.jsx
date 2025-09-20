@@ -18,7 +18,7 @@ import { TextSelector } from './TextSelector';
 import { TextTemplate } from './TextTemplate';
 
 
-export const PictureContainer = ({songData}) => {
+export const PictureContainer = ({songData, songDataText}) => {
 
     const pictureRef = useRef(null); // referência à div da picture
     const contentRef = useRef(null); // referencia apenas ao sticker
@@ -241,65 +241,6 @@ export const PictureContainer = ({songData}) => {
         })
     };
 
-    // ---xxx useState e Effect para fazer o fetch do texto da música e salvar.
-
-    const [songFullText, setSongFullText] = useState(null);
-
-    useEffect(() => { // faz o fetch da letra 
-
-        if (!songData) { // sem dado de música, retorna
-            return;
-        }
-
-
-        const fetchText = async (artist, track) => {
-
-            if (!artist.trim() || !track.trim()) {
-                return;
-            }
-            
-            setSongFullText(null)
-                setSongFullText({plainLyrics: "Helloaosdka opsdkopaskdo paksdopkaop sdkopaskdoas\n\nIt is me agau\nOkay\n\nI tryrtrt\nOH OKEEE\nNMV"})
-
-            try {
-                const params = new URLSearchParams({
-                    artist_name: artist,
-                    track_name: track,
-                });
-
-                const queryOne = `https://lrclib.net/api/search?${params}`;
-                const queryTwo = `https://lrclib.net/api/search?q=${artist} ${track}`;
-
-
-                
-                const response = await fetch(queryTwo);
-                if (!response.ok) {
-                    throw new Error(`Não foi possível fazer o fetch dos dados. (status: ${response.status})`);
-                }
-
-                const data = await response.json();
-
-                if (!data || data.length === 0) {
-                    throw new Error('Nenhum resultado para essa música');
-                }
-                const filteredData = data.filter((data) => {
-                    return data.trackName.toLowerCase().trim() === track.toLowerCase().trim()
-                });
-
-                setSongFullText(filteredData[0] ?? data[0] ?? null);
-                console.log(filteredData[0])
-
-            } catch (err) {
-                console.error("Não foi possível fazer o fetch dos dados.", err.message);
-            } finally {
-            }
-        };
-
-        fetchText(songData.artist, songData.track);
-
-
-    }, [songData])
-
     // ---xxx
 
     useEffect(() => {  // useEffect final, para definir o estilo inicial do fundo da imagem
@@ -332,10 +273,10 @@ export const PictureContainer = ({songData}) => {
                 {/* Container dos botões de fundo, eles recebem o style atual, palettas, e função para setar o style atual*/}
                 <ColorSelector bgStyle={bgStyle} onSetBgStyle={handleSetBgStyle} thiefColorPalette={thiefColorPalette} vibrantColorPalette={colorPalette}/>
 
-                <TemplateSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} textExists={songFullText !== null}/>
+                <TemplateSelector currentTemplate={currentTemplate} onSetTemplate={setCurrentTemplate} textExists={songDataText !== null}/>
 
                 {currentTemplate == 'lyric' &&
-                    <TextSelector onSetText={setSongText} songFullText={songFullText}/>
+                    <TextSelector onSetText={setSongText} songFullText={songDataText}/>
                 }
             
             </div>
