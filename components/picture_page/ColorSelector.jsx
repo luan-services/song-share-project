@@ -21,6 +21,8 @@ export const ColorSelector = ({bgStyle, onSetBgStyle, thiefColorPalette, vibrant
 				)
 			})}
 
+			<ColorSelectorButton key="full-black" onClick={() => onSetBgStyle('color', 'black', '#000')} isActive={bgStyle.type === 'black'} btnStyle={{type: 'color', data: 'black'}}/>  
+
 			{/* pega as imagens de bg e faz um botão p cada  (PRECISA MUDAR ISSO AQUI DEPOIS)*/}
 			{/* bgImgsSrc && bgImgsSrc.map((bg) => {
 				return (

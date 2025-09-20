@@ -55,7 +55,7 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 						<p translate="no" className={`text-[8.4px] sm:text-[10.5px] lg:text-[14px]  truncate select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>{artist}</p>
 					</div>
 					
-					<img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-[33.6px] h-[33.6px] sm:w-[42px] sm:h-[42px] lg:w-[56px] lg:h-[56px] object-cover pointer-events-none" crossOrigin="anonymous"/>
+					<img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-[33.6px] h-[33.6px] sm:w-[42px] sm:h-[42px] lg:w-[56px] lg:h-[56px] object-cover select-none pointer-events-none" crossOrigin="anonymous"/>
 				</div>
 
 				{/*linebreak*/}
@@ -64,7 +64,7 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 				{/*div da letra, se a linha é '\n', dá espaço, caso contrário, escreve a linha*/}
 				<div className={`w-full z-20 font-medium ${bgIsLight ? 'text-custom-charcoal' : 'text-white'}`}>
 					{songText.map((line, index) => {
-						return <p translate="no" key={`line-${index}`} className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium select-none ${line == '' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
+						return <p translate="no" key={`line-${index}`} className={`text-[9.6px] sm:text-[12px] lg:text-[16px] mb-0.5 font-medium select-none ${line == '' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
 					})}
 				</div>
 
@@ -73,7 +73,7 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 
 				{/* logo */}
 				<div className="z-20 self-end flex gap-[4.8px] sm:gap-[6px] lg:gap-2 items-center">
-					<img src={bgIsLight ? SongStickerBlackIcon : SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline pointer-events-none" crossOrigin="anonymous"/>
+					<img src={bgIsLight ? SongStickerBlackIcon : SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline select-none pointer-events-none" crossOrigin="anonymous"/>
 					<span translate="no" className={`text-[7.2px] sm:text-[9px] lg:text-xs font-medium select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>Song Sticker</span>
 				</div>
 

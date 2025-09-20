@@ -59,7 +59,7 @@ export const TextSelector = ({ onSetText, songFullText }) => {
                 {/* botão de toggle no seletor */}
                 <button disabled={!(textArray.length > 0)} type="button" onClick={() => setIsExpanded(!isExpanded)} className="w-full flex justify-between items-center px-4 py-4 text-custom-charcoal font-medium cursor-pointer disabled:cursor-default">
                         
-                    <span className="text-[14px] lg:text-[16px]">{textArray.length > 0 ? "Clique no texto e adicione ao sticker" : "Não há texto disponível para essa música."}</span>
+                    <span className="text-[14px] lg:text-[16px]">{textArray.length > 0 ? "Clique e adicione texto ao sticker" : "Não há texto disponível para essa música."}</span>
                     <span className={`inline-block transform transition-transform duration-300 ease-in-out ${textArray.length > 0 ? '' : 'text-custom-primary-red'} ${isExpanded ? 'rotate-180' : ''}`}>
                         
                         {(textArray.length > 0) ? <FontAwesomeIcon icon={faCaretDown} /> : <FontAwesomeIcon icon={faBan} />}
@@ -69,8 +69,14 @@ export const TextSelector = ({ onSetText, songFullText }) => {
                 <div className="border-gray-200 border-b-1" />
 
                 {/* Corpo com a listagem de letras */}
-                <div className={`w-full flex px-4 origin-top transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100 py-2 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                    <div className="w-full max-h-88 pr-4">
+                <div className={`w-full flex flex-col gap-2 pr-1 origin-top transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100 py-2 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+
+                    <div className="px-4">
+                        <button type="button" disabled={(selection.start === null && selection.end === null)} className="bg-gray-300 w-full text-[12px] sm:text-[14px] lg:text-[16px] disabled:opacity-30 px-3 self-center py-1 rounded-lg text-custom-charcoal font-medium justify-center cursor-pointer disabled:active:scale-100 disabled:cursor-default active:scale-92 transition-all" onClick={() => setSelection({ start: null, end: null })}>Limpar seleção</button>
+
+                    </div>
+
+                    <div className="w-full max-h-88 px-4 overflow-y-scroll">
 
                         {textArray && textArray.map((line, index) => {
                             const isEmpty = line === '';

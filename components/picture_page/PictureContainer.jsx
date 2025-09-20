@@ -297,6 +297,13 @@ export const PictureContainer = ({songData, songDataText}) => {
 
 
             <div className="flex flex-wrap flex-row gap-4 justify-center w-full lg:w-3/10 lg:pt-12">
+
+                <div className="flex flex-col w-full gap-2 pb-8 tems-center justify-center max-w-180">
+                    <span className="text-3xl font-bold py-2 pb-4 text-center">Compartilhe</span>
+                    <span className='text-center text-sm sm:text-[16px]'>Faça o download diretamente em 1080x1920, ou compartilhe o sticker nas redes sociais pelo botão.</span>
+                </div>
+
+
                 {/* caso seja possível usar o webshare API no navegador do usuário */}
                 {navigator.share && navigator.canShare && 
                     <ShareButton onClick={handleShare}/>
