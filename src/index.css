@@ -1,4 +1,15 @@
-@import "tailwindcss"; 
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Noto Sans";
+  font-weight: 100 900;
+  src: url("../src/assets//fonts/NotoSans-VariableFont_wdth\,wght.ttf"), format("ttf");
+}
+
+@theme {
+  --font-noto-sans: "Noto Sans", sans-serif;
+}
+
 
 @theme {
     --color-custom-primary-red: #E50914;    

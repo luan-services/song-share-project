@@ -40,7 +40,7 @@ const router = createBrowserRouter([
 function App() {
 
 	return (
-		<div className="min-h-screen text-custom-charcoal bg-custom-background-sand">
+		<div className="min-h-screen text-custom-charcoal bg-custom-background-sand font-noto-sans">
         <RouterProvider router={router} />
 		</div>
 	)
