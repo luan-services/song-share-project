@@ -27,7 +27,7 @@ export const SongForm = ({isLoading, onSearch}) => {
         }
 
         let searchTerm = `${songArtist} ${songTitle}`.trim().replace(/\s+/g, ' ') // cria uma query para buscar os dados;
-        console.log("termo de busca deezer", searchTerm)
+        
         onSearch(searchTerm); // chama a função onSearch e passa a query.
 
     };

@@ -6,23 +6,21 @@ const PrivacyPage = () => {
 			<div className="py-8 px-2 w-180">
 				<p className="text-xl"><b>POLÍTICA DE PRIVACIDADE DO Song Sticker</b></p>
 				<br></br>
-				<p><b>Última atualização:</b> 15 de setembro de 2025</p>
+				<p><b>Última atualização:</b> 18 de setembro de 2025</p>
 				<br></br>
 				<p>Esta Política de Privacidade descreve como Song Sticker ("nós", "nosso") coleta, usa e protege suas informações quando você utiliza o site Song Sticker, em conformidade com a Lei Geral de Proteção de Dados do Brasil (LGPD - Lei nº 13.709/2018).</p>
 				<br></br>
 				<p><b>1. Quais Dados Coletamos?</b></p>
 				<p>Para fornecer e melhorar nosso serviço, coletamos os seguintes tipos de informações:</p>
 				<p className=''>a. Dados Coletados Automaticamente: Quando você acessa nosso site, podemos coletar automaticamente certas informações, incluindo seu endereço de IP, tipo de navegador, provedor de internet, e dados de uso do site.</p>
-				<p className=''>b. Dados Fornecidos às Nossas APIs: As buscas que você realiza (nomes de artistas, músicas e letras) são enviadas para nossas funções de servidor para processamento.</p>
+				<p className=''>b. Dados Fornecidos para o Serviço: As buscas que você realiza (nomes de artistas e músicas) são enviadas para nossas funções de servidor para processamento.</p>
 				<br></br>
 				<p><b>2. Como Usamos Seus Dados?</b></p>
 				Utilizamos os dados coletados para as seguintes finalidades:
 				<br></br>
 				a. Para operar e manter o serviço.
 				<br></br>
-				<p className='pl-6'><li>Para se comunicar com as APIs de terceiros (Deezer).</li></p>
-				
-				<p className='pl-6'><li>Para implementar nosso sistema de cache de letras no Firebase.</li></p>
+				<p className='pl-6'><li>Para se comunicar com APIs e serviços de terceiros.</li></p>
 				
 				<p className='pl-6'><li>Para monitorar o uso do serviço e prevenir fraudes ou abusos.</li></p>
 				
@@ -33,9 +31,7 @@ const PrivacyPage = () => {
 				<br></br>
 				<b>a. Vercel (Hospedagem):</b> Nosso site e nossas funções de API são hospedados na Vercel. A Vercel processa seu endereço de IP para entregar o conteúdo do site e proteger o serviço.
 				<br></br>
-				<b>b. Google Firebase (Banco de Dados):</b> Usamos o serviço Firestore do Google para armazenar em cache as letras das músicas que são buscadas, a fim de acelerar o carregamento futuro.
-				<br></br>
-				<b>c. APIs de Músicas (Deezer):</b> As buscas que você realiza são repassadas para as APIs do Deezer para obter os dados das músicas.
+				<b>c. APIs e Serviços de Músicas:</b> As buscas que você realiza (nomes de artistas e músicas) são repassadas para serviços de terceiros, como a API da Deezer (para dados da música) e as fontes consultadas pela nossa biblioteca de busca de letras (para obter as letras).
 				<br></br><br></br>
 			
 				<p><b>4. Política de Cookies</b></p>

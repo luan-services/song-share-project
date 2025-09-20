@@ -28,50 +28,60 @@ export const PicturePage = () => {
 		}
 	}, [songData, navigate]); // Dependências: o efeito roda se songData ou navigate mudarem.
 
-	// ---
+    // ---xxx useState e Effect para fazer o fetch do texto da música e salvar.
 
-	useEffect(() => { // useEffect para salvar os dados escolhidos no firebase
+    const [songDataText, setSongDataText] = useState(null);
+	const [songDataTextIsLoading, setSongDataTextIsLoading] = useState(true);
 
-		const storeData = async () => {
+    useEffect(() => { 
 
-			const songPayload = {
-				id: String(songData.id),
-				artist: songData.artist, 
-				track: songData.track,
-				lyrics: '.'
-			};
+        if (!songData) { // sem dado de música, retorna
+            return;
+        }
 
-			try {
-				const response = await fetch('/api/store-data', { 
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json', 
-					},
-					body: JSON.stringify(songPayload),
-				});
+        const fetchText = async (artist, track) => {
 
-				if (!response.ok) {
-					const err = await response.json();
-					throw new Error(err.message || 'Não foi possível salvar dados.');
-				}
+            if (!artist.trim() || !track.trim()) {
+                return;
+            }
+            
+            setSongDataText(null);
+			setSongDataTextIsLoading(true);
 
-				const data = await response.json();
-				
-				console.log('Resposta do store-data:', data.message);
-				
-			} catch (err) {
-				console.error(err);
-			}
-		};
+            try {
+                const query = `https://lrclib.net/api/search?q=${artist} ${track}`;
+            
+                const response = await fetch(query);
 
-		// chama a função de busca assim que o efeito é executado
-		storeData();
+                if (!response.ok) {
+                    throw new Error(`Não foi possível fazer o fetch dos dados. (status: ${response.status})`);
+                }
 
-	}, [songData, navigate]); // o efeito depende dos dados da música para rodar
+                const data = await response.json();
 
+                if (!data || data.length === 0) {
+                    throw new Error('Nenhum resultado para essa música');
+                }
+                const filteredData = data.filter((data) => {
+                    return data.trackName.toLowerCase().trim() === track.toLowerCase().trim()
+                });
+
+                setSongDataText(filteredData[0] ?? data[0] ?? null);
+
+            } catch (err) {
+                console.error("Não foi possível fazer o fetch dos dados.", err.message);
+            } finally {
+				setSongDataTextIsLoading(false);
+            }
+        };
+
+        fetchText(songData.artist, songData.track);
+
+
+    }, [songData])
 
 	// se songData ainda não existe, não renderizamos nada (ou um loading) para evitar o erro até que o retorno do useEffect carregue
-	if (!songData) {
+	if (!songData || songDataTextIsLoading) {
 		return (
 			<LoadingPage/>
 		)
@@ -85,19 +95,20 @@ export const PicturePage = () => {
 				<ReturnButton onClick={() => navigate('/')}/>
 			</nav>
 
-			<main className="flex flex-col items-center justify-center w-full pb-8">	
+			<main className="flex flex-col items-center justify-center w-full px-2 pb-8">	
 
 				<section className="flex flex-col w-full gap-2 pb-8 tems-center justify-center max-w-180">
-                    <span className="text-4xl font-bold py-2 pb-4 text-center">Costumize seu sticker do seu jeito</span>
+                    <span className="text-3xl sm:text-4xl font-bold py-2 pb-4 text-center">Costumize seu sticker do seu jeito</span>
                     <span className='text-center text-sm sm:text-[16px]'>Selecione o tipo e a cor do background, decida entre adicionar texto ou não, e em seguida faça o download ou compartilhe o resultado com seus amigos!</span>
                 </section>
 
-				<span className="text-sm self-center">
+				<span className="text-xs self-center">
 					*Considere adicionar um link para nosso site no seu story. =)
 				</span>	
 				
 				<section className='container flex-col items-center justify-center'>
-					<PictureContainer songData={songData}/>
+
+					<PictureContainer songData={songData} songDataText={songDataText}/>
 				</section>
 
 

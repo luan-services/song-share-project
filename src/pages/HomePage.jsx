@@ -44,7 +44,6 @@ export const HomePage = () => {
                 previewUrl: track.preview,       // A prévia de 30 segundos
             }));
 
-            console.log("resultados: ", results)
             if (results.length === 0) {
                 setError('Nenhum resultado encontrado para essa busca.');
             }
@@ -60,8 +59,6 @@ export const HomePage = () => {
 
     // função que vai ser chamada após o usuário clicar em Generate ou Generate With Image, song é um objeto com os dados do som, e withLyrics é um bool
     const handleShareSong = (songData) => {
-        console.log("Navegando para /picture com os dados da música:", songData);
-
         navigate('/picture', { // <- chama o state navigate e redireciona para a url
             state: { // <- state gera objetos useState 'songData' que vai ser acessado na outra página com o state 'useLocation'
                 songData: songData,
@@ -73,7 +70,7 @@ export const HomePage = () => {
         <div className="min-h-screen px-2 md:px-12 py-4 sm:py-8 flex flex-col justify-between">
             <main className="w-full flex flex-col items-center justify-center">
                 <section className="flex flex-col w-full text-center items-center justify-center">
-                    <span className="text-4xl font-bold py-8">Qual música você está ouvindo hoje?</span>
+                    <span className="text-3xl sm:text-4xl font-bold py-8">Qual música você está ouvindo hoje?</span>
 
                     <SongForm onSearch={handleSearch} isLoading={isLoading}></SongForm>
                 </section>
