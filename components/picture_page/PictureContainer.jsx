@@ -7,15 +7,15 @@ import { mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utili
 
 import { LoadingPage } from "../../src/layout/LoadingPage"
 
+import { TextTemplate } from './TextTemplate'; // template de foto com texto
 import { ClassicTemplate } from './ClassicTemplate'; // template de foto apenas com nome da música
 
-import ColorSelector from './ColorSelector'; // componente para definir a cor do bg
+import { ColorSelector } from './ColorSelector'; // componente para definir a cor do bg
+import { TemplateSelector } from './TemplateSelector';
+import { TextSelector } from './TextSelector';
 
 import { DownloadButton } from './DownloadButton';
 import { ShareButton } from "./ShareButton"
-import { TemplateSelector } from './TemplateSelector';
-import { TextSelector } from './TextSelector';
-import { TextTemplate } from './TextTemplate';
 
 
 export const PictureContainer = ({songData, songDataText}) => {
@@ -80,7 +80,6 @@ export const PictureContainer = ({songData, songDataText}) => {
         return () => {
             if (proxyObjectUrl) {
                 URL.revokeObjectURL(proxyObjectUrl);
-                console.log("Object URL desfeito");
             }
         };
 
@@ -278,7 +277,6 @@ export const PictureContainer = ({songData, songDataText}) => {
                 {currentTemplate == 'lyric' &&
                     <TextSelector onSetText={setSongText} songFullText={songDataText}/>
                 }
-            
             </div>
 
 

@@ -49,60 +49,63 @@ export const TextSelector = ({ onSetText, songFullText }) => {
     };
 
     return (
-        <div className='flex flex-col w-full bg-white border-1 border-gray-300 shadow-sm rounded-lg transition-all duration-300 mt-4'>
-            
-			{/* botão de toggle no seletor */}
-			<button disabled={!(textArray.length > 0)} type="button" onClick={() => setIsExpanded(!isExpanded)} className="w-full flex justify-between items-center px-4 py-4 text-custom-charcoal font-medium cursor-pointer disabled:cursor-default">
-					
-                <span className="text-[14px] sm:text-sm lg:text-[16px]">{textArray.length > 0 ? "Clique no texto e adicione ao sticker" : "Não há texto disponível para essa música."}</span>
-				<span className={`inline-block transform transition-transform duration-300 ease-in-out ${textArray.length > 0 ? '' : 'text-custom-primary-red'} ${isExpanded ? 'rotate-180' : ''}`}>
-					
-					{(textArray.length > 0) ? <FontAwesomeIcon icon={faCaretDown} /> : <FontAwesomeIcon icon={faBan} />}
-				</span>
-            </button>
+        <div className="px-2 sm:px-0">
+            <div className='flex flex-col w-full bg-white border-1 border-gray-300 shadow-sm rounded-lg transition-all duration-300 mt-4'>
+                
+                {/* botão de toggle no seletor */}
+                <button disabled={!(textArray.length > 0)} type="button" onClick={() => setIsExpanded(!isExpanded)} className="w-full flex justify-between items-center px-4 py-4 text-custom-charcoal font-medium cursor-pointer disabled:cursor-default">
+                        
+                    <span className="text-[14px] lg:text-[16px]">{textArray.length > 0 ? "Clique no texto e adicione ao sticker" : "Não há texto disponível para essa música."}</span>
+                    <span className={`inline-block transform transition-transform duration-300 ease-in-out ${textArray.length > 0 ? '' : 'text-custom-primary-red'} ${isExpanded ? 'rotate-180' : ''}`}>
+                        
+                        {(textArray.length > 0) ? <FontAwesomeIcon icon={faCaretDown} /> : <FontAwesomeIcon icon={faBan} />}
+                    </span>
+                </button>
 
-            <div className="border-gray-200 border-b-1" />
+                <div className="border-gray-200 border-b-1" />
 
-            {/* Corpo com a listagem de letras */}
-            <div className={`w-full flex px-4 origin-top transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100 py-2 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                <div className="w-full max-h-88 pr-4">
+                {/* Corpo com a listagem de letras */}
+                <div className={`w-full flex px-4 origin-top transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100 py-2 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                    <div className="w-full max-h-88 pr-4">
 
-                    {textArray && textArray.map((line, index) => {
-                        const isEmpty = line === '';
+                        {textArray && textArray.map((line, index) => {
+                            const isEmpty = line === '';
 
-						if (isEmpty) { // se a linha for uma quebra, ela vai ser apenas uma div, sem botão
-							return <div key={index} className="h-[12px] lg:h-[16px]" />;
-						}
-						
-						// se houver uma seleção e o indíce da linha atual estiver entre o primeiro selecionado e o último, essa linha também está selecionada
-                        const isSelected = selection.start !== null && index >= selection.start && index <= selection.end;
-
-						// lógica para saber se a linha atual pode ser selecionada (é uma das 5 próximas linhas)
-                        let isPotentiallySelectable = false;
-
-						// se houver uma seleção e o indíce da linha atual for maior do que o da última selecionada
-                        if (selection.start !== null && !isSelected && index > selection.end && !isEmpty) {
-                            
-							// calcula quantas linhas já foram selecionadas
-                            const potentialSelection = textArray.slice(selection.start, index + 1);
-                            const nonEmptyLinesCount = potentialSelection.filter(l => l !== '').length;
-                            
-							// se menos de 5 linhas foram selecionadas, a linha atual ganha isPontentiallySelectable = true;
-                            if (nonEmptyLinesCount <= 8) {
-                                isPotentiallySelectable = true;
+                            if (isEmpty) { // se a linha for uma quebra, ela vai ser apenas uma div, sem botão
+                                return <div key={index} className="h-[12px] lg:h-[16px]" />;
                             }
-                        } 
+                            
+                            // se houver uma seleção e o indíce da linha atual estiver entre o primeiro selecionado e o último, essa linha também está selecionada
+                            const isSelected = selection.start !== null && index >= selection.start && index <= selection.end;
 
-                        return (
-                            <button key={index} type="button" onClick={() => handleLineClick(index)}  className={`w-full text-start rounded-md mb-1.5 transition-colors duration-150 ${isEmpty ? 'cursor-default' : 'cursor-pointer'} ${isSelected ? 'bg-custom-secundary-red text-white' : ''} ${isPotentiallySelectable ? 'bg-custom-light-red' : ''}`}>
-                                <p translate="no" className={`px-2 py-1 text-[12px] lg:text-[16px] font-medium select-none ${isEmpty ? 'h-[12px] lg:h-[16px]' : ''}`}>
-                                    {line}
-                                </p>
-                            </button>
-                        );
-                    })}
+                            // lógica para saber se a linha atual pode ser selecionada (é uma das 5 próximas linhas)
+                            let isPotentiallySelectable = false;
+
+                            // se houver uma seleção e o indíce da linha atual for maior do que o da última selecionada
+                            if (selection.start !== null && !isSelected && index > selection.end && !isEmpty) {
+                                
+                                // calcula quantas linhas já foram selecionadas
+                                const potentialSelection = textArray.slice(selection.start, index + 1);
+                                const nonEmptyLinesCount = potentialSelection.filter(l => l !== '').length;
+                                
+                                // se menos de 5 linhas foram selecionadas, a linha atual ganha isPontentiallySelectable = true;
+                                if (nonEmptyLinesCount <= 8) {
+                                    isPotentiallySelectable = true;
+                                }
+                            } 
+
+                            return (
+                                <button key={index} type="button" onClick={() => handleLineClick(index)}  className={`w-full text-start rounded-md mb-1.5 transition-colors duration-150 ${isEmpty ? 'cursor-default' : 'cursor-pointer'} ${isSelected ? 'bg-custom-secundary-red text-white' : ''} ${isPotentiallySelectable ? 'bg-custom-light-red' : ''}`}>
+                                    <p translate="no" className={`px-2 py-1 text-[12px] sm:text-[14px] lg:text-[16px] font-medium select-none ${isEmpty ? 'h-[12px] lg:h-[16px]' : ''}`}>
+                                        {line}
+                                    </p>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
         </div>
+
     );
 };

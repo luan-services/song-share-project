@@ -63,13 +63,13 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 
 				{/*div da letra, se a linha é '\n', dá espaço, caso contrário, escreve a linha*/}
 				<div className={`w-full z-20 font-medium ${bgIsLight ? 'text-custom-charcoal' : 'text-white'}`}>
-					{songText.map((line) => {
-						return <p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium select-none ${line == '' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
+					{songText.map((line, index) => {
+						return <p translate="no" key={`line-${index}`} className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium select-none ${line == '' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
 					})}
 				</div>
 
 				{/*linebreak*/}
-				<div className={`w-full border-b-1  z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
+				<div className={`w-full border-b-1 hidden z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
 
 				{/* logo */}
 				<div className="z-20 self-end flex gap-[4.8px] sm:gap-[6px] lg:gap-2 items-center">

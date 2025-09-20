@@ -95,14 +95,14 @@ export const PicturePage = () => {
 				<ReturnButton onClick={() => navigate('/')}/>
 			</nav>
 
-			<main className="flex flex-col items-center justify-center w-full pb-8">	
+			<main className="flex flex-col items-center justify-center w-full px-2 pb-8">	
 
 				<section className="flex flex-col w-full gap-2 pb-8 tems-center justify-center max-w-180">
-                    <span className="text-4xl font-bold py-2 pb-4 text-center">Costumize seu sticker do seu jeito</span>
+                    <span className="text-3xl sm:text-4xl font-bold py-2 pb-4 text-center">Costumize seu sticker do seu jeito</span>
                     <span className='text-center text-sm sm:text-[16px]'>Selecione o tipo e a cor do background, decida entre adicionar texto ou não, e em seguida faça o download ou compartilhe o resultado com seus amigos!</span>
                 </section>
 
-				<span className="text-sm self-center">
+				<span className="text-xs self-center">
 					*Considere adicionar um link para nosso site no seu story. =)
 				</span>	
 				

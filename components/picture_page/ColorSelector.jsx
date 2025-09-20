@@ -10,14 +10,14 @@ export const ColorSelector = ({bgStyle, onSetBgStyle, thiefColorPalette, vibrant
 			{/* pega o state das paletts do thief arr[palett] e adiciona um botão pra cada */}
 			{ thiefColorPalette && thiefColorPalette.map((palett, index) => {
 				return (
-					<ColorSelectorButton onClick={() => onSetBgStyle('color', `thief-${index}`, palett)} isActive={bgStyle.key === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
+					<ColorSelectorButton key={`thief-${index}`} onClick={() => onSetBgStyle('color', `thief-${index}`, palett)} isActive={bgStyle.key === `thief-${index}`} btnStyle={{type: 'color', data: palett}}/>
 				)
 			})}
 
 			{/* pega o state das paletts do vibrant (arr[{type, color}]e adiciona um botão pra cada */}
 			{ vibrantColorPalette && vibrantColorPalette.map((palett) => {
 				return (
-					<ColorSelectorButton onClick={() => onSetBgStyle(palett.type, palett.type, palett.data)} isActive={bgStyle.type === palett.type} btnStyle={{type: palett.type, data: palett.data}}/>     
+					<ColorSelectorButton key={palett.type} onClick={() => onSetBgStyle(palett.type, palett.type, palett.data)} isActive={bgStyle.type === palett.type} btnStyle={{type: palett.type, data: palett.data}}/>     
 				)
 			})}
 
@@ -32,5 +32,3 @@ export const ColorSelector = ({bgStyle, onSetBgStyle, thiefColorPalette, vibrant
 		</div>
 	)
 }
-
-export default ColorSelector
