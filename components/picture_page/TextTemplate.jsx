@@ -9,14 +9,15 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 
 	songText = ["Helloaosdka opsdkopaskdo paksdopkaop sdkopaskdoas ", '\n', "It is me agau", "Okay"]
 	
-    let outerBgStyle = {}; 
+    let outerBgStyle = {}; // cor do fundo
 
-	let innerBgStyle = {};
+	let innerBgStyle = {}; // cor do interior da div
 
+	// pega a cor mais clara, ou mais escura, para por no interior da div
 	const contrastingColor = bgStyle.type === 'img' ? '#121212' : (bgStyle.type === 'gradient' || bgStyle.type === 'darkGradient') ? getContrastingShade(bgStyle.data[0]) : getContrastingShade(bgStyle.data);
 
+	// função para saber se a cor da div do exterior é 'clara' ou 'escura', para definir a cor do texto
 	const bgIsLight = isInnerBgLight(contrastingColor);
-
 
     switch (bgStyle.type) {
         case "color": 
@@ -25,7 +26,7 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
             outerBgStyle = { backgroundColor: bgStyle.data };
 			innerBgStyle = { backgroundColor: contrastingColor };
             break;
-        case "img":
+        case "img": // caso o fundo seja imagem, o innerBg passa a ser preto, como no sticker sem lyrics
             outerBgStyle = { backgroundImage: `url(${bgStyle.data})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
 			innerBgStyle = { backgroundColor: '#121212' };
             break;
@@ -41,15 +42,16 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
     }
 
     return (
+		/* fundo colorido original */
 		<div className="w-full h-full flex flex-col items-center justify-center px-[21.6px] sm:px-[27px] lg:px-9" style={outerBgStyle}>
 
 			<div ref={contentRef} className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
 
-				{/*fundo colorido opaco*/}
+				{/*fundo colorido com cor mais escura/clara, baseado no original*/}
 				<div className="absolute inset-0 bg-bottom-center rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl lg:shadow-lg" style={innerBgStyle}/>
 
+				{/* div do texto e imagem */}
 				<div className="z-20 w-full flex-row flex items-center justify-between">
-
 					<div className="z-20">
 						<p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-bold  truncate select-none ${bgIsLight ? 'text-custom-charcoal/90' : 'text-white'}`}>{track}</p>
 						<p translate="no" className={`text-[8.4px] sm:text-[10.5px] lg:text-[14px]  truncate select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>{artist}</p>
@@ -58,14 +60,17 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 					<img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-[33.6px] h-[33.6px] sm:w-[42px] sm:h-[42px] lg:w-[56px] lg:h-[56px] object-cover pointer-events-none" crossOrigin="anonymous"/>
 				</div>
 
+				{/*linebreak*/}
 				<div className={`w-full border-b-1  z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
 
+				{/*div da letra, se a linha é '\n', dá espaço, caso contrário, escreve a linha*/}
 				<div className={`w-full z-20 font-medium ${bgIsLight ? 'text-custom-charcoal' : 'text-white'}`}>
 					{songText.map((line) => {
 						return <p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-medium select-none ${line == '\n' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
 					})}
 				</div>
-				
+
+				{/*linebreak*/}
 				<div className={`w-full border-b-1  z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
 
 				{/* logo */}
