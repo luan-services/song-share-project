@@ -1,4 +1,3 @@
-import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faBan } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect, useMemo } from 'react';
@@ -26,14 +25,19 @@ export const TextSelector = ({ onSetText, songFullText }) => {
 
     const handleLineClick = (clickedIndex) => {
 
-        const { start } = selection;
+        const { start, end } = selection;
 
         if (start === null || clickedIndex < start) { // se ainda não tem nada selecionado ou se o clique for ANTES do primeiro index selecionado, começa
             setSelection({ start: clickedIndex, end: clickedIndex });
             return;
         }
 
-        if (clickedIndex >= start) { // se o clique for DEPOIS da seleção atual, expande a seleção
+        if (clickedIndex < end && clickedIndex > start) { // se o clique for dentro da seleção, o novo inicio é a linha do clique
+           setSelection({ start: clickedIndex, end: end });
+            return;
+        }
+
+        if (clickedIndex >= end) { // se o clique for DEPOIS da seleção atual, expande a seleção
 
             const potentialSelection = textArray.slice(start, clickedIndex + 1); // pega o trecho entre o início da seleção e o ponto clicado
             
