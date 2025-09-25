@@ -72,7 +72,7 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 				<div className={`w-full border-b-1 hidden z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
 
 				{/* logo */}
-				<div className="z-20 self-end flex gap-[4.8px] sm:gap-[6px] lg:gap-2 items-center">
+				<div className="z-20 self-end flex gap-[4.8px] sm:gap-[6px] lg:gap-2">
 					<img src={bgIsLight ? SongStickerBlackIcon : SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 inline select-none pointer-events-none" crossOrigin="anonymous"/>
 					<span translate="no" className={`text-[7.2px] sm:text-[9px] lg:text-xs font-medium select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>Song Sticker</span>
 				</div>
