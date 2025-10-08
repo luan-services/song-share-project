@@ -50,8 +50,8 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 
 				{/* div do texto e imagem */}
 				<div className="z-20 w-full flex-row flex items-center justify-between">
-					<div className="z-20 truncate">
-						<p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-bold  truncate select-none ${bgIsLight ? 'text-custom-charcoal/90' : 'text-white'}`}>{track}</p>
+					<div className={`z-20 ${track.length > 38 ? ' truncate ': ''}`}>
+						<p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-bold ${track.length > 38 ? ' truncate ': ''} select-none ${bgIsLight ? 'text-custom-charcoal/90' : 'text-white'}`}>{track}</p>
 						<p translate="no" className={`text-[8.4px] sm:text-[10.5px] lg:text-[14px]  truncate select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>{artist}</p>
 					</div>
 					
