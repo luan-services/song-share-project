@@ -48,8 +48,8 @@ export const ClassicTemplate = ({ artUrl, contentRef, track, artist, bgStyle }) 
 
                 {/* logo */}
                 <div className="z-20 self-end flex items-center gap-[4.8px] sm:gap-[6px] lg:gap-2">
-                    <img src={SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 h-[9.6px] sm:h-[12px] lg:h-4 inline select-none pointer-events-none" crossOrigin="anonymous"/>
-                    <span translate="no" className="pt-0.25 sm:pt-0 text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Sticker</span>
+                    <img src={SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 h-[9.6px] sm:h-[12px] lg:h-4 select-none pointer-events-none" crossOrigin="anonymous"/>
+                    <span translate="no" className="leading-none sm:pt-0 text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Sticker</span>
                 </div>
 
             </div>
