@@ -31,8 +31,12 @@ export default async function handler(req, res) {
 
 		const imageBuffer = Buffer.from(await imageResponse.arrayBuffer()); // buffer é um container padrão de node.js para armazenar os dados da imagem da forma correta
 		
-		const contentType = imageResponse.headers.get('content-type') || 'application/octet-stream'; // pega o tipo do conteúdo original da imagem (ex: 'image/jpeg', 'image/png')
-
+		//const contentType = imageResponse.headers.get('content-type') || 'application/octet-stream'; // pega o tipo do conteúdo original da imagem (ex: 'image/jpeg', 'image/png')
+		const contentType =
+		imageResponse.headers.get('content-type')?.startsWith('image/')
+			? imageResponse.headers.get('content-type')
+			: 'image/jpeg';
+			
 	    res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
 		res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
@@ -45,7 +49,7 @@ export default async function handler(req, res) {
 
 		res.setHeader('Content-Type', contentType); // adiciona o header do tipo do conteúdo pego anteriormente
 
-		res.send(imageBuffer); // envia a resposta de volta pro frontend
+		res.end(imageBuffer, 'binary') // envia a resposta de volta pro frontend
 
 	} catch (error) {
 		console.error('Erro no proxy de imagem:', error);
