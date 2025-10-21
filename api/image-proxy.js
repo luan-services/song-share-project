@@ -33,10 +33,15 @@ export default async function handler(req, res) {
 		
 		const contentType = imageResponse.headers.get('content-type') || 'application/octet-stream'; // pega o tipo do conteúdo original da imagem (ex: 'image/jpeg', 'image/png')
 
+	    res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+		res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+		res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
 
 		// configura os headers
 		// cache-Control: instrui o navegador e a Vercel a guardarem essa imagem em cache por um ano
 		res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, stale-while-revalidate');
+
 
 		res.setHeader('Content-Type', contentType); // adiciona o header do tipo do conteúdo pego anteriormente
 
