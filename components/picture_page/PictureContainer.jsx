@@ -40,7 +40,6 @@ export const PictureContainer = ({songData, songDataText}) => {
             return;
         }
 
-        let proxyObjectUrl = null;
         
         const getProxiedUrl = async (url) => {
 
@@ -62,11 +61,16 @@ export const PictureContainer = ({songData, songDataText}) => {
 
                 const imageBlob = await response.blob();
 
-                const objectUrl = URL.createObjectURL(imageBlob);
+                const reader = new FileReader();
 
-                proxyObjectUrl = objectUrl; // Armazena na variável local
+                reader.onloadend = () => {
+                    setProxyArtUrl(reader.result); // base64 seguro
+                    setProxyArtUrlIsLoading(false);
+                };
 
-                setProxyArtUrl(objectUrl);
+                reader.readAsDataURL(imageBlob);
+                return;
+
                 
             } catch (error) {
                 console.error("Error ao tentar fazer o proxy da capa do álbum.");
@@ -76,13 +80,6 @@ export const PictureContainer = ({songData, songDataText}) => {
         }
         
         getProxiedUrl(songData.coverArtUrl);
-
-        return () => {
-            if (proxyObjectUrl) {
-                URL.revokeObjectURL(proxyObjectUrl);
-            }
-        };
-
 
     }, [songData]);
 
