@@ -36,6 +36,7 @@ export const PictureContainer = ({songData, songDataText}) => {
 
     useEffect(() => { // useEffect inicial para fazer o fetch do url da imagem, para baixar a foto e fazer um novo url (o cors não permite usar algumas imagens de api para baixar imagem, nem para ler de 'ler' os dados da imagem para busca de palettas)
 
+        let currentObjectUrl = null;
         if (!songData) { // sem dado de música, retorna
             return;
         }
@@ -44,6 +45,7 @@ export const PictureContainer = ({songData, songDataText}) => {
         const getProxiedUrl = async (url) => {
 
             setProxyArtUrlIsLoading(true)
+            
 
             try {
 
@@ -60,18 +62,11 @@ export const PictureContainer = ({songData, songDataText}) => {
                 }
 
                 const imageBlob = await response.blob();
-
-                const reader = new FileReader();
-
-                reader.onloadend = () => {
-                    setProxyArtUrl(reader.result); // base64 seguro
-                    setProxyArtUrlIsLoading(false);
-                };
-
-                reader.readAsDataURL(imageBlob);
-                return;
-
                 
+                currentObjectUrl = URL.createObjectURL(imageBlob);
+
+                setProxyArtUrl(currentObjectUrl);
+
             } catch (error) {
                 console.error("Error ao tentar fazer o proxy da capa do álbum.");
             } finally {
@@ -80,6 +75,13 @@ export const PictureContainer = ({songData, songDataText}) => {
         }
         
         getProxiedUrl(songData.coverArtUrl);
+
+        return () => {
+            if (currentObjectUrl) {
+                URL.revokeObjectURL(currentObjectUrl);
+                // console.log("Revogado Blob URL:", currentObjectUrl);
+            }
+        };
 
     }, [songData]);
 
