@@ -39,7 +39,6 @@ export default async function handler(req, res) {
 			
 	    res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-		res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
 		res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
 		
 		// configura os headers
