@@ -1,6 +1,6 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
-import html2canvas from "html2canvas";
 
+import { toPng, toBlob } from 'html-to-image'; // libary para converter html em png
 import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
 import { mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utilitário para filtrar paletas com pouca saturação
@@ -170,53 +170,8 @@ export const PictureContainer = ({songData, songDataText}) => {
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
         
         try {
-            
-            // patch completo para Safari + Tailwind cores modernas
-            const sanitizeColors = (element) => {
-            const computedStyle = getComputedStyle(element);
 
-            const colorProps = [
-                'color',
-                'backgroundColor',
-                'borderColor',
-                'outlineColor',
-                'boxShadow',
-                'textShadow',
-                'backgroundImage',
-            ];
-
-            colorProps.forEach((prop) => {
-                const val = computedStyle[prop];
-                if (!val) return;
-                if (val.includes('oklch') || val.includes('oklab')) {
-                try {
-                    // simplifica para algo neutro
-                    if (prop === 'backgroundImage' || prop.includes('Shadow')) {
-                    element.style[prop] = 'none';
-                    } else {
-                    element.style[prop] = '#000'; // fallback visível
-                    }
-                } catch (e) {
-                    console.warn(`Falha ao sanitizar ${prop}`, e);
-                }
-                }
-            });
-            };
-
-            // aplica em todo o container
-            targetContainer.querySelectorAll('*').forEach(sanitizeColors);
-            sanitizeColors(targetContainer);
-
-            const canvas = await html2canvas(targetContainer, {
-                scale: pixelRatio,
-                useCORS: true,
-                backgroundColor: null,
-                allowTaint: false,
-            });
-
-            const blob = await new Promise((resolve) =>
-                canvas.toBlob(resolve, "image/png")
-            );
+            const blob = await toBlob(targetContainer, { pixelRatio: pixelRatio, useCORS: true, cacheBust: false });
 
             if (!blob) {
                 throw new Error("Não foi possível gerar a imagem para compartilhamento.");
@@ -252,18 +207,7 @@ export const PictureContainer = ({songData, songDataText}) => {
             return; 
         }
 
-        await Promise.all(
-            Array.from(targetContainer.querySelectorAll("img")).map(
-            (img) =>
-                new Promise((resolve) => {
-                if (img.complete) resolve();
-                else {
-                    img.onload = resolve;
-                    img.onerror = resolve;
-                }
-                })
-            )
-        );
+        const link = document.createElement('a');
 
         const currentWidth = targetContainer.offsetWidth; // mede a largura atual da div do story
 
@@ -271,61 +215,7 @@ export const PictureContainer = ({songData, songDataText}) => {
 
         try {
 
-            // patch completo para Safari + Tailwind cores modernas
-            const sanitizeColors = (element) => {
-            const computedStyle = getComputedStyle(element);
-
-            const colorProps = [
-                'color',
-                'backgroundColor',
-                'borderColor',
-                'outlineColor',
-                'boxShadow',
-                'textShadow',
-                'backgroundImage',
-            ];
-
-            colorProps.forEach((prop) => {
-                const val = computedStyle[prop];
-                if (!val) return;
-                if (val.includes('oklch') || val.includes('oklab')) {
-                try {
-                    // simplifica para algo neutro
-                    if (prop === 'backgroundImage' || prop.includes('Shadow')) {
-                    element.style[prop] = 'none';
-                    } else {
-                    element.style[prop] = '#000'; // fallback visível
-                    }
-                } catch (e) {
-                    console.warn(`Falha ao sanitizar ${prop}`, e);
-                }
-                }
-            });
-            };
-
-            // aplica em todo o container
-            targetContainer.querySelectorAll('*').forEach(sanitizeColors);
-            sanitizeColors(targetContainer);
-
-            const canvas = await html2canvas(targetContainer, {
-            scale: pixelRatio,
-            useCORS: true,
-            backgroundColor: null,
-            allowTaint: false,
-            logging: false,
-            imageTimeout: 0,
-            removeContainer: true,
-            onclone: (doc) => {
-                // Garantir que nenhuma imagem tenha display:none ao clonar
-                doc.querySelectorAll("img").forEach((img) => {
-                img.style.visibility = "visible";
-                img.style.display = "block";
-                });
-            },
-            });
-
-            const dataUrl = canvas.toDataURL("image/png");
-            const link = document.createElement("a");
+            const dataUrl = await toPng(targetContainer, { pixelRatio: pixelRatio, useCORS: true, cacheBust: false });
             link.download = 'song-share-story.png';
             link.href = dataUrl;
             link.click();
