@@ -170,6 +170,20 @@ export const PictureContainer = ({songData, songDataText}) => {
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
         
         try {
+            await Promise.all( // fix p esperar as imagens carregarem no safari
+            Array.from(targetContainer.querySelectorAll("img")).map(
+                (img) =>
+                new Promise((resolve) => {
+                    if (img.complete) {
+                    resolve();
+                    } else {
+                    img.onload = resolve;
+                    img.onerror = resolve; // evita travar se uma imagem falhar
+                    }
+                })
+            )
+            );
+            
             const blob = await toBlob(targetContainer, { pixelRatio: pixelRatio });
 
             if (!blob) {
@@ -213,6 +227,19 @@ export const PictureContainer = ({songData, songDataText}) => {
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
 
         try {
+            await Promise.all( // fix p esperar as imagens carregarem no safari
+            Array.from(targetContainer.querySelectorAll("img")).map(
+                (img) =>
+                new Promise((resolve) => {
+                    if (img.complete) {
+                    resolve();
+                    } else {
+                    img.onload = resolve;
+                    img.onerror = resolve; // evita travar se uma imagem falhar
+                    }
+                })
+            )
+            );
 
             const dataUrl = await toPng(targetContainer, { pixelRatio: pixelRatio });
             link.download = 'song-share-story.png';
