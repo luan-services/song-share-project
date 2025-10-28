@@ -171,7 +171,7 @@ export const PictureContainer = ({songData, songDataText}) => {
         
         try {
 
-            const blob = await toBlob(targetContainer, { pixelRatio: pixelRatio, useCORS: true, cacheBust: false });
+            const blob = await toBlob(targetContainer, { pixelRatio: pixelRatio });
 
             if (!blob) {
                 throw new Error("Não foi possível gerar a imagem para compartilhamento.");
@@ -215,7 +215,7 @@ export const PictureContainer = ({songData, songDataText}) => {
 
         try {
 
-            const dataUrl = await toPng(targetContainer, { pixelRatio: pixelRatio, useCORS: true, cacheBust: false });
+            const dataUrl = await toPng(targetContainer, { pixelRatio: pixelRatio});
             link.download = 'song-share-story.png';
             link.href = dataUrl;
             link.click();
