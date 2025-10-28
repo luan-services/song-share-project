@@ -170,16 +170,42 @@ export const PictureContainer = ({songData, songDataText}) => {
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
         
         try {
-            // força Safari/Tailwind a usar cores resolvidas em RGB
-            targetContainer.querySelectorAll('*').forEach((el) => {
-                const computedStyle = window.getComputedStyle(el);
-                const bg = computedStyle.backgroundColor;
-                const color = computedStyle.color;
-                
-                if (bg && bg.startsWith('oklch')) el.style.backgroundColor = '#00000000';
-                if (color && color.startsWith('oklch')) el.style.color = '#ffffff';
-            });
+            
+            // patch completo para Safari + Tailwind cores modernas
+            const sanitizeColors = (element) => {
+            const computedStyle = getComputedStyle(element);
 
+            const colorProps = [
+                'color',
+                'backgroundColor',
+                'borderColor',
+                'outlineColor',
+                'boxShadow',
+                'textShadow',
+                'backgroundImage',
+            ];
+
+            colorProps.forEach((prop) => {
+                const val = computedStyle[prop];
+                if (!val) return;
+                if (val.includes('oklch') || val.includes('oklab')) {
+                try {
+                    // simplifica para algo neutro
+                    if (prop === 'backgroundImage' || prop.includes('Shadow')) {
+                    element.style[prop] = 'none';
+                    } else {
+                    element.style[prop] = '#000'; // fallback visível
+                    }
+                } catch (e) {
+                    console.warn(`Falha ao sanitizar ${prop}`, e);
+                }
+                }
+            });
+            };
+
+            // aplica em todo o container
+            targetContainer.querySelectorAll('*').forEach(sanitizeColors);
+            sanitizeColors(targetContainer);
 
             const canvas = await html2canvas(targetContainer, {
                 scale: pixelRatio,
@@ -245,15 +271,41 @@ export const PictureContainer = ({songData, songDataText}) => {
 
         try {
 
-            // força Safari/Tailwind a usar cores resolvidas em RGB
-            targetContainer.querySelectorAll('*').forEach((el) => {
-                const computedStyle = window.getComputedStyle(el);
-                const bg = computedStyle.backgroundColor;
-                const color = computedStyle.color;
-                
-                if (bg && bg.startsWith('oklch')) el.style.backgroundColor = '#00000000';
-                if (color && color.startsWith('oklch')) el.style.color = '#ffffff';
+            // patch completo para Safari + Tailwind cores modernas
+            const sanitizeColors = (element) => {
+            const computedStyle = getComputedStyle(element);
+
+            const colorProps = [
+                'color',
+                'backgroundColor',
+                'borderColor',
+                'outlineColor',
+                'boxShadow',
+                'textShadow',
+                'backgroundImage',
+            ];
+
+            colorProps.forEach((prop) => {
+                const val = computedStyle[prop];
+                if (!val) return;
+                if (val.includes('oklch') || val.includes('oklab')) {
+                try {
+                    // simplifica para algo neutro
+                    if (prop === 'backgroundImage' || prop.includes('Shadow')) {
+                    element.style[prop] = 'none';
+                    } else {
+                    element.style[prop] = '#000'; // fallback visível
+                    }
+                } catch (e) {
+                    console.warn(`Falha ao sanitizar ${prop}`, e);
+                }
+                }
             });
+            };
+
+            // aplica em todo o container
+            targetContainer.querySelectorAll('*').forEach(sanitizeColors);
+            sanitizeColors(targetContainer);
 
             const canvas = await html2canvas(targetContainer, {
             scale: pixelRatio,
