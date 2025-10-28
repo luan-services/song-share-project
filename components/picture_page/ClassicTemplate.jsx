@@ -37,17 +37,8 @@ export const ClassicTemplate = ({ artUrl, contentRef, track, artist, bgStyle }) 
                 {/*fundo preto opaco*/}
                 <div className="absolute inset-0 bg-bottom-center opacity-85 rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl" style={ { backgroundColor: '#121212' }}/>
 
-                {/*<img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-full rounded-[3.6px] sm:rounded-[4.5px] lg:rounded-md object-cover select-none pointer-events-none" crossOrigin="anonymous"/>*/} 
-                <div 
-                    aria-label={`Capa de ${track}`}
-                    className="z-20 w-full aspect-square rounded-[3.6px] sm:rounded-[4.5px] lg:rounded-md select-none pointer-events-none" // Adicionado 'aspect-square'
-                    style={{
-                        backgroundImage: `url(${artUrl})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                    }}
-                />
+                <img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-full rounded-[3.6px] sm:rounded-[4.5px] lg:rounded-md object-cover select-none pointer-events-none" crossOrigin="anonymous"/>
+
                 <div className="z-20 text-center w-full">
                     <p translate="no" className={`text-[12px] sm:text-[15px] lg:text-xl font-bold text-white ${track.length > 38 ? ' truncate ': ''} select-none`}>{track}</p>
                     <p translate="no" className="text-[10.8px] sm:text-[13.5px] lg:text-lg text-gray-100 truncate select-none">{artist}</p>
