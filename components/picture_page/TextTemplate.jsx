@@ -22,20 +22,20 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
         case "vibrant": 
         case "muted":
             outerBgStyle = { backgroundColor: bgStyle.data };
-			innerBgStyle = { backgroundColor: contrastingColor, position: "absolute", zIndex: 0 };
+			innerBgStyle = { backgroundColor: contrastingColor, position: "absolute", zIndex: 0, boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)" };
             break;
         case "img": // caso o fundo seja imagem, o innerBg passa a ser preto, como no sticker sem lyrics
             outerBgStyle = { backgroundImage: `url(${bgStyle.data})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
-			innerBgStyle = { backgroundColor: '#121212', position: "absolute", zIndex: 0 };
+			innerBgStyle = { backgroundColor: '#121212', position: "absolute", zIndex: 0, boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)" };
             break;
         case "gradient":
         case "darkGradient":
             outerBgStyle = { backgroundImage: `linear-gradient(to bottom, ${bgStyle.data[0]}, ${bgStyle.data[1]})` };
-			innerBgStyle = { backgroundColor: contrastingColor, position: "absolute", zIndex: 0 };
+			innerBgStyle = { backgroundColor: contrastingColor, position: "absolute", zIndex: 0, boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)" };
             break;
         default:
             outerBgStyle = { backgroundColor: '#000' };
-			innerBgStyle = { backgroundColor: '#121212', position: "absolute", zIndex: 0 };
+			innerBgStyle = { backgroundColor: '#121212', position: "absolute", zIndex: 0, boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)" };
             break;
     }
 
@@ -43,10 +43,10 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 		/* fundo colorido original */
 		<div className="w-full h-full flex flex-col items-center justify-center px-[21.6px] sm:px-[27px] lg:px-9" style={outerBgStyle}>
 
-			<div ref={contentRef} className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
+			<div ref={contentRef}  className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
 
 				{/*fundo colorido com cor mais escura/clara, baseado no original*/}
-				<div className="absolute inset-0 bg-bottom-center rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl lg:shadow-lg" 
+				<div className="absolute inset-0 bg-bottom-center rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl" 
 					style={innerBgStyle}/>
 
 				{/* div do texto e imagem */}

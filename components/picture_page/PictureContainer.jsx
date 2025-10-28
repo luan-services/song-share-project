@@ -176,9 +176,13 @@ export const PictureContainer = ({songData, songDataText}) => {
 
             const canvas = await html2canvas(targetContainer, {
                 useCORS: true,
-                backgroundColor: null,
+                backgroundColor: "#000000",
                 scale: pixelRatio,
+                willReadFrequently: true,
             });
+
+            const ctx = canvas.getContext("2d", { colorSpace: "srgb" });
+
 
             const blob = await new Promise((resolve) =>
                 canvas.toBlob(resolve, "image/png")
@@ -221,9 +225,12 @@ export const PictureContainer = ({songData, songDataText}) => {
         try {
             const canvas = await html2canvas(targetContainer, {
                 useCORS: true,
-                backgroundColor: null, // mantém transparência
+                backgroundColor: "#000000", // mantém transparência
                 scale: pixelRatio, // mais qualidade (1080p)
+                willReadFrequently: true,
             });
+
+            const ctx = canvas.getContext("2d", { colorSpace: "srgb" });
 
             const dataUrl = canvas.toDataURL("image/png");
             const link = document.createElement("a");

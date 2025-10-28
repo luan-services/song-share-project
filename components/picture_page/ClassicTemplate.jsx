@@ -32,7 +32,7 @@ export const ClassicTemplate = ({ artUrl, contentRef, track, artist, bgStyle }) 
     return (
         <div className="w-full h-full flex flex-col items-center justify-center px-[21.6px] sm:px-[27px] lg:px-9" style={finalStyle}>
 
-            <div ref={contentRef} className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
+            <div ref={contentRef}  className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
 
                 {/*fundo preto opaco*/}
                 <div className="inset-0 bg-bottom-center opacity-85 rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl" 
