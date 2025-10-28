@@ -1,6 +1,6 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
+import html2canvas from "html2canvas";
 
-import { toPng, toBlob } from 'html-to-image'; // libary para converter html em png
 import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
 import { mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utilitário para filtrar paletas com pouca saturação
@@ -171,7 +171,16 @@ export const PictureContainer = ({songData, songDataText}) => {
         
         try {
 
-            const blob = await toBlob(targetContainer, { pixelRatio: pixelRatio, useCORS: true, cacheBust: false });
+            const canvas = await html2canvas(targetContainer, {
+                scale: pixelRatio,
+                useCORS: true,
+                backgroundColor: null,
+                allowTaint: false,
+            });
+
+            const blob = await new Promise((resolve) =>
+                canvas.toBlob(resolve, "image/png")
+            );
 
             if (!blob) {
                 throw new Error("Não foi possível gerar a imagem para compartilhamento.");
@@ -207,28 +216,44 @@ export const PictureContainer = ({songData, songDataText}) => {
             return; 
         }
 
-        const link = document.createElement('a');
+        await Promise.all(
+            Array.from(targetContainer.querySelectorAll("img")).map(
+            (img) =>
+                new Promise((resolve) => {
+                if (img.complete) resolve();
+                else {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                }
+                })
+            )
+        );
 
         const currentWidth = targetContainer.offsetWidth; // mede a largura atual da div do story
 
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
 
         try {
-            await Promise.all( // fix p esperar as imagens carregarem no safari
-            Array.from(targetContainer.querySelectorAll("img")).map(
-                (img) =>
-                new Promise((resolve) => {
-                    if (img.complete) {
-                    resolve();
-                    } else {
-                    img.onload = resolve;
-                    img.onerror = resolve; // evita travar se uma imagem falhar
-                    }
-                })
-            )
-            );
 
-            const dataUrl = await toPng(targetContainer, { pixelRatio: pixelRatio, useCORS: true, cacheBust: false });
+            const canvas = await html2canvas(targetContainer, {
+            scale: pixelRatio,
+            useCORS: true,
+            backgroundColor: null,
+            allowTaint: false,
+            logging: false,
+            imageTimeout: 0,
+            removeContainer: true,
+            onclone: (doc) => {
+                // Garantir que nenhuma imagem tenha display:none ao clonar
+                doc.querySelectorAll("img").forEach((img) => {
+                img.style.visibility = "visible";
+                img.style.display = "block";
+                });
+            },
+            });
+
+            const dataUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
             link.download = 'song-share-story.png';
             link.href = dataUrl;
             link.click();

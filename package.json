@@ -16,7 +16,7 @@
     "@tailwindcss/vite": "^4.1.12",
     "colorthief": "^2.6.0",
     "firebase-admin": "^13.5.0",
-    "html-to-image": "^1.11.13",
+    "html2canvas": "^1.4.1",
     "node-vibrant": "^3.1.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
