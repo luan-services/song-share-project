@@ -170,6 +170,16 @@ export const PictureContainer = ({songData, songDataText}) => {
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
         
         try {
+            // força Safari/Tailwind a usar cores resolvidas em RGB
+            targetContainer.querySelectorAll('*').forEach((el) => {
+                const computedStyle = window.getComputedStyle(el);
+                const bg = computedStyle.backgroundColor;
+                const color = computedStyle.color;
+                
+                if (bg && bg.startsWith('oklch')) el.style.backgroundColor = '#00000000';
+                if (color && color.startsWith('oklch')) el.style.color = '#ffffff';
+            });
+
 
             const canvas = await html2canvas(targetContainer, {
                 scale: pixelRatio,
@@ -234,6 +244,16 @@ export const PictureContainer = ({songData, songDataText}) => {
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
 
         try {
+
+            // força Safari/Tailwind a usar cores resolvidas em RGB
+            targetContainer.querySelectorAll('*').forEach((el) => {
+                const computedStyle = window.getComputedStyle(el);
+                const bg = computedStyle.backgroundColor;
+                const color = computedStyle.color;
+                
+                if (bg && bg.startsWith('oklch')) el.style.backgroundColor = '#00000000';
+                if (color && color.startsWith('oklch')) el.style.color = '#ffffff';
+            });
 
             const canvas = await html2canvas(targetContainer, {
             scale: pixelRatio,
