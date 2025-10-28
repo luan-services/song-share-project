@@ -22,20 +22,20 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
         case "vibrant": 
         case "muted":
             outerBgStyle = { backgroundColor: bgStyle.data };
-			innerBgStyle = { backgroundColor: contrastingColor };
+			innerBgStyle = { backgroundColor: contrastingColor, position: "absolute", zIndex: 0 };
             break;
         case "img": // caso o fundo seja imagem, o innerBg passa a ser preto, como no sticker sem lyrics
             outerBgStyle = { backgroundImage: `url(${bgStyle.data})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'};
-			innerBgStyle = { backgroundColor: '#121212' };
+			innerBgStyle = { backgroundColor: '#121212', position: "absolute", zIndex: 0 };
             break;
         case "gradient":
         case "darkGradient":
             outerBgStyle = { backgroundImage: `linear-gradient(to bottom, ${bgStyle.data[0]}, ${bgStyle.data[1]})` };
-			innerBgStyle = { backgroundColor: contrastingColor };
+			innerBgStyle = { backgroundColor: contrastingColor, position: "absolute", zIndex: 0 };
             break;
         default:
             outerBgStyle = { backgroundColor: '#000' };
-			innerBgStyle = { backgroundColor: '#121212' };
+			innerBgStyle = { backgroundColor: '#121212', position: "absolute", zIndex: 0 };
             break;
     }
 
@@ -46,11 +46,12 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 			<div ref={contentRef} className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
 
 				{/*fundo colorido com cor mais escura/clara, baseado no original*/}
-				<div className="absolute inset-0 bg-bottom-center rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl lg:shadow-lg" style={innerBgStyle}/>
+				<div className="absolute inset-0 bg-bottom-center rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl lg:shadow-lg" 
+					style={innerBgStyle}/>
 
 				{/* div do texto e imagem */}
-				<div className="z-20 w-full flex-row flex items-center justify-between">
-					<div className={`z-20 ${track.length > 38 ? ' truncate ': ''}`}>
+				<div className="z-20 relative w-full flex-row flex items-center justify-between">
+					<div className={`z-20 relative ${track.length > 38 ? ' truncate ': ''}`}>
 						<p translate="no" className={`text-[9.6px] sm:text-[12px] lg:text-[16px] font-bold ${track.length > 38 ? ' truncate ': ''} select-none ${bgIsLight ? 'text-custom-charcoal/90' : 'text-white'}`}>{track}</p>
 						<p translate="no" className={`text-[8.4px] sm:text-[10.5px] lg:text-[14px]  truncate select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>{artist}</p>
 					</div>
@@ -59,20 +60,20 @@ export const TextTemplate = ({ songText, contentRef, artUrl, track, artist, bgSt
 				</div>
 
 				{/*linebreak*/}
-				<div className={`w-full border-b-1  z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
+				<div className={`z-20 relative w-full border-b-1 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
 
 				{/*div da letra, se a linha é '\n', dá espaço, caso contrário, escreve a linha*/}
-				<div className={`w-full z-20 font-medium ${bgIsLight ? 'text-custom-charcoal' : 'text-white'}`}>
+				<div className={`z-20 relative w-full font-medium ${bgIsLight ? 'text-custom-charcoal' : 'text-white'}`}>
 					{songText.map((line, index) => {
 						return <p translate="no" key={`line-${index}`} className={`text-[9.6px] sm:text-[12px] lg:text-[16px] mb-0.5 font-medium select-none ${line == '' ? 'h-[9.6px] sm:h-[12px] lg:h-[16px]' : ''}`}>{line}</p>
 					})}
 				</div>
 
 				{/*linebreak*/}
-				<div className={`w-full border-b-1 hidden z-20 ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
+				<div className={`z-20 relative w-full border-b-1 hidden ${bgIsLight ? 'border-custom-charcoal/30' : 'border-white/50'}`}></div>
 
 				{/* logo */}
-				<div className="z-20 self-end flex items-center gap-[4.8px] sm:gap-[6px] lg:gap-2">
+				<div className="z-20 relative self-end flex items-center gap-[4.8px] sm:gap-[6px] lg:gap-2">
 					<img src={bgIsLight ? SongStickerBlackIcon : SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 h-[9.6px] sm:h-[12px] lg:h-4 select-none pointer-events-none" crossOrigin="anonymous"/>
 					<span translate="no" className={`flex items-center translate-y-[1px] sm:pt-0 text-[7.2px] sm:text-[9px] lg:text-xs font-medium select-none ${bgIsLight ? 'text-custom-charcoal' : 'text-gray-100'}`}>Song Sticker</span>
 				</div>

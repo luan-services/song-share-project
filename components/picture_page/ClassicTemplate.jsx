@@ -35,19 +35,20 @@ export const ClassicTemplate = ({ artUrl, contentRef, track, artist, bgStyle }) 
             <div ref={contentRef} className="w-full relative flex flex-col items-center p-[9.6px] sm:p-[12px] lg:p-4 gap-[6px] sm:gap-[7.5px] lg:gap-2.5">
 
                 {/*fundo preto opaco*/}
-                <div className="absolute inset-0 bg-bottom-center opacity-85 rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl" style={ { backgroundColor: '#121212' }}/>
+                <div className="inset-0 bg-bottom-center opacity-85 rounded-[7.2px] sm:rounded-[9px] lg:rounded-xl" 
+                    style={ { backgroundColor: '#121212', position: "absolute", zIndex: 0 }}/>
 
-                <img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 w-full rounded-[3.6px] sm:rounded-[4.5px] lg:rounded-md object-cover select-none pointer-events-none" crossOrigin="anonymous"/>
+                <img src={artUrl} alt={`Capa de ${track}`} draggable="false" className="z-20 relative w-full rounded-[3.6px] sm:rounded-[4.5px] lg:rounded-md object-cover select-none pointer-events-none" crossOrigin="anonymous"/>
 
-                <div className="z-20 text-center w-full">
+                <div className="z-20 text-center relative w-full">
                     <p translate="no" className={`text-[12px] sm:text-[15px] lg:text-xl font-bold text-white ${track.length > 38 ? ' truncate ': ''} select-none`}>{track}</p>
                     <p translate="no" className="text-[10.8px] sm:text-[13.5px] lg:text-lg text-gray-100 truncate select-none">{artist}</p>
                 </div>
                 
-                <div className="w-full border-b-1 border-white/50 z-20"></div>
+                <div className="z-20 relative w-full border-b-1 border-white/50"></div>
 
                 {/* logo */}
-                <div className="z-20 self-end flex items-center gap-[4.8px] sm:gap-[6px] lg:gap-2">
+                <div className="z-20 relative self-end flex items-center gap-[4.8px] sm:gap-[6px] lg:gap-2">
                     <img src={SongStickerIcon} alt={`Logo`} draggable="false" className="w-[9.6px] sm:w-[12px] lg:w-4 h-[9.6px] sm:h-[12px] lg:h-4 select-none pointer-events-none" crossOrigin="anonymous"/>
                     <span translate="no" className="leading-none sm:pt-0 text-[7.2px] sm:text-[9px] lg:text-xs text-gray-100 font-medium select-none">Song Sticker</span>
                 </div>

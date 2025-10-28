@@ -1,6 +1,7 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
 
-import { toPng, toBlob } from 'html-to-image'; // libary para converter html em png
+import html2canvas from "html2canvas-pro";
+
 import Vibrant from 'node-vibrant'; // library vibrant para pegar a colorPalette
 import ColorThief from 'colorthief'; // library colorThief para pegar outras palettes.
 import { mapPaletteToBase, BASE_PALETTE } from "../../lib/color-filter" // utilitário para filtrar paletas com pouca saturação
@@ -173,14 +174,20 @@ export const PictureContainer = ({songData, songDataText}) => {
         
         try {
 
-            const blob = await toBlob(targetContainer, { pixelRatio: pixelRatio });
+            const canvas = await html2canvas(targetContainer, {
+                useCORS: true,
+                backgroundColor: null,
+                scale: pixelRatio,
+            });
 
-            if (!blob) {
-                throw new Error("Não foi possível gerar a imagem para compartilhamento.");
-            }
-            
+            const blob = await new Promise((resolve) =>
+                canvas.toBlob(resolve, "image/png")
+            );
+
+            if (!blob) throw new Error("Falha ao gerar imagem.");
+
             const file = new File([blob], "song-share-story.png", { type: blob.type });
-            
+
             const shareData = {
                 title: `Música: ${songData.track}`,
                 text: `Veja essa música que estou ouvindo: ${songData.track} por ${songData.artist}!`,
@@ -190,10 +197,8 @@ export const PictureContainer = ({songData, songDataText}) => {
             if (navigator.canShare(shareData)) {
                 await navigator.share(shareData);
                 console.log("Conteúdo compartilhado com sucesso!");
-            } 
-            else {
-                throw new Error("Não é possível compartilhar este tipo de arquivo.");
             }
+
             
         } catch (err) {
             console.error('Erro ao tentar compartilhar a imagem:', err);
@@ -209,16 +214,20 @@ export const PictureContainer = ({songData, songDataText}) => {
             return; 
         }
 
-        const link = document.createElement('a');
-
         const currentWidth = targetContainer.offsetWidth; // mede a largura atual da div do story
 
         const pixelRatio = 1080 / currentWidth; // calcula o pixel ratio (fullwidth / current width)
 
         try {
+            const canvas = await html2canvas(targetContainer, {
+                useCORS: true,
+                backgroundColor: null, // mantém transparência
+                scale: pixelRatio, // mais qualidade (1080p)
+            });
 
-            const dataUrl = await toPng(targetContainer, { pixelRatio: pixelRatio});
-            link.download = 'song-share-story.png';
+            const dataUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.download = "song-share-story.png";
             link.href = dataUrl;
             link.click();
 
